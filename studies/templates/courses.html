@@ -14,18 +14,27 @@
         <th>Statut</th>
         <th>Notes</th>
         <th>Crédit</th>
+	<th>Inscription au cours</th>
       </thead>
       <tbody>
-        {% for enrollment in enrollments %}
-          <tr>
-            <td><a href="/courses/{{ enrollment.learning_unit_year.academic_year.year }}/{{ enrollment.id }}">{{ enrollment.learning_unit_year.learning_unit.acronym }}</a></td>
-            <td>{{ enrollment.learning_unit_year.learning_unit }}</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-          </tr>
-        {% endfor %}
+	<form action="/courses/2015/" method="post">
+	{% csrf_token %}
+		{% for enrollment in enrollments %}
+		  <tr>
+		    <td><input id="id_registration_name" name="registration_name" type="hidden" value="{{ enrollment.learning_unit_year.learning_unit.acronym }}"/><a href="/courses/{{ enrollment.learning_unit_year.academic_year.year }}/{{ enrollment.id }}">{{ enrollment.learning_unit_year.learning_unit.acronym }}</a></td>
+		    <td>{{ enrollment.learning_unit_year.learning_unit }}</td>
+		    <td>-</td>
+		    <td>-</td>
+		    <td>-</td>
+		    <td>-</td>
+		    <td align="center"><input type="checkbox" id="id_registration_check"name="registration_check" value={{ enrollment.learning_unit_year.learning_unit.acronym }}></td>
+		  </tr>
+		{% endfor %}
+		<tr>
+		    <td colspan='6'></td>
+		    <td width='5%' align="center"> <input type="submit" value="Valider"></td>
+		</tr>
+	</form>
       </tbody>
     </table>
   </div>

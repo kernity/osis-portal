@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 class AcademicYear(models.Model):
     year       = models.IntegerField()
     start_date = models.DateField()
@@ -24,7 +23,7 @@ class OfferYear(models.Model):
     academic_year = models.ForeignKey(AcademicYear)
 
     def __str__(self):
-        return u'%s (%d)' % (self.offer.title, self.academic_year)
+        return u'%s (%d)' % (self.offer.title, self.academic_year.year)
 
 
 class Student(models.Model):
@@ -40,7 +39,7 @@ class OfferEnrollment(models.Model):
     student    = models.ForeignKey(Student)
 
     def __str__(self):
-        return u'%d' % (self.offer_year)
+        return u'%d' % (self.offer_year.academic_year.year)
 
 
 class Tutor(models.Model):
