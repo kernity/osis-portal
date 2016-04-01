@@ -596,7 +596,7 @@
 
     </div>
 </div>
-<div class="panel panel-default">
+<div class="panel panel-default" id="pnl_french_exam"  >
     <div class="panel-heading">Examen de maitrise de la langue française *</div>
     <div class="panel-body">
         <div class="row">
@@ -608,15 +608,49 @@
                 <label>Avez-vous été inscrit(e) ou allez-vous être inscrit(e) à cet examen?*</label>
                 <br>
                 <label class="radio-inline">
-                  <input type="radio" name="rdb_diploma_french" id="rdb_diploma_french1" value="true"> Oui
+                  <input type="radio" name="rdb_diploma_french" id="rdb_diploma_french1" value="true"
+                         onclick="display('pnl_french_exam_detail',true);"> Oui
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" name="rdb_diploma_french" id="rdb_diploma_french2" value="false"> Non
+                  <input type="radio" name="rdb_diploma_french" id="rdb_diploma_french2" value="false"
+                         onclick="display('pnl_french_exam_detail',false);"> Non
                 </label>
                 <br>
                 <br>
                 Informations complémentaires : <a target="_blank" href="http://www.uclouvain.be/204100.html">http://www.uclouvain.be/204100.html</a>
             </div>
+        </div>
+        <div id="pnl_french_exam_detail" style="visibility:hidden;display:none">
+            <div class="form-inline">
+                <br>
+                <label>A quelle session (date)? *</label>
+                <input class="form-control" id="txt_french_exam_date" name="french_exam_date">
+                <br>
+                <br>
+                <label>Auprès de quel établissement (nom)? *</label>
+                <input class="form-control" id="txt_french_exam_enterprise" name="french_exam_enterprise">
+                <br>
+            </div>
+            <br>
+            <br>
+            <label>A quelle session (date)? *</label>
+            <br>
+            <label class="radio-inline">
+              <input type="radio" name="french_exam_session" id="rdb_french_exam_session_succeed" value="SUCCEED">
+                Réussite
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="french_exam_session" id="rdb_french_exam_session_failed" value="FAILED">
+                Echec
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="french_exam_session" id="rdb_french_exam_enrollment_session_in_progress" value="ENROLLMENT_IN_PROGRESS">
+                En cours d'inscription à la session mentionnée
+            </label>
+            <br>
+            <br>
+            <label>Veuillez joindre l'attestation de réussite ou la preuve d'inscription</label>
+            &nbsp;&nbsp;<input type="button" value="Cliquez-ici pour joindre"/>
         </div>
     </div>
 </div>
