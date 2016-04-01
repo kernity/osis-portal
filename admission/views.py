@@ -364,6 +364,7 @@ def sec_diploma(request):
     schools = []#le modèle référence a été ajouté dans un autre ticket
     countries = []
     languages = []
+    exam_types = []
     return render(request, "sec_diploma.html",
                           {"academic_year": academic_yr,
                            "academic_years": academic_yrs,
@@ -371,4 +372,5 @@ def sec_diploma(request):
                            "postal_codes": postal_codes,
                            "schools": schools,
                            "countries": countries,
-                           "languages": languages})
+                           "languages": languages,
+                           "exam_types": exam_types})
