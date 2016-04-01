@@ -58,6 +58,20 @@
             display('pnl_parcours',false);
         }
     }
+
+    function enabled_other_language(elt){
+        if(elt.checked){
+            document.getElementById('slt_other_language_diploma').disabled = false;
+            document.getElementById('slt_language_diploma').selectedIndex = -1;
+            document.getElementById('slt_country').selectedIndex = -1;
+            document.getElementById('slt_language_diploma').disabled=true;
+            document.getElementById('slt_country').disabled=true;
+        }else{
+            document.getElementById('slt_other_language_diploma').disabled = true;
+            document.getElementById('slt_language_diploma').disabled=false;
+            document.getElementById('slt_country').disabled=false;
+        }
+    }
 </script>
 
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -110,11 +124,11 @@
                     </label>
                     <label class="radio-inline">
                       <input type="radio" name="rdb_belgian_foreign" id="rdb_belgium" value="true"
-                             onclick="display('pnl_belgian_detail',true);"> Oui
+                             onclick="display('pnl_belgian_detail',true);display('pnl_foreign_detail',false);"> en Belgique
                     </label>
                     <label class="radio-inline">
                       <input type="radio" name="rdb_belgian_foreign" id="rdb_foreign" value="false"
-                             onclick="display('pnl_belgian_detail',false)"> Non
+                             onclick="display('pnl_belgian_detail',false);display('pnl_foreign_detail',true)"> à l'étranger
                     </label>
             </div>
             <div id="pnl_belgian_detail" style="visibility:hidden;display:none">
@@ -326,10 +340,146 @@
                     </div>
                 </div>
             </div>
-
+             <div id="pnl_foreign_detail" style="visibility:hidden;display:none">
+                 <br>
+                 <label>Quel diplôme avez-vous obtenu (ou obtiendrez-vous)</label>
+                 <br>
+                <input type="radio" name="foreign_baccalaureate_diploma"
+                       id="rdb_foreign_baccalaureate_diploma_national"
+                       value="NATIONAL">&nbsp;&nbsp;Baccalauréat national (ou diplôme d'état, ...)
+                 <br>
+                <input type="radio" name="foreign_baccalaureate_diploma"
+                       id="rdb_foreign_baccalaureate_diploma_european"
+                       value="EUROPEAN">&nbsp;&nbsp;Baccalauréat européen (Schola Europea)
+                 <br>
+                <input type="radio" name="foreign_baccalaureate_diploma"
+                       id="rdb_foreign_baccalaureate_diploma_international"
+                       value="INTERNATIONAL">&nbsp;&nbsp;Baccalauréat international(IBO)
+                 <br>
+                 <div class="row">
+                     <div class="col-md-4">
+                         <label>Pays organisateur</label>
+                         <select class="form-control" id="slt_country" name="country">
+                            {% for c in countries %}
+                                <option value="{{ c.id }}">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                     </div>
+                     <div class="col-md-4">
+                         <label>Régime linguistique</label>
+                         <select class="form-control" id="slt_language_diploma" name="language_diploma">
+                            <option>-</option>
+                            <option value="FRENCH">Français</option>
+                            <option value="DUTCH">Néerlandais</option>
+                            <option value="ENGLISH">Anglais</option>
+                            <option value="GERMAN">Allemand</option>
+                            <option value="ITALIAN">Italien</option>
+                            <option value="SPANISH">Espagnol</option>
+                            <option value="PORTUGUESE">Portuguais</option>
+                        </select>
+                     </div>
+                     <div class="col-md-4">
+                         <label>Si autre régime linguistique, précisez
+                                <input type="checkbox"
+                                       id="chb_foreign_baccalaureate_diploma_european"
+                                       value="EUROPEAN"
+                                       onclick="enabled_other_language(this)">
+                         </label>
+                         <select class="form-control" id="slt_other_language_diploma" name="other_language_diploma" disabled>
+                            {% for l in languages %}
+                                <option value="{{ l.id }}">{{ l }}</option>
+                            {% endfor %}
+                        </select>
+                     </div>
+                 </div>
+                 <div id="pnl_equivalence">
+                     <label>Ce diplôme a-t-il fait l'objet d'une décision d'équivalence par les services de la Communauté française de Belgique? *</label>
+                     <br>
+                    <input type="radio" name="belgian_equivalence"
+                           id="rdb_belgian_equivalence_yes"
+                           value="YES">&nbsp;&nbsp;Oui
+                     <br>
+                    <input type="radio" name="belgian_equivalence"
+                           id="rdb_belgian_equivalence_no"
+                           value="NO">&nbsp;&nbsp;Non
+                     <br>
+                    <input type="radio" name="belgian_equivalence"
+                           id="rdb_belgian_equivalence_in_progress"
+                           value="IN_PROGRESS">&nbsp;&nbsp;En cours de demande
+                     <br>
+                     Si vous la possédez, vous devrez fournir une photocopie recto-verso de la décision d'équivalence
+                     définitive délivrée par le Ministère de la Communauté française de Belgique. Si vous ne la possédez
+                     pas, une demande d'équivalence DOIT être introduite en respectant strictement les consignes
+                     indiquées par la <a target="_blank" href="http://www.equivalences.cfwb.be/">CFWB</a>.
+                     <br>
+                     <input type="button" value="Veuillez joindre la décision d'équivalence *"/>
+                 </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Résultat</div>
+                    <div class="panel-body">
+                        <label>Quel résultat avez-vous obtenu? *</label>
+                        <br>
+                        <label class="radio-inline">
+                          <input type="radio" name="foreign_result" id="rdb_foreign_result_less_65" value="LESS_65"> Moins de 65%
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="foreign_result" id="rdb_foreign_result_between_65_75" value="BETWEEN_65_75"> Entre 65 et 75%
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="foreign_result" id="rdb_foreign_result_more_75" value="MORE_75"> Plus de 75%
+                        </label>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Veuillez joindre la copie de *</div>
+                    <div class="panel-body">
+                        Vous devez fournir une copie recto-verso.  Si vous avez le recto-verso dans le même fichier,
+                        veuillez le joindre.
+                        <br>
+                        <label>Original de votre</label>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="button" value="Diplôme d'études secondaires - recto" id="bt_diploma_recto"/>
+                            </div>
+                             <div class="col-md-6">
+                                <input type="button" value="Diplôme d'études secondaires - verso" id="bt_diploma_verso"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="button" value="Relevé de notes pour votre dernière année d'études secondaires - recto" id="bt_note_sheet_recto"/>
+                            </div>
+                             <div class="col-md-6">
+                                <input type="button" value="Relevé de notes pour votre dernière année d'études secondaires- verso" id="bt_note_sheet_verso"/>
+                            </div>
+                        </div>
+                        <br>
+                        <label>Traduction par un traducteur-juré</label>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="button" value="Diplôme d'études secondaires - recto" id="bt_diploma_translation_recto"/>
+                            </div>
+                             <div class="col-md-6">
+                                <input type="button" value="Diplôme d'études secondaires - verso" id="bt_diploma_translation_verso"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input type="button" value="Relevé de notes pour votre dernière année d'études secondaires - recto" id="bt_note_sheet_translation_recto"/>
+                            </div>
+                             <div class="col-md-6">
+                                <input type="button" value="Relevé de notes pour votre dernière année d'études secondaires- verso" id="bt_note_sheet_translation_verso"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
         </div>
     </div>
 </div>
+
 <div class="panel panel-default">
     <div class="panel-heading">Examen de maitrise de la langue française *</div>
     <div class="panel-body">

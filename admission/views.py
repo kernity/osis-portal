@@ -362,9 +362,13 @@ def sec_diploma(request):
     cities = [] #le modèle référence a été ajouté dans un autre ticket
     postal_codes = [] #le modèle référence a été ajouté dans un autre ticket
     schools = []#le modèle référence a été ajouté dans un autre ticket
+    countries = []
+    languages = []
     return render(request, "sec_diploma.html",
                           {"academic_year": academic_yr,
                            "academic_years": academic_yrs,
                            "cities":cities,
                            "postal_codes": postal_codes,
-                           "schools": schools})
+                           "schools": schools,
+                           "countries": countries,
+                           "languages": languages})
