@@ -176,7 +176,7 @@ QUEUE_CONTEXT_ROOT = '/'
 # A relative URL will work on local , but not out of the box on the servers.
 LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "admission/static/img/logo_institution.jpg")
 
-try  :
+try:
     from frontoffice.server_settings import *
 except ImportError:
     pass

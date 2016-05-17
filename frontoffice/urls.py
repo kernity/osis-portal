@@ -54,4 +54,5 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', admin.site.urls),
     url(r'^admission/', include('admission.urls')),
+    url(r'^dashboard/',include('dashboard.urls')),
 ]

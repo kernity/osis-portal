@@ -23,8 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render
+from django.conf.urls import url
 
+from dashboard import views
 
-def home(request):
-    return render(request, "dashboard_index.html")
+app_name = 'dashboard'
+
+urlpatterns = [
+    url(r'^$', views.home, name='home'),
+]
