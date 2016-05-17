@@ -29,24 +29,55 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = [ 'user']
-    fieldsets = ((None, {'fields': ['user']}),)
+    list_display = ('user', 'birth_date', 'gender')
+    fieldsets = ((None, {'fields': ('user', 'birth_date', 'gender', 'language')}),)
 
 
 class Person(models.Model):
+    GENDER_CHOICES = (
+        ('FEMALE', _('female')),
+        ('MALE', _('male')))
+
+    CIVIL_STATUS_CHOICES = (
+        ('MARRIED', _('married')),
+        ('SINGLE', _('single')),
+        ('WIDOWED', _('widowed')),
+        ('DIVORCED', _('divorced')),
+        ('SEPARATED', _('separated')),
+        ('COHABITANT', _('cohabitant')),
+        ('UNKNOWN', _('unknown')))
+
     activation_code = models.UUIDField(default=uuid.uuid4, editable=False, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    middle_name = models.CharField(max_length=50, blank=True, null=True)
+    birth_date = models.DateField(blank=True, null=True)
+    birth_place = models.CharField(max_length=255, blank=True, null=True)
+    birth_country = models.ForeignKey('reference.Country', blank=True, null=True)
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, blank=True, null=True)
+    civil_status = models.CharField(max_length=20, choices=CIVIL_STATUS_CHOICES, default='UNKNOWN', blank=True, null=True)
+    number_children = models.IntegerField(blank=True, null=True)
+    spouse_name = models.CharField(max_length=50, blank=True, null=True)
+    nationality = models.ForeignKey('reference.Country', related_name='person_nationality', blank=True, null=True)
+    national_id = models.CharField(max_length=25, blank=True, null=True)
+    id_card_number = models.CharField(max_length=25, blank=True, null=True)
+    passport_number = models.CharField(max_length=25, blank=True, null=True)
+    phone_mobile = models.CharField(max_length=30, blank=True, null=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    additional_email = models.EmailField(max_length=255, blank=True, null=True)
+    register_number = models.CharField(max_length=20, blank=True, null=True)
+    ucl_last_year = models.IntegerField(blank=True, null=True)
+    language = models.CharField(max_length=30, null=True, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE)
 
     def __str__(self):
-        return u"%s" % (self.user)
+        return u"%s" % self.user
+
 
 def find_by_user(user):
-
     try:
-
         person_result = Person.objects.filter(user__id=user.id).first()
     except ObjectDoesNotExist:
         return None
@@ -81,5 +112,5 @@ def is_uuid4(activ_code):
 def find_by_id(id):
     try:
         return Person.objects.get(pk=id)
-    except:
+    except ObjectDoesNotExist:
         return None

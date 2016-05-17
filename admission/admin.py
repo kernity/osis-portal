@@ -25,17 +25,52 @@
 ##############################################################################
 from django.contrib import admin
 from admission.models import *
-
+from admission.models import assimilation_criteria, person_assimilation_criteria
 
 admin.site.register(person.Person,
                     person.PersonAdmin)
+
+admin.site.register(grade_type.GradeType,
+                    grade_type.GradeTypeAdmin)
+
 admin.site.register(domain.Domain,
                     domain.DomainAdmin)
+
 admin.site.register(academic_year.AcademicYear,
                     academic_year.AcademicYearAdmin)
+
 admin.site.register(offer_year.OfferYear,
                     offer_year.OfferYearAdmin)
+
 admin.site.register(offer_year_calendar.OfferYearCalendar,
                     offer_year_calendar.OfferYearCalendarAdmin)
+
 admin.site.register(application.Application,
                     application.ApplicationAdmin)
+
+admin.site.register(assimilation_criteria.AssimilationCriteria,
+                    assimilation_criteria.AssimilationCriteriaAdmin)
+
+admin.site.register(form.Form,
+                    form.FormAdmin)
+
+admin.site.register(question.Question,
+                    question.QuestionAdmin)
+
+admin.site.register(option.Option,
+                    option.OptionAdmin)
+
+admin.site.register(answer.Answer,
+                    answer.AnswerAdmin)
+
+admin.site.register(person_address.PersonAddress,
+                    person_address.PersonAddressAdmin)
+
+admin.site.register(person_assimilation_criteria.PersonAssimilationCriteria,
+                    person_assimilation_criteria.PersonAssimilationCriteriaAdmin)
+
+admin.site.register(properties.Properties,
+                    properties.PropertiesAdmin)
+
+admin.site.register(secondary_education.SecondaryEducation,
+                    secondary_education.SecondaryEducationAdmin)

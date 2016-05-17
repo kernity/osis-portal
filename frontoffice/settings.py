@@ -25,6 +25,7 @@
 ##############################################################################
 import os
 from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext_lazy as _
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -50,11 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'reference',
     'admission',
     'catalog',
     'enrollments',
     'dashboard',
-    'rest_framework',
+    'rest_framework'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -66,6 +68,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware'
 ]
 
 REST_FRAMEWORK = {
@@ -129,8 +132,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
-
 LANGUAGE_CODE = 'fr-be'
+
+LANGUAGES = [
+    ('fr-be', _('French')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = 'UTC'
 
@@ -157,6 +164,17 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
 LOGIN_REDIRECT_URL = '/admission/'
+
+QUEUE_URL = 'localhost'
+QUEUE_USER = 'guest'
+QUEUE_PASSWORD = 'guest'
+QUEUE_PORT = 5672
+QUEUE_CONTEXT_ROOT = '/'
+
+# This has to be replaced by the actual url where you institution logo can be found.
+# Ex : LOGO_INSTITUTION_URL = 'https://www.google.be/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png'
+# A relative URL will work on local , but not out of the box on the servers.
+LOGO_INSTITUTION_URL = os.path.join(BASE_DIR, "admission/static/img/logo_institution.jpg")
 
 try  :
     from frontoffice.server_settings import *
