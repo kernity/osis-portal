@@ -806,6 +806,7 @@ function display_main_panel(radio_value, year){
     $('#rdb_activity_type_volunteering_'+year).prop( "checked", false);
     $('#rdb_activity_type_unemployment_'+year).prop( "checked", false);
     $('#rdb_activity_type_illness_'+year).prop( "checked", false);
+    $('#rdb_activity_type_other_'+year).prop( "checked", false);
 
     if (radio_value=='LOCAL_UNIVERSITY' || radio_value=='LOCAL_HIGH_EDUCATION'   ){
         $('#pnl_national_education_'+year).css('visibility', 'visible').css('display','block');
@@ -857,6 +858,9 @@ function display_main_panel(radio_value, year){
         }
         if($('#hdn_original_activity_type_'+year).val() == 'ILLNESS'){
             $('#rdb_activity_type_illness_'+year).prop( "checked", true);
+        }
+        if($('#hdn_original_activity_type_'+year).val() == 'OTHER'){
+            $('#rdb_activity_type_other_'+year).prop( "checked", true);
         }
         activity_display(year, $('#hdn_original_activity_type_'+year).val());
 
@@ -1305,7 +1309,7 @@ $("input[name^='activity_type_']").change(function(event) {
 function activity_display(year,radio_value) {
     $('#pnl_activity_detail_'+year).css('visibility', 'hidden').css('display','none');
     $('#pnl_onem_'+year).css('visibility', 'hidden').css('display','none');
-    if(radio_value == 'JOB' || radio_value == 'INTERNSHIP' || radio_value == 'VOLUNTEERING' ){
+    if(radio_value == 'JOB' || radio_value == 'INTERNSHIP' || radio_value == 'VOLUNTEERING' || radio_value == 'OTHER' ){
         $('#pnl_activity_detail_'+year).css('visibility', 'visible').css('display','block');
         $('#txt_activity_'+year).val($('#hdn_original_activity_'+year).val());
         $('#txt_activity_place_'+year).val($('#hdn_original_activity_place_'+year).val());
