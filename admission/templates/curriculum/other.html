@@ -39,6 +39,12 @@
                        id="rdb_activity_type_illness_{{curriculum.academic_year.year}}"
                        value="ILLNESS"> {% trans 'illness'%}
             </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year.year}}"
+                       id="rdb_activity_type_other_{{curriculum.academic_year.year}}"
+                       value="OTHER"> {% trans 'other'%}
+            </label>
             {% message_error validation_messages year=curriculum.academic_year.year|lower param='activity_type' as activity_type_msg %}
             {%if activity_type%}
             <font class="error">{{activity_type}}</font>
