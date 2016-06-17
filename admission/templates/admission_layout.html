@@ -1,4 +1,4 @@
-{% extends "admission_layout.html" %}
+{% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -26,20 +26,23 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-{% block admission_tabs %}
-    <div class="tab-content">
-        <div id="tab_profile" class="tab-pane fade">
-            {% include "profile_tab.html" %}
-        </div>
-        <div id="tab_curriculum" class="tab-pane fade">
-            {% include "curriculum_tab.html" %}
-        </div>
-        <div id="tab_diploma" class="tab-pane fade">
-             {% include "diploma_tab.html" %}
-        </div>
-        <div id="tab_application" class="tab-pane fade in active">
-             {% include "application_tab.html" %}
-        </div>
-    </div>
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li>
+            <a data-toggle="tab" href="#tab_profile" id="lnk_profile_tab">{%trans 'your_profile'%}</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_diploma" id="lnk_diploma_tab">{%trans 'your_diplomas'%}/{%trans 'secondary_education'%}</a>
+        </li>
+        <li>
+            <a data-toggle="tab" href="#tab_curriculum" id="lnk_curriculum_tab">{%trans 'curriculum'%}</a>
+        </li>
+        <li class="active">
+            <a data-toggle="tab" href="#tab_application" id="lnk_application_tab">{%trans 'your_requests'%}</a>
+        </li>
+    </ul>
+
+    {% block admission_tabs %}
+    {% endblock %}
 
 {% endblock %}
