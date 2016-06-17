@@ -224,36 +224,6 @@ def validate_fields_form(request, secondary_education, next_step):
     return is_valid, validation_messages, secondary_education
 
 
-def curriculum_save(request, application_id):
-
-    exam_types = mdl_reference.admission_exam_type.find_all_by_adhoc(False)
-
-    local_language_exam_link = mdl.properties.find_by_key('PROFESSIONAL_EXAM_LINK')
-    professional_exam_link = mdl.properties.find_by_key('LOCAL_LANGUAGE_EXAM_LINK')
-
-    application = mdl.application.find_by_id(application_id)
-    other_language_regime = mdl_reference.language.find_languages_by_recognized(False)
-    recognized_languages = mdl_reference.language.find_languages_by_recognized(True)
-
-    secondary_education = mdl.secondary_education.find_by_person(application.person)
-    education_type_transition = mdl_reference.education_type.find_education_type_by_adhoc('TRANSITION', False)
-    education_type_qualification = mdl_reference.education_type.find_education_type_by_adhoc('QUALIFICATION', False)
-    return render(request, "diploma.html",
-                  {"application":                  application,
-                   "academic_years":               mdl.academic_year.find_academic_years(),
-                   "secondary_education":          secondary_education,
-                   "countries":                    mdl_reference.country.find_excluding("BE"),
-                   "recognized_languages":         recognized_languages,
-                   "languages":                    other_language_regime,
-                   "exam_types":                   exam_types,
-                   'local_language_exam_link':     local_language_exam_link,
-                   "professional_exam_link":       professional_exam_link,
-                   "education_type_transition":    education_type_transition,
-                   "education_type_qualification": education_type_qualification,
-                   "current_academic_year":        mdl.academic_year.current_academic_year(),
-                   "local_language_exam_needed":   is_local_language_exam_needed(request.user)})
-
-
 def diploma_save(request):
     next_step = False
     previous_step = False
@@ -304,7 +274,7 @@ def diploma_save(request):
             else:
                 if save_step:
                     countries = mdl_reference.country.find_excluding("BE")
-                    return render(request, "diploma.html",
+                    return render(request, "home.html",
                                   {"application":                  application,
                                    "validation_messages":          validation_messages,
                                    "academic_years":               academic_years,
@@ -319,13 +289,14 @@ def diploma_save(request):
                                    "education_type_qualification": education_type_qualification,
                                    "message_success":              message_success,
                                    "current_academic_year":        mdl.academic_year.current_academic_year(),
-                                   "local_language_exam_needed":   local_language_exam_needed})
+                                   "local_language_exam_needed":   local_language_exam_needed,
+                                   'tab_active': 1})
                 else:
                     if previous_step:
                         return home(request)
 
         else:
-            return render(request, "diploma.html",
+            return render(request, "home.html",
                           {"application":                  application,
                            "validation_messages":          validation_messages,
                            "academic_years":               academic_years,
@@ -339,9 +310,10 @@ def diploma_save(request):
                            "education_type_transition":    education_type_transition,
                            "education_type_qualification": education_type_qualification,
                            "current_academic_year":        mdl.academic_year.current_academic_year(),
-                           "local_language_exam_needed":   local_language_exam_needed})
+                           "local_language_exam_needed":   local_language_exam_needed,
+                           'tab_active': 1})
     else:
-        return render(request, "diploma.html",
+        return render(request, "home.html",
                       {"application":                  application,
                        "validation_messages":          validation_messages,
                        "academic_years":               academic_years,
@@ -355,7 +327,8 @@ def diploma_save(request):
                        "education_type_transition":    education_type_transition,
                        "education_type_qualification": education_type_qualification,
                        "current_academic_year":        mdl.academic_year.current_academic_year(),
-                       "local_language_exam_needed":   local_language_exam_needed})
+                       "local_language_exam_needed":   local_language_exam_needed,
+                       'tab_active': 1})
 
 
 def diploma_update(request):
@@ -371,7 +344,7 @@ def diploma_update(request):
     professional_exam_link = mdl.properties.find_by_key('LOCAL_LANGUAGE_EXAM_LINK')
     countries = mdl_reference.country.find_excluding("BE")
     academic_years = mdl.academic_year.find_academic_years()
-    return render(request, "diploma.html",
+    return render(request, "home.html",
                   {"application":                  application,
                    "academic_years":               academic_years,
                    "secondary_education":          secondary_education,
@@ -384,7 +357,8 @@ def diploma_update(request):
                    "education_type_transition":    education_type_transition,
                    "education_type_qualification": education_type_qualification,
                    "current_academic_year":        mdl.academic_year.current_academic_year(),
-                   "local_language_exam_needed":   is_local_language_exam_needed(request.user)})
+                   "local_language_exam_needed":   is_local_language_exam_needed(request.user),
+                   'tab_active': 1})
 
 
 def validate_professional_exam(request, is_valid, validation_messages, secondary_education):

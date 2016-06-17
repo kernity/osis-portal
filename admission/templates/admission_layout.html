@@ -25,24 +25,48 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
+{% endblock %}
 {% block content %}
     <ul class="nav nav-tabs">
-        <li>
-            <a data-toggle="tab" href="#tab_profile" id="lnk_profile_tab">{%trans 'your_profile'%}</a>
+        <li class="{%if tab_active == 0 %}active{%endif%}">
+            <a href="{% url 'profile' %}" id="lnk_profile_tab">{%trans 'your_profile'%}</a>
         </li>
-        <li>
-            <a data-toggle="tab" href="#tab_diploma" id="lnk_diploma_tab">{%trans 'your_diplomas'%}/{%trans 'secondary_education'%}</a>
+        <li class="{%if tab_active == 1 %}active{%endif%}">
+            <a href="{% url 'diploma_update'%}" id="lnk_diploma_tab">{%trans 'your_diplomas'%}/{%trans 'secondary_education'%}</a>
         </li>
-        <li>
-            <a data-toggle="tab" href="#tab_curriculum" id="lnk_curriculum_tab">{%trans 'curriculum'%}</a>
+        <li class="{%if tab_active == 2 %}active{%endif%}">
+            <a href="{% url 'curriculum_update' %}" id="lnk_curriculum_tab">{%trans 'curriculum'%}</a>
         </li>
-        <li class="active">
-            <a data-toggle="tab" href="#tab_application" id="lnk_application_tab">{%trans 'your_requests'%}</a>
+        <li class="{%if tab_active == 3 %}active{%endif%}">
+            <a href="{% url 'applications' %}" id="lnk_application_tab">{%trans 'your_requests'%}</a>
         </li>
     </ul>
 
     {% block admission_tabs %}
     {% endblock %}
 
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+<script>
+
+
+$(document).ready(function() {
+    if($("#slt_nationality").val()){
+        $.ajax({
+            url: "/admission/country?nationality=" + $("#slt_nationality").val()
+        }).then(function(data) {
+
+            if (data.european_union) {
+                $('#pnl_assimilation_criteria').css('visibility', 'hidden').css('display','none');
+            }else{
+                $('#pnl_assimilation_criteria').css('visibility', 'visible').css('display','block');
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

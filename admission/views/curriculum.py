@@ -81,7 +81,7 @@ def save(request):
             for curriculum in curricula:
                 curriculum.save()
         else:
-            return render(request, "curriculum.html",
+            return render(request, "home.html",
                           {"curricula": curricula,
                            "local_universities_french": local_universities_french,
                            "local_universities_dutch": local_universities_dutch,
@@ -93,7 +93,8 @@ def save(request):
                            "universities_cities": universities_cities,
                            "universities": universities,
                            "languages": mdl_reference.language.find_languages(),
-                           "current_academic_year": mdl.academic_year.current_academic_year()})
+                           "current_academic_year": mdl.academic_year.current_academic_year(),
+                           "tab_active": 2})
 
     # Get the data in bd
     a_person = mdl.person.find_by_user(request.user)
@@ -120,7 +121,7 @@ def save(request):
         curricula.append(curriculum)
         year = year + 1
 
-    return render(request, "curriculum.html", {"curricula": curricula,
+    return render(request, "home.html", {"curricula": curricula,
                                                "local_universities_french": local_universities_french,
                                                "local_universities_dutch": local_universities_dutch,
                                                "domains": mdl.domain.find_all_domains(),
@@ -133,7 +134,8 @@ def save(request):
                                                "universities_cities": universities_cities,
                                                "universities": universities,
                                                "languages": mdl_reference.language.find_languages(),
-                                               "current_academic_year": mdl.academic_year.current_academic_year()})
+                                               "current_academic_year": mdl.academic_year.current_academic_year(),
+                                               "tab_active": 2})
 
 
 def update(request):
@@ -148,7 +150,7 @@ def update(request):
     if secondary_education is None:
         applications = mdl.application.find_by_user(request.user)
         return render(request, "home.html",
-                      {'applications': applications, 'message_warning': _('msg_warning_curriculum')})
+                      {'applications': applications, 'message_warning': _('msg_warning_curriculum'), 'tab_active': 2})
     if secondary_education and secondary_education.secondary_education_diploma is True:
         year_secondary = secondary_education.academic_year.year
 
@@ -181,7 +183,7 @@ def update(request):
         return home(request)
     else:
         universities_cities, universities = populate_dropdown_list(curricula)
-        return render(request, "curriculum.html",
+        return render(request, "home.html",
                       {"curricula": curricula,
                        "local_universities_french": local_universities_french,
                        "local_universities_dutch": local_universities_dutch,
@@ -192,7 +194,8 @@ def update(request):
                        "universities_cities": universities_cities,
                        "universities": universities,
                        "languages": mdl_reference.language.find_languages(),
-                       "current_academic_year": mdl.academic_year.current_academic_year()})
+                       "current_academic_year": mdl.academic_year.current_academic_year(),
+                       "tab_active": 2})
 
 
 def validate_fields_form(request, duplicate_year_origin):

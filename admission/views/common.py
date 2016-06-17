@@ -45,12 +45,12 @@ def home(request):
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
         applications = mdl.application.find_by_user(request.user)
-        return render(request, "home.html", {'applications': applications})
+        return render(request, "home.html", {'applications': applications, 'tab_active': 3})
     else:
         return profile(request)
 
 
-def profile(request):
+def profile(request, message_success=None):
     if request.method == 'POST':
         person_form = PersonForm(data=request.POST)
 
@@ -199,7 +199,8 @@ def profile(request):
             person.phone = request.POST['phone']
         if request.POST['additional_email']:
             person.additional_email = request.POST['additional_email']
-
+        else:
+            person.additional_email = None
         if request.POST['previous_enrollment'] == "true":
             if request.POST['register_number']:
                 person.register_number = request.POST['register_number']
@@ -231,10 +232,17 @@ def profile(request):
             request.user = person.user # Otherwise it was not refreshed while going back to home page
             person.save()
             if 'save_up' in request.POST or 'save_down' in request.POST:
-                return home_retour(request)
+                message_success='ok'
+                if message_success:
+                    #return HttpResponseRedirect(reverse('profile', args=({'message_success':message_success})))
+                    return HttpResponseRedirect(reverse('profile', kwargs={'message_success': message_success}))
+                else:
+                    return HttpResponseRedirect(reverse('profile'))
             else:
                 if 'next_step_up' in request.POST or 'next_step_down' in request.POST:
                     return HttpResponseRedirect(reverse('curriculum_update'))
+        else:
+            message_success=None
     else:
         person = mdl.person.find_by_user(request.user)
         person_form = PersonForm()
@@ -261,19 +269,26 @@ def profile(request):
     assimilation_criteria = mdl.assimilation_criteria.find_criteria()
     person_assimilation_criteria = mdl.person_assimilation_criteria.find_by_person(person.id)
 
-    return render(request, "profile.html", {'person': person,
-                                            'person_form': person_form,
-                                            'countries': countries,
-                                            'assimilationCriteria': assimilation_criteria,
-                                            'personAssimilationCriteria': person_assimilation_criteria,
-                                            'person_legal_address': person_legal_address,
-                                            'person_contact_address': person_contact_address,
-                                            'same_addresses': same_addresses,
-                                            'previous_enrollment': previous_enrollment,
-                                            'institution': institution_name})
+    return render(request, "home.html", {'person': person,
+                                         'person_form': person_form,
+                                         'countries': countries,
+                                         'assimilationCriteria': assimilation_criteria,
+                                         'personAssimilationCriteria': person_assimilation_criteria,
+                                         'person_legal_address': person_legal_address,
+                                         'person_contact_address': person_contact_address,
+                                         'same_addresses': same_addresses,
+                                         'previous_enrollment': previous_enrollment,
+                                         'institution': institution_name,
+                                         "message_success": message_success,
+                                         'tab_active': 0})
 
 
 @login_required
 def home_retour(request):
     applications = mdl.application.find_by_user(request.user)
-    return render(request, "home.html", {'applications': applications, 'message_info': _('msg_info_saved')})
+    # return render(request, "home.html", {'applications': applications,
+    #                                      'message_info': _('msg_info_saved'),
+    #                                      'tab_active': 0})
+
+    #return profile(request)
+    return HttpResponseRedirect(reverse('profile'))

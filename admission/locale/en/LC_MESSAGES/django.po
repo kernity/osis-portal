@@ -907,3 +907,15 @@ msgstr "Documents"
 
 msgid "ucl_denom_location"
 msgstr "Université catholique de Louvain"
+
+msgid "question"
+msgstr "Question"
+
+msgid "answer"
+msgstr "Answer"
+
+msgid "applications_list"
+msgstr "Yours applications"
+
+msgid "new_demand"
+msgstr "Encode a new application demand"

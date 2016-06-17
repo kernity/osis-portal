@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+
 {% load staticfiles %}
 {% load i18n %}
 {% load dictionnary %}
@@ -26,303 +26,305 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form method="post" action="{% url 'diploma'%}" id="form_secondary_education">
+            <input type="hidden"
+                   id="hdn_secondary_education_secondary_education_diploma"
+                   name="secondary_education_secondary_education_diploma"
+                   value="{{secondary_education.secondary_education_diploma | default_if_none:'False'}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_academic_year_id"
+                   name="secondary_academic_year"
+                   value="{{secondary_education.academic_year.id}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national"
+                   name="secondary_education_national"
+                   value="{{secondary_education.national}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_community"
+                   value="{{secondary_education.national_community | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_id"
+                   name="secondary_education_national_institution_id"
+                   value="{{secondary_education.national_institution.id | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_city"
+                   name="secondary_education_national_institution_city"
+                   value="{{secondary_education.national_institution.city}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_postal_code"
+                   name="secondary_education_national_institution_postal_code"
+                   value="{{secondary_education.national_institution.postal_code}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_name"
+                   name="secondary_education_national_institution_name"
+                   value="{{secondary_education.national_institution.name}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_adhoc"
+                   value="{{secondary_education.national_institution.adhoc| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_national_institution_national_community"
+                   name="secondary_education_national_institution_national_community"
+                   value="{{secondary_education.national_institution.national_community| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_education_type_id"
+                   name="secondary_education_education_type_id"
+                   value="{{secondary_education.education_type.id| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_education_type_adhoc"
+                   name="secondary_education_education_type_adhoc"
+                   value="{{secondary_education.education_type.adhoc| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_education_type_name"
+                   name="secondary_education_education_type_name"
+                   value="{{secondary_education.education_type.name| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_daes"
+                   name="secondary_education_daes"
+                   value="{{secondary_education.daes}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_path_repetition"
+                   name="secondary_education_path_repetition"
+                   value="{{secondary_education.path_repetition}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_path_reorientation"
+                   name="secondary_education_path_reorientation"
+                   value="{{secondary_education.path_reorientation}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_result"
+                   name="secondary_education_result"
+                   value="{{secondary_education.result | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_diploma"
+                   name="secondary_education_international_diploma"
+                   value="{{secondary_education.international_diploma | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_diploma_country_id"
+                   value="{{secondary_education.international_diploma_country.id}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_diploma_language"
+                   value="{{secondary_education.international_diploma_language| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_diploma_language_id"
+                   value="{{secondary_education.international_diploma_language.id}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_diploma_language_recognized"
+                   value="{{secondary_education.international_diploma_language.recognized | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_international_equivalence"
+                   name="secondary_education_international_equivalence"
+                   value="{{secondary_education.international_equivalence}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam"
+                   name="secondary_education_admission_exam"
+                   value="{{secondary_education.admission_exam}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_date"
+                   name="secondary_education_admission_exam_date"
+                   value="{{secondary_education.admission_exam_date | default_if_none:'' | date:"d/m/Y" }}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_institution"
+                   name="secondary_education_admission_exam_institution"
+                   value="{{secondary_education.admission_exam_institution | default_if_none:'' }}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_type_id"
+                   name="secondary_education_admission_exam_type_id"
+                   value="{{secondary_education.admission_exam_type.id}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_type_name"
+                   name="secondary_education_admission_exam_type_name"
+                   value="{{secondary_education.admission_exam_type.name}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_type_adhoc"
+                   name="secondary_education_admission_exam_type_adhoc"
+                   value="{{secondary_education.admission_exam_type.adhoc}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_admission_exam_result"
+                   name="secondary_education_admission_exam_result"
+                   value="{{secondary_education.admission_exam_result| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_professional_exam_date"
+                   name="secondary_education_professional_exam_date"
+                   value="{{secondary_education.professional_exam_date | default_if_none:'' | date:"d/m/Y"}}" >
+            <input type="hidden"
+                   id="hdn_secondary_professional_exam"
+                   name="secondary_education_professional_exam"
+                   value="{{secondary_education.professional_exam }}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_professional_exam_institution"
+                   name="secondary_education_professional_exam_institution"
+                   value="{{secondary_education.professional_exam_institution | default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_professional_exam_result"
+                   name="secondary_education_professional_exam_result"
+                   value="{{secondary_education.professional_exam_result| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_local_language_exam"
+                   name="secondary_education_local_language_exam"
+                   value="{{secondary_education.local_language_exam}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_local_language_exam_date"
+                   name="secondary_education_local_language_exam_date"
+                   value="{{secondary_education.local_language_exam_date | default_if_none:'' | date:"d/m/Y" }}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_local_language_exam_institution"
+                   name="secondary_education_local_language_exam_institution"
+                   value="{{secondary_education.local_language_exam_institution}}" >
+            <input type="hidden"
+                   id="hdn_secondary_education_local_language_exam_result"
+                   name="secondary_education_local_language_exam_result"
+                   value="{{secondary_education.local_language_exam_result| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_person_register_number"
+                   value="{{application.person.register_number| default_if_none:''}}" >
+            <input type="hidden"
+                   id="hdn_local_language_exam_needed"
+                   value="{{local_language_exam_needed}}" >
 
-{% block content %}
-<form method="post" action="{% url 'diploma'%}" id="form_secondary_education">
-    <input type="hidden"
-           id="hdn_secondary_education_secondary_education_diploma"
-           name="secondary_education_secondary_education_diploma"
-           value="{{secondary_education.secondary_education_diploma | default_if_none:'False'}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_academic_year_id"
-           name="secondary_academic_year"
-           value="{{secondary_education.academic_year.id}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national"
-           name="secondary_education_national"
-           value="{{secondary_education.national}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_community"
-           value="{{secondary_education.national_community | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_id"
-           name="secondary_education_national_institution_id"
-           value="{{secondary_education.national_institution.id | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_city"
-           name="secondary_education_national_institution_city"
-           value="{{secondary_education.national_institution.city}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_postal_code"
-           name="secondary_education_national_institution_postal_code"
-           value="{{secondary_education.national_institution.postal_code}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_name"
-           name="secondary_education_national_institution_name"
-           value="{{secondary_education.national_institution.name}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_adhoc"
-           value="{{secondary_education.national_institution.adhoc| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_national_institution_national_community"
-           name="secondary_education_national_institution_national_community"
-           value="{{secondary_education.national_institution.national_community| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_education_type_id"
-           name="secondary_education_education_type_id"
-           value="{{secondary_education.education_type.id| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_education_type_adhoc"
-           name="secondary_education_education_type_adhoc"
-           value="{{secondary_education.education_type.adhoc| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_education_type_name"
-           name="secondary_education_education_type_name"
-           value="{{secondary_education.education_type.name| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_daes"
-           name="secondary_education_daes"
-           value="{{secondary_education.daes}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_path_repetition"
-           name="secondary_education_path_repetition"
-           value="{{secondary_education.path_repetition}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_path_reorientation"
-           name="secondary_education_path_reorientation"
-           value="{{secondary_education.path_reorientation}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_result"
-           name="secondary_education_result"
-           value="{{secondary_education.result | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_diploma"
-           name="secondary_education_international_diploma"
-           value="{{secondary_education.international_diploma | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_diploma_country_id"
-           value="{{secondary_education.international_diploma_country.id}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_diploma_language"
-           value="{{secondary_education.international_diploma_language| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_diploma_language_id"
-           value="{{secondary_education.international_diploma_language.id}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_diploma_language_recognized"
-           value="{{secondary_education.international_diploma_language.recognized | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_international_equivalence"
-           name="secondary_education_international_equivalence"
-           value="{{secondary_education.international_equivalence}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam"
-           name="secondary_education_admission_exam"
-           value="{{secondary_education.admission_exam}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_date"
-           name="secondary_education_admission_exam_date"
-           value="{{secondary_education.admission_exam_date | default_if_none:'' | date:"d/m/Y" }}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_institution"
-           name="secondary_education_admission_exam_institution"
-           value="{{secondary_education.admission_exam_institution | default_if_none:'' }}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_type_id"
-           name="secondary_education_admission_exam_type_id"
-           value="{{secondary_education.admission_exam_type.id}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_type_name"
-           name="secondary_education_admission_exam_type_name"
-           value="{{secondary_education.admission_exam_type.name}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_type_adhoc"
-           name="secondary_education_admission_exam_type_adhoc"
-           value="{{secondary_education.admission_exam_type.adhoc}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_admission_exam_result"
-           name="secondary_education_admission_exam_result"
-           value="{{secondary_education.admission_exam_result| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_professional_exam_date"
-           name="secondary_education_professional_exam_date"
-           value="{{secondary_education.professional_exam_date | default_if_none:'' | date:"d/m/Y"}}" >
-    <input type="hidden"
-           id="hdn_secondary_professional_exam"
-           name="secondary_education_professional_exam"
-           value="{{secondary_education.professional_exam }}" >
-    <input type="hidden"
-           id="hdn_secondary_education_professional_exam_institution"
-           name="secondary_education_professional_exam_institution"
-           value="{{secondary_education.professional_exam_institution | default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_professional_exam_result"
-           name="secondary_education_professional_exam_result"
-           value="{{secondary_education.professional_exam_result| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_local_language_exam"
-           name="secondary_education_local_language_exam"
-           value="{{secondary_education.local_language_exam}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_local_language_exam_date"
-           name="secondary_education_local_language_exam_date"
-           value="{{secondary_education.local_language_exam_date | default_if_none:'' | date:"d/m/Y" }}" >
-    <input type="hidden"
-           id="hdn_secondary_education_local_language_exam_institution"
-           name="secondary_education_local_language_exam_institution"
-           value="{{secondary_education.local_language_exam_institution}}" >
-    <input type="hidden"
-           id="hdn_secondary_education_local_language_exam_result"
-           name="secondary_education_local_language_exam_result"
-           value="{{secondary_education.local_language_exam_result| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_person_register_number"
-           value="{{application.person.register_number| default_if_none:''}}" >
-    <input type="hidden"
-           id="hdn_local_language_exam_needed"
-           value="{{local_language_exam_needed}}" >
-
-    {% csrf_token %}
-    <div>
-        <button type="submit" id="bt_previous_step_up" name="bt_previous_step_up" class="btn btn-default" role="button"
-                title="{%trans 'previous_step' %}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-            {%trans 'previous_step'%}</button>
-        <button type="submit" id="bt_save_up" name="bt_save_up" class="btn btn-default" role="button"
-                title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-            {%trans 'save'%}</button>
-        <button type="submit" id="bt_next_step_up" name="bt_next_step_up" class="btn btn-default" role="button"
-                title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            {%trans 'next_step'%}</button>
-        <br>
-        <br>
-        {%if validation_messages%}
-            <br>
-            <font class="error" role="alert" style="margin-left:5px;">
-                Il y a {{ validation_messages|length}} {% trans 'errors'%} {{validation_messages}}
-            </font>
-            <br><br>
-        {% endif %}
-        {%if message_success%}
-            <br>
-            <font class="alert alert-success" role="alert" style="margin-left:5px;">
-                {{message_success}}
-            </font>
-            <br><br>
-        {% endif %}
-    </div>
-    <div class="panel panel-default"
-         id="pnl_secondary_education_main">
-        <div class="panel-heading">{% trans 'secondary_education' %}</div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <label>{% trans 'question_get_diploma'%} *</label>
-                    <br>
-                    <span >{% trans 'label_secondary_education' %}</span>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12">
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="secondary_education_diploma"
-                             id="rdb_secondary_education_diploma_true"
-                             value="true"
-                             onclick="display('pnl_academic_year',true);display('pnl_admission_exam',false);"> {% trans 'yes'%}
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="secondary_education_diploma"
-                             id="rdb_secondary_education_diploma_false" value="false"
-                             onclick="display('pnl_academic_year',false);display('pnl_admission_exam',true);"> {% trans 'no'%}
-                    </label>
-                    {%if validation_messages and validation_messages|get_item:'secondary_education_diploma'%}
-                        <br><font class="error" style="margin-left:5px;">{{ validation_messages|get_item:'secondary_education_diploma'}}</font>
-                    {% endif %}
-                </div>
-            </div>
-            <br>
-            <div id="pnl_academic_year"
-                 class="form-inline">
-                <div class="form-group" >
-                    <label>{% trans 'pnl_academic_year_which_year'%} *</label>
-                    <select class="form-control"
-                            id="slt_academic_year"
-                            name="academic_year"
-                            onchange="show_hide_parcours(this);show_hide_pnl_daes();">
-                            {% for academic_yr in academic_years %}
-                                <option value="{{ academic_yr.id }}" title="{% trans 'academic_year'%}{{academic_yr.year}}">{{ academic_yr }}</option>
-                            {% endfor %}
-                    </select>
-                    {%if validation_messages and validation_messages|get_item:'academic_year'%}
-                        <font class="error" style="margin-left:5px;">
-                            {{ validation_messages|get_item:'academic_year'}}
-                        </font>
-                    {% endif %}
-                </div>
-                <br><br>
-                <div class="form-group" >
-                    <label>
-                      {% trans 'pnl_academic_year_secondary_education'%} *
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="rdb_belgian_foreign" id="rdb_belgium"
-                             value="true"
-                             onclick="display('pnl_belgian_detail',true);display('pnl_foreign_detail',false);populate_secondary_national_institution();"> {% trans 'in_belgium'%}
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="rdb_belgian_foreign" id="rdb_foreign"
-                             value="false"
-                             onclick="display('pnl_belgian_detail',false);display('pnl_foreign_detail',true);"> {% trans 'not_in_belgium'%}
-                    </label>
-                    {%if validation_messages and validation_messages|get_item:'rdb_belgian_foreign'%}
-                        <font class="error" style="margin-left:5px;">
-                            {{ validation_messages|get_item:'rdb_belgian_foreign'}}
-                        </font>
-                    {% endif %}
-                </div>
+            {% csrf_token %}
+            <div>
+                <button type="submit" id="bt_previous_step_up" name="bt_previous_step_up" class="btn btn-default" role="button"
+                        title="{%trans 'previous_step' %}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+                    {%trans 'previous_step'%}</button>
+                <button type="submit" id="bt_save_up" name="bt_save_up" class="btn btn-default" role="button"
+                        title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                    {%trans 'save'%}</button>
+                <button type="submit" id="bt_next_step_up" name="bt_next_step_up" class="btn btn-default" role="button"
+                        title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+                    {%trans 'next_step'%}</button>
                 <br>
-                {% include "diploma/national_diploma.html" %}
-                {% include "diploma/international_diploma.html" %}
+                <br>
+                {%if validation_messages%}
+                    <br>
+                    <font class="error" role="alert" style="margin-left:5px;">
+                        Il y a {{ validation_messages|length}} {% trans 'errors'%} {{validation_messages}}
+                    </font>
+                    <br><br>
+                {% endif %}
+                {%if message_success%}
+                    <br>
+                    <font class="alert alert-success" role="alert" style="margin-left:5px;">
+                        {{message_success}}
+                    </font>
+                    <br><br>
+                {% endif %}
             </div>
-        </div>
+            <div class="panel panel-default"
+                 id="pnl_secondary_education_main">
+                <div class="panel-heading">{% trans 'secondary_education' %}</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>{% trans 'question_get_diploma'%} *</label>
+                            <br>
+                            <span >{% trans 'label_secondary_education' %}</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="radio-inline">
+                              <input type="radio"
+                                     name="secondary_education_diploma"
+                                     id="rdb_secondary_education_diploma_true"
+                                     value="true"
+                                     onclick="display('pnl_academic_year',true);display('pnl_admission_exam',false);"> {% trans 'yes'%}
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio"
+                                     name="secondary_education_diploma"
+                                     id="rdb_secondary_education_diploma_false" value="false"
+                                     onclick="display('pnl_academic_year',false);display('pnl_admission_exam',true);"> {% trans 'no'%}
+                            </label>
+                            {%if validation_messages and validation_messages|get_item:'secondary_education_diploma'%}
+                                <br><font class="error" style="margin-left:5px;">{{ validation_messages|get_item:'secondary_education_diploma'}}</font>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                    <div id="pnl_academic_year"
+                         class="form-inline">
+                        <div class="form-group" >
+                            <label>{% trans 'pnl_academic_year_which_year'%} *</label>
+                            <select class="form-control"
+                                    id="slt_academic_year"
+                                    name="academic_year"
+                                    onchange="show_hide_parcours(this);show_hide_pnl_daes();">
+                                    {% for academic_yr in academic_years %}
+                                        <option value="{{ academic_yr.id }}" title="{% trans 'academic_year'%}{{academic_yr.year}}">{{ academic_yr }}</option>
+                                    {% endfor %}
+                            </select>
+                            {%if validation_messages and validation_messages|get_item:'academic_year'%}
+                                <font class="error" style="margin-left:5px;">
+                                    {{ validation_messages|get_item:'academic_year'}}
+                                </font>
+                            {% endif %}
+                        </div>
+                        <br><br>
+                        <div class="form-group" >
+                            <label>
+                              {% trans 'pnl_academic_year_secondary_education'%} *
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio"
+                                     name="rdb_belgian_foreign" id="rdb_belgium"
+                                     value="true"
+                                     onclick="display('pnl_belgian_detail',true);display('pnl_foreign_detail',false);populate_secondary_national_institution();"> {% trans 'in_belgium'%}
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio"
+                                     name="rdb_belgian_foreign" id="rdb_foreign"
+                                     value="false"
+                                     onclick="display('pnl_belgian_detail',false);display('pnl_foreign_detail',true);"> {% trans 'not_in_belgium'%}
+                            </label>
+                            {%if validation_messages and validation_messages|get_item:'rdb_belgian_foreign'%}
+                                <font class="error" style="margin-left:5px;">
+                                    {{ validation_messages|get_item:'rdb_belgian_foreign'}}
+                                </font>
+                            {% endif %}
+                        </div>
+                        <br>
+                        {% include "diploma/national_diploma.html" %}
+                        {% include "diploma/international_diploma.html" %}
+                    </div>
+                </div>
+            </div>
+            {% include "diploma/admission_exam.html" %}
+            {% include "diploma/professional_exam.html" %}
+            {% include "diploma/local_language_exam.html" %}
+            {%if validation_messages and validation_messages|get_item:'final'%}
+                <br>
+                <font class="error" style="margin-left:5px;">
+                    {{ validation_messages|get_item:'final'}}<br>
+                    <ul>
+                        <li>{{ validation_messages|get_item:'final1'}}</li>
+                        <li>{{ validation_messages|get_item:'final2'}}</li>
+                        <li>{{ validation_messages|get_item:'final3'}}</li>
+                    </ul>
+                </font>
+                <br><br>
+            {% endif %}
+            <br>
+            <div>
+                <button type="submit" id="bt_previous_step_down" class="btn btn-default" role="button"
+                        title="{%trans 'previous_step'%}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+                    {%trans 'previous_step'%}</button>
+                <button type="submit" id="bt_save_down" name="bt_save_down" class="btn btn-default" role="button"
+                        title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+                    {%trans 'save'%}</button>
+                <button type="submit" id="bt_next_step_down" name="bt_next_step_down" class="btn btn-default" role="button"
+                        title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+                    {%trans 'next_step'%}</button>
+                {%if message_success%}
+                    <br><br>
+                    <font class="alert alert-success" role="alert" style="margin-left:5px;">{{ message_success}}</font>
+                    <br><br>
+                {% endif %}
+            </div>
+        </form>
     </div>
-    {% include "diploma/admission_exam.html" %}
-    {% include "diploma/professional_exam.html" %}
-    {% include "diploma/local_language_exam.html" %}
-    {%if validation_messages and validation_messages|get_item:'final'%}
-        <br>
-        <font class="error" style="margin-left:5px;">
-            {{ validation_messages|get_item:'final'}}<br>
-            <ul>
-                <li>{{ validation_messages|get_item:'final1'}}</li>
-                <li>{{ validation_messages|get_item:'final2'}}</li>
-                <li>{{ validation_messages|get_item:'final3'}}</li>
-            </ul>
-        </font>
-        <br><br>
-    {% endif %}
-    <br>
-    <div>
-        <button type="submit" id="bt_previous_step_down" class="btn btn-default" role="button"
-                title="{%trans 'previous_step'%}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-            {%trans 'previous_step'%}</button>
-        <button type="submit" id="bt_save_down" name="bt_save_down" class="btn btn-default" role="button"
-                title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-            {%trans 'save'%}</button>
-        <button type="submit" id="bt_next_step_down" name="bt_next_step_down" class="btn btn-default" role="button"
-                title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            {%trans 'next_step'%}</button>
-        {%if message_success%}
-            <br><br>
-            <font class="alert alert-success" role="alert" style="margin-left:5px;">{{ message_success}}</font>
-            <br><br>
-        {% endif %}
-    </div>
-</form>
+</div>
 
   <script>
 	var selDiv = "";
@@ -459,4 +461,4 @@
     }
 
     </script>
-{% endblock %}
+

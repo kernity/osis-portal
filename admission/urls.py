@@ -45,8 +45,8 @@ urlpatterns = [
     url(r'^admission/application/([0-9]+)/$', application.application_update, name='application_update'),
     url(r'^admission/application/diploma/save/$', secondary_education.diploma_save, name='diploma'),
     url(r'^admission/curriculum/save/$', curriculum.save, name='curriculum'),
-    url(r'^admission/curriculum/update/$', curriculum.update, name='curriculum_update'),
-    url(r'^admission/application/diploma/update/$', secondary_education.diploma_update, name='diploma_update'),
+    url(r'^curriculum/update/$', curriculum.update, name='curriculum_update'),
+    url(r'^diploma/update/$', secondary_education.diploma_update, name='diploma_update'),
     url(r'^admission/offer/$', offer.offer_selection, name='offer_selection'),
     url(r'^admission/offer/save/$', application.save_application_offer, name='save_offer_selection'),
     url(r'^admission/offer/application/([0-9]+)/$', offer.selection_offer, name='selection_offer'),
@@ -64,7 +64,7 @@ urlpatterns = [
 
     url(r'^options/$', option.find_by_offer),
 
-    url(r'^profile/$', common.profile, name='profile'),
+    url(r'^profile(?:/(?P<message_success>\w+))?/$', common.profile, name='profile'),
     url(r'^profile_confirmed/$', application.profile_confirmed, name='profile_confirmed'),
 
     url(r'^questions/$', question.find_by_offer),
@@ -84,6 +84,7 @@ urlpatterns = [
     url(r'^institution_cities/$', education_institution.find_cities_by_type),
     url(r'^institution_postal_codes/$', education_institution.find_postal_codes_by_type),
     url(r'^institutions/$', education_institution.find_institution_by_city_postal_code_type),
+    url(r'^applications/$', application.applications, name='applications'),
 
 
 

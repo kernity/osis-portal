@@ -915,3 +915,16 @@ msgstr "Documents"
 
 msgid "ucl_denom_location"
 msgstr "Université catholique de Louvain"
+
+
+msgid "question"
+msgstr "Question"
+
+msgid "answer"
+msgstr "Réponse"
+
+msgid "applications_list"
+msgstr "Vos demandes d'inscription"
+
+msgid "new_demand"
+msgstr "Introduire une nouvelle demande"

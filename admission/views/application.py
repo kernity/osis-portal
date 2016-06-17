@@ -14,7 +14,7 @@
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    but WITHOUT ANY WARRANTY; without evegitn the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -33,6 +33,10 @@ from functools import cmp_to_key
 import locale
 from django.utils.translation import ugettext_lazy as _
 
+
+def applications(request):
+    applications = mdl.application.find_by_user(request.user)
+    return render(request, "home.html", {'applications': applications, 'tab_active': 3})
 
 def application_update(request, application_id):
     application = mdl.application.find_by_id(application_id)
@@ -143,7 +147,6 @@ def save_application_offer(request):
                         answer.save()
 
         return HttpResponseRedirect(reverse('curriculum_update'))
-
 
 
 def application_view(request, application_id):

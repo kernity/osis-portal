@@ -1,4 +1,3 @@
-{% extends "layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -25,10 +24,6 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-{% block style %}
-<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
-{% endblock %}
-{% block content %}
 
 <div class="panel panel-default">
     <div class="panel-body">
@@ -36,8 +31,10 @@
         <h5>{% trans 'mandatory_asterisk'%}</h5>
         <form method="post" action="{% url 'profile' %}">
             {% csrf_token %}
+            {% if person_form.errors %}
             <font class="error">{% if person_form.errors %}{% trans 'errors_warning'%}{%endif%}</font>
             <br>
+            {%endif%}
             <br>
             <button type="submit" id="bt_submit_profile" class="btn btn-primary" role="button" name="save_up"
                     title="{% trans 'save'%}">
@@ -47,6 +44,15 @@
                     title="{% trans 'next_step'%}">
                 <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>{% trans 'next_step'%}
             </button>
+
+                {%if message_success and message_success == 'ok'%}
+                    <br><br>
+                    <div>
+                        <font class="alert alert-success" role="alert" style="margin-left:5px;">
+                            {% trans 'msg_info_saved'%}
+                        </font>
+                        </div>
+                {% endif %}
             <br>
             <br>
             <div class="panel panel-default">
@@ -471,24 +477,3 @@
         </form>
     </div>
 </div>
-
-{% endblock %}
-{% block script %}
-<script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
-<script>
-
-
-$(document).ready(function() {
-    $.ajax({
-        url: "/admission/country?nationality=" + $("#slt_nationality").val()
-    }).then(function(data) {
-
-        if (data.european_union) {
-            $('#pnl_assimilation_criteria').css('visibility', 'hidden').css('display','none');
-        }else{
-            $('#pnl_assimilation_criteria').css('visibility', 'visible').css('display','block');
-        }
-    });
-});
-</script>
-{% endblock %}

@@ -28,17 +28,17 @@
 
 {% block admission_tabs %}
     <div class="tab-content">
-        <div id="tab_profile" class="tab-pane fade">
-            {% include "profile_tab.html" %}
+        <div id="tab_profile" class="tab-pane fade {% if tab_active == 0 %} in active{%endif%}">
+            {% include "profile.html" %}
         </div>
-        <div id="tab_curriculum" class="tab-pane fade">
-            {% include "curriculum_tab.html" %}
+        <div id="tab_diploma" class="tab-pane fade {% if tab_active == 1 %} in active{%endif%}">
+            {% include "diploma.html" %}
         </div>
-        <div id="tab_diploma" class="tab-pane fade">
-             {% include "diploma_tab.html" %}
+        <div id="tab_curriculum" class="tab-pane fade {% if tab_active == 2 %} in active{%endif%}">
+             {% include "curriculum.html" %}
         </div>
-        <div id="tab_application" class="tab-pane fade in active">
-             {% include "application_tab.html" %}
+        <div id="tab_application" class="tab-pane fade {% if tab_active == 3 %} in active{%endif%}">
+             {% include "applications.html" %}
         </div>
     </div>
 
