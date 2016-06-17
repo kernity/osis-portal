@@ -122,20 +122,19 @@ def save(request):
         year = year + 1
 
     return render(request, "home.html", {"curricula": curricula,
-                                               "local_universities_french": local_universities_french,
-                                               "local_universities_dutch": local_universities_dutch,
-                                               "domains": mdl.domain.find_all_domains(),
-                                               "subdomains": mdl.domain.find_all_subdomains(),
-                                               "grade_types": mdl.grade_type.find_all(),
-                                               "universities_countries": mdl_reference.education_institution
-                  .find_countries(),
-                                               "validation_messages": validation_messages,
-                                               "message_success": message_success,
-                                               "universities_cities": universities_cities,
-                                               "universities": universities,
-                                               "languages": mdl_reference.language.find_languages(),
-                                               "current_academic_year": mdl.academic_year.current_academic_year(),
-                                               "tab_active": 2})
+                                         "local_universities_french": local_universities_french,
+                                         "local_universities_dutch": local_universities_dutch,
+                                         "domains": mdl.domain.find_all_domains(),
+                                         "subdomains": mdl.domain.find_all_subdomains(),
+                                         "grade_types": mdl.grade_type.find_all(),
+                                         "universities_countries": mdl_reference.education_institution.find_countries(),
+                                         "validation_messages": validation_messages,
+                                         "message_success": message_success,
+                                         "universities_cities": universities_cities,
+                                         "universities": universities,
+                                         "languages": mdl_reference.language.find_languages(),
+                                         "current_academic_year": mdl.academic_year.current_academic_year(),
+                                         "tab_active": 2})
 
 
 def update(request):

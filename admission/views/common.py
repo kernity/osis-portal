@@ -153,7 +153,7 @@ def profile(request, message_success=None):
             person_legal_address.country = country
         else:
             person_form.errors['legal_adr_country'] = _('mandatory_field')
-            #person_legal_address.country = None
+            # person_legal_address.country = None
         if request.POST.get('same_contact_legal_addr') == "false":
             person_contact_address = mdl.person_address.find_by_person_type(person, 'CONTACT')
             if person_contact_address is None:
@@ -229,12 +229,11 @@ def profile(request, message_success=None):
                 person_contact_address.save()
             person_legal_address.save()
             person.user.save()
-            request.user = person.user # Otherwise it was not refreshed while going back to home page
+            request.user = person.user  # Otherwise it was not refreshed while going back to home page
             person.save()
             if 'save_up' in request.POST or 'save_down' in request.POST:
-                message_success='ok'
+                message_success = 'ok'
                 if message_success:
-                    #return HttpResponseRedirect(reverse('profile', args=({'message_success':message_success})))
                     return HttpResponseRedirect(reverse('profile', kwargs={'message_success': message_success}))
                 else:
                     return HttpResponseRedirect(reverse('profile'))
@@ -242,7 +241,7 @@ def profile(request, message_success=None):
                 if 'next_step_up' in request.POST or 'next_step_down' in request.POST:
                     return HttpResponseRedirect(reverse('curriculum_update'))
         else:
-            message_success=None
+            message_success = None
     else:
         person = mdl.person.find_by_user(request.user)
         person_form = PersonForm()
@@ -282,13 +281,3 @@ def profile(request, message_success=None):
                                          "message_success": message_success,
                                          'tab_active': 0})
 
-
-@login_required
-def home_retour(request):
-    applications = mdl.application.find_by_user(request.user)
-    # return render(request, "home.html", {'applications': applications,
-    #                                      'message_info': _('msg_info_saved'),
-    #                                      'tab_active': 0})
-
-    #return profile(request)
-    return HttpResponseRedirect(reverse('profile'))

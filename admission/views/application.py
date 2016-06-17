@@ -38,6 +38,7 @@ def applications(request):
     applications = mdl.application.find_by_user(request.user)
     return render(request, "home.html", {'applications': applications, 'tab_active': 3})
 
+
 def application_update(request, application_id):
     application = mdl.application.find_by_id(application_id)
     return render(request, "offer_selection.html",

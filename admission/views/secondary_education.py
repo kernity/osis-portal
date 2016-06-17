@@ -545,7 +545,7 @@ def populate_secondary_education(request, secondary_education):
                     secondary_education.result = request.POST.get('foreign_result')
                     secondary_education.national = False
             if request.POST.get('other_school') == "on":
-                existing_institution= mdl_reference.education_institution\
+                existing_institution = mdl_reference.education_institution\
                     .find_by_name_city_postal_code(request.POST.get('CESS_other_school_name'),
                                                    request.POST.get('CESS_other_school_city'),
                                                    request.POST.get('CESS_other_school_postal_code'),
