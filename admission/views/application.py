@@ -14,7 +14,7 @@
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without evegitn the implied warranty of
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -32,6 +32,8 @@ from admission.views.common import home
 from functools import cmp_to_key
 import locale
 from django.utils.translation import ugettext_lazy as _
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 
 def applications(request):
