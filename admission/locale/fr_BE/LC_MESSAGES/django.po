@@ -928,3 +928,6 @@ msgstr "Vos demandes d'inscription"
 
 msgid "new_demand"
 msgstr "Introduire une nouvelle demande"
+
+msgid "tab_diplomas"
+msgstr "Diplômes et certificats"

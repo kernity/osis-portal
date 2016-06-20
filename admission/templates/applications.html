@@ -25,30 +25,31 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-<div class="panel panel-default">
-    <div class="panel-body">
-        <h2>{% trans 'applications_list'%} :</h2>
-        {% if applications %}
-        <br>
-        <table class="table table-striped table-hover">
-            <tr>
-                <th colspan="2"><h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3></th>
-            </tr>
-            <tr>
-                <th>Création</th>
-                <th>Etude demandée</th>
-            </tr>
-            {% for application in applications%}
-            <tr>
-                <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
-                <td><a href="{% url 'application_view' application.id %}">{{ application.offer_year.title }}</a></td>
-            </tr>
-            {% endfor%}
-        </table>
-        {%endif%}
-        <br>
-        <a href="{% url 'offer_selection' %}" class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            {% trans 'new_demand'%}</a>
-    </div>
-</div>
+
+    <h2>{% trans 'applications_list'%} :</h2>
+    <a href="{% url 'offer_selection' %}" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {% trans 'new_demand'%}</a>
+    <br>
+    {% if applications %}
+    <br>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th colspan="2"><h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3></th>
+        </tr>
+        <tr>
+            <th>Création</th>
+            <th>Etude demandée</th>
+        </tr>
+        {% for application in applications%}
+        <tr>
+            <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
+            <td><a href="{% url 'application_view' application.id %}">{{ application.offer_year.title }}</a></td>
+        </tr>
+        {% endfor%}
+    </table>
+    {%endif%}
+    <br>
+    <a href="{% url 'offer_selection' %}" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        {% trans 'new_demand'%}</a>

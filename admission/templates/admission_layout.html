@@ -29,24 +29,27 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker3.min.css' %}" type='text/css'>
 {% endblock %}
 {% block content %}
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills">
         <li class="{%if tab_active == 0 %}active{%endif%}">
             <a href="{% url 'profile' %}" id="lnk_profile_tab">{%trans 'your_profile'%}</a>
         </li>
         <li class="{%if tab_active == 1 %}active{%endif%}">
-            <a href="{% url 'diploma_update'%}" id="lnk_diploma_tab">{%trans 'your_diplomas'%}/{%trans 'secondary_education'%}</a>
+            <a href="{% url 'diploma_update'%}" id="lnk_diploma_tab">{%trans 'tab_diplomas'%}</a>
         </li>
         <li class="{%if tab_active == 2 %}active{%endif%}">
             <a href="{% url 'curriculum_update' %}" id="lnk_curriculum_tab">{%trans 'curriculum'%}</a>
         </li>
-        <li class="{%if tab_active == 3 %}active{%endif%}">
+        <li class="{%if tab_active == 3 or tab_active == 31 %}active{%endif%}">
             <a href="{% url 'applications' %}" id="lnk_application_tab">{%trans 'your_requests'%}</a>
         </li>
     </ul>
-
+<div class="panel panel-default">
+    <div class="panel-body">
+    <h5>{% trans 'mandatory_asterisk'%}</h5>
     {% block admission_tabs %}
     {% endblock %}
-
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}

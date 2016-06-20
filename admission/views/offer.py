@@ -62,13 +62,14 @@ def offer_selection(request):
     offers = None
     application = mdl.application.find_by_user(request.user)
     grade_choices = mdl.grade_type.GRADE_CHOICES
-    return render(request, "offer_selection.html",
+    return render(request, "home.html",
                           {"gradetypes":  mdl.grade_type.find_all(),
                            "domains":     mdl.domain.find_all_domains(),
                            "offers":      offers,
                            "offer":       None,
                            "application": application,
-                           "grade_choices": grade_choices})
+                           "grade_choices": grade_choices,
+                           'tab_active': 31})
 
 
 def _get_offer_type(request):

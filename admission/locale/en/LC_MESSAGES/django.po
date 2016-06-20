@@ -919,3 +919,7 @@ msgstr "Yours applications"
 
 msgid "new_demand"
 msgstr "Encode a new application demand"
+
+msgid "tab_diplomas"
+msgstr "Diplomas and certificates"
+

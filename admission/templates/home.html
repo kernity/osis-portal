@@ -37,8 +37,13 @@
         <div id="tab_curriculum" class="tab-pane fade {% if tab_active == 2 %} in active{%endif%}">
              {% include "curriculum.html" %}
         </div>
-        <div id="tab_application" class="tab-pane fade {% if tab_active == 3 %} in active{%endif%}">
-             {% include "applications.html" %}
+        <div id="tab_application" class="tab-pane fade {% if tab_active == 3 or tab_active == 31 %} in active{%endif%}">
+            {% if tab_active == 3 %}
+            {% include "applications.html" %}
+            {%endif%}
+            {% if tab_active == 31 %}
+            {% include "offer_selection.html" %}
+            {%endif%}
         </div>
     </div>
 
