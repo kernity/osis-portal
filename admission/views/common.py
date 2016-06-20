@@ -267,7 +267,7 @@ def profile(request, message_success=None):
 
     assimilation_criteria = mdl.assimilation_criteria.find_criteria()
     person_assimilation_criteria = mdl.person_assimilation_criteria.find_by_person(person.id)
-
+    # validated are not ready yet, to be achieved in another issue - Leila
     return render(request, "home.html", {'person': person,
                                          'person_form': person_form,
                                          'countries': countries,
@@ -279,5 +279,10 @@ def profile(request, message_success=None):
                                          'previous_enrollment': previous_enrollment,
                                          'institution': institution_name,
                                          "message_success": message_success,
-                                         'tab_active': 0})
-
+                                         'tab_active': 0,
+                                         'validated_profil': False,
+                                         'validated_diploma': False,
+                                         'validated_curriculum': False,
+                                         'validated_applications': False,
+                                         'validated_demande': False,
+                                         'validated_accounting': False})

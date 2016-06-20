@@ -53,7 +53,9 @@ def accounting(request):
                                                "application":                 application,
                                                "debts_check":                 debts_check(application),
                                                "reduction_possible":          reduction_possible(application),
-                                               "third_cycle":                 third_cycle(application)})
+                                               "third_cycle":                 third_cycle(application),
+                                               "tab_active":                  31,
+                                               "tab_demande_active":          1})
 
 
 def accounting_update(request):

@@ -216,11 +216,12 @@ def offer_selection(request):
     offers = None
     application = mdl.application.find_by_user(request.user)
     return render(request, "offer_selection.html",
-                          {"gradetypes":  mdl.grade_type.find_all(),
-                           "domains":     mdl.domain.find_all(),
-                           "offers":      offers,
-                           "offer":       None,
-                           "application": application})
+                          {"gradetypes":         mdl.grade_type.find_all(),
+                           "domains":            mdl.domain.find_all(),
+                           "offers":             offers,
+                           "offer":              None,
+                           "application":        application,
+                           "tab_demande_active": 0})
 
 
 def refresh_offer_selection(request):
@@ -237,11 +238,12 @@ def refresh_offer_selection(request):
     offers = mdl.offer_year.find_by_domain_grade(domain, offer_type)
     grade = get_object_or_404(mdl.grade_type.GradeType, pk=offer_type)
     return render(request, "offer_selection.html",
-                          {"gradetypes":  mdl.grade_type.find_all(),
-                           "domains":     mdl.domain.find_all(),
-                           "offers":      offers,
-                           "offer_type":  grade,
-                           "domain":      domain})
+                          {"gradetypes":         mdl.grade_type.find_all(),
+                           "domains":            mdl.domain.find_all(),
+                           "offers":             offers,
+                           "offer_type":         grade,
+                           "domain":             domain,
+                           "tab_demande_active": 0})
 
 
 def _get_offer_type(request):
@@ -294,11 +296,12 @@ def save_offer_selection(request):
         application.save()
 
     return render(request, "offer_selection.html",
-                          {"gradetypes":  mdl.grade_type.find_all(),
-                           "domains":     mdl.domain.find_all(),
-                           "offers":      None,
-                           "offer_type":  None,
-                           "domain":      mdl})
+                          {"gradetypes":         mdl.grade_type.find_all(),
+                           "domains":            mdl.domain.find_all(),
+                           "offers":             None,
+                           "offer_type":         None,
+                           "domain":             mdl,
+                           "tab_demande_active": 0})
 
 
 def selection_offer(request, offer_id):
@@ -306,22 +309,23 @@ def selection_offer(request, offer_id):
     grade = _get_offer_type(request)
     domain = _get_domain(request)
 
-
     return render(request, "offer_selection.html",
-                          {"gradetypes":  mdl.grade_type.find_all(),
-                           "domains":     mdl.domain.find_all(),
-                           "offers":      None,
-                           "offer":       offer_year,
-                           "offer_type":  grade,
-                           "domain":      domain})
+                          {"gradetypes":         mdl.grade_type.find_all(),
+                           "domains":            mdl.domain.find_all(),
+                           "offers":             None,
+                           "offer":              offer_year,
+                           "offer_type":         grade,
+                           "domain":             domain,
+                           "tab_demande_active": 0})
 
 
 def application_update(request, application_id):
     application = mdl.application.find_by_id(application_id)
     return render(request, "offer_selection.html",
-                          {"offers":      None,
-                           "offer":       application.offer_year,
-                           "application": application})
+                          {"offers":             None,
+                           "offer":              application.offer_year,
+                           "application":        application,
+                           "tab_demande_active": 0})
 
 
 def osis_login(request, *args, **kwargs):

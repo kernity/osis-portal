@@ -1047,3 +1047,17 @@ msgstr "Encode a new application demand"
 msgid "tab_diplomas"
 msgstr "Diplomas and certificates"
 
+msgid "profile"
+msgstr "Profile"
+
+msgid "demandes"
+msgstr "Demandes"
+
+msgid "accounting"
+msgstr "Accounting"
+
+msgid "sociological_survey"
+msgstr "Sociological survey"
+
+msgid "demande"
+msgstr "Demande"

@@ -37,30 +37,25 @@
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
     <link rel="icon" href="{% static 'img/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/custom.css' %}"/>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/custom_creative.css' %}" type="text/css">
+
     {% block style %}
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="background-color:white;">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url 'home' %}" id="lnk_home">
-                    <img src="{% static 'img/logo_institution.jpg' %}" style="margin-top: -10px;"></a>
+                <a class="navbar-brand page-scroll" href="#">
+                  <img src="{% static 'img/logo_ucl.png' %}" style="border: 2px solid #ddd; border-radius: 4px; display: inline-block; float: left;">
+                  <span>&nbsp;&nbsp; Université catholique de Louvain</span>
+                </a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <h2 class="navbar-text" style="padding-top:6px">{% trans 'institution_identification' %}</h2>
                 <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_authenticated %}
                     <li class="dropdown">
@@ -86,19 +81,18 @@
             <div id="message_info" class="alert alert-success">{{message_info}}</div>
         {%endif%}
         {% block content %}
-        ppppppppppp
         {% endblock %}
         <br>
         <br>
     </div>
     <hr>
-
+    {% block footer%}
     <div class="container">
         <p class="navbar-text pull-left"></p>
         <p class="navbar-text pull-right"><span class="glyphicon glyphicon-copyright-mark"></span> 2016 <a
                 href="http://www.uclouvain.be" target="_blank" id="lnk_ucl">Université catholique de Louvain</a></p>
     </div>
-
+    {% endblock %}
     <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/osis-portal.js' %}"></script>

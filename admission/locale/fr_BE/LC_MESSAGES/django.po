@@ -1055,3 +1055,18 @@ msgstr "Introduire une nouvelle demande"
 
 msgid "tab_diplomas"
 msgstr "Diplômes et certificats"
+
+msgid "profile"
+msgstr "Profil"
+
+msgid "demandes"
+msgstr "Demandes"
+
+msgid "accounting"
+msgstr "Comptabilité"
+
+msgid "sociological_survey"
+msgstr "Enquête sociologique"
+
+msgid "demande"
+msgstr "Demande"

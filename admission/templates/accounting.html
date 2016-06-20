@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "demande_layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
 {% load message %}
@@ -26,10 +26,7 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
-{% block content %}
-<br>
-
+{% block demande_tabs %}
 <form method="post" action="{% url 'accounting_update'%}" id="form_accounting">
     {% csrf_token %}
     <input type="hidden"
@@ -45,7 +42,7 @@
     <input type="hidden"
            value="{{application.study_grant}}"
            id="hdn_study_grant"/>
-    <button type="submit" id="bt_save_up" class="btn btn-default"
+    <button type="submit" id="bt_save_up" class="btn btn-primary"
         title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
     {%trans 'save'%}</button>
     <br>

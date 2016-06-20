@@ -71,6 +71,7 @@
                                  name="other_school"
                                  onclick="disabled_field('txt_CESS_other_school_name',this);disabled_field('txt_CESS_other_school_city',this);disabled_field('txt_CESS_other_school_postal_code',this);
                                           reset_select('slt_cities');reset_select('slt_postal_codes');reset_select('slt_schools');
+                                          disabled_field_specify('slt_cities',this.checked);disabled_field_specify('slt_postal_codes',this.checked);disabled_field_specify('slt_schools',this.checked);
                                           reset_input('txt_CESS_other_school_name');reset_input('txt_CESS_other_school_city');reset_input('txt_CESS_other_school_postal_code');"
                                  > {% trans 'other_institution' %}
                         </label>

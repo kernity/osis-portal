@@ -96,30 +96,7 @@ def save(request):
                            "current_academic_year": mdl.academic_year.current_academic_year(),
                            "tab_active": 2})
 
-    # Get the data in bd
-    a_person = mdl.person.find_by_user(request.user)
-    first_academic_year_for_cv = None
-    curricula = []
-    # find existing cv
-    secondary_education = mdl.secondary_education.find_by_person(a_person)
-    if secondary_education:
-        if secondary_education.academic_year:
-            first_academic_year_for_cv = secondary_education.academic_year.year + 1
-
-    current_academic_year = mdl.academic_year.current_academic_year().year
-
-    year = first_academic_year_for_cv
-
-    while year < current_academic_year:
-        academic_year = mdl.academic_year.find_by_year(year)
-        curriculum = mdl.curriculum.find_by_academic_year(academic_year)
-        if curriculum is None:
-            # add cv empty cv's for the year if it's needed
-            curriculum = mdl.curriculum.Curriculum()
-            curriculum.person = a_person
-            curriculum.academic_year = academic_year
-        curricula.append(curriculum)
-        year = year + 1
+    curricula = find_curricula(request)
 
     return render(request, "home.html", {"curricula": curricula,
                                          "local_universities_french": local_universities_french,
@@ -138,40 +115,9 @@ def save(request):
 
 
 def update(request):
-    curricula = []
     message = None
-    a_person = mdl.person.find_by_user(request.user)
-    secondary_education = mdl.secondary_education.find_by_person(a_person)
-    current_academic_year = mdl.academic_year.current_academic_year().year
-    admission = is_admission(a_person, secondary_education)
-    year_secondary = None
-    year = current_academic_year - 5
-    if secondary_education is None:
-        applications = mdl.application.find_by_user(request.user)
-        return render(request, "home.html",
-                      {'applications': applications, 'message_warning': _('msg_warning_curriculum'), 'tab_active': 2})
-    if secondary_education and secondary_education.secondary_education_diploma is True:
-        year_secondary = secondary_education.academic_year.year
+    curricula = find_curricula(request)
 
-    if admission:
-        if secondary_education and secondary_education.secondary_education_diploma is True:
-            year = secondary_education.academic_year.year + 1
-
-    if year_secondary and year < year_secondary:
-        year = year_secondary + 1
-
-    while year < current_academic_year:
-        academic_year = mdl.academic_year.find_by_year(year)
-        if academic_year:
-            # find existing cv
-            curriculum = mdl.curriculum.find_by_academic_year(academic_year)
-            if curriculum is None:
-                # add cv empty cv's for the year if it's needed
-                curriculum = mdl.curriculum.Curriculum()
-                curriculum.person = a_person
-                curriculum.academic_year = academic_year
-            curricula.append(curriculum)
-        year = year + 1
     local_universities_french = mdl_reference.education_institution \
         .find_by_institution_type_national_community('UNIVERSITY', 'FRENCH', False)
 
@@ -798,3 +744,41 @@ def data_dictionnary_building(request, curriculum_year):
                  'activity_type': request.POST.get('activity_type_%s' % curriculum_year),
                  'activity_place': request.POST.get('activity_place_%s' % curriculum_year)}
     return data_dict
+
+
+def find_curricula(request):
+    curricula = []
+    a_person = mdl.person.find_by_user(request.user)
+    secondary_education = mdl.secondary_education.find_by_person(a_person)
+    current_academic_year = mdl.academic_year.current_academic_year().year
+
+    admission = is_admission(a_person, secondary_education)
+    year_secondary = None
+    year = current_academic_year - 5
+    if secondary_education is None:
+        applications = mdl.application.find_by_user(request.user)
+        return render(request, "home.html",
+                      {'applications': applications, 'message_warning': _('msg_warning_curriculum'), 'tab_active': 2})
+    if secondary_education and secondary_education.secondary_education_diploma is True:
+        year_secondary = secondary_education.academic_year.year
+
+    if admission:
+        if secondary_education and secondary_education.secondary_education_diploma is True:
+            year = secondary_education.academic_year.year + 1
+
+    if year_secondary and year < year_secondary:
+        year = year_secondary + 1
+
+    while year < current_academic_year:
+        academic_year = mdl.academic_year.find_by_year(year)
+        if academic_year:
+            # find existing cv
+            curriculum = mdl.curriculum.find_by_academic_year(academic_year)
+            if curriculum is None:
+                # add cv empty cv's for the year if it's needed
+                curriculum = mdl.curriculum.Curriculum()
+                curriculum.person = a_person
+                curriculum.academic_year = academic_year
+            curricula.append(curriculum)
+        year = year + 1
+    return curricula

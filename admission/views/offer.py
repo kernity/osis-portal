@@ -40,7 +40,7 @@ class JSONResponse(HttpResponse):
 class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = mdl.offer_year.OfferYear
-        fields = ('id', 'acronym','title', 'title_international','grade_type','subject_to_quota')
+        fields = ('id', 'acronym', 'title', 'title_international', 'grade_type', 'subject_to_quota')
 
 
 def search(request):
@@ -62,18 +62,19 @@ def offer_selection(request):
     offers = None
     application = mdl.application.find_by_user(request.user)
     grade_choices = mdl.grade_type.GRADE_CHOICES
-    return render(request, "home.html",
-                          {"gradetypes":  mdl.grade_type.find_all(),
-                           "domains":     mdl.domain.find_all_domains(),
-                           "offers":      offers,
-                           "offer":       None,
-                           "application": application,
-                           "grade_choices": grade_choices,
-                           'tab_active': 31})
+    return render(request, "offer_selection.html",
+                  {"gradetypes":  mdl.grade_type.find_all(),
+                   "domains":     mdl.domain.find_all_domains(),
+                   "offers":      offers,
+                   "offer":       None,
+                   "application": application,
+                   "grade_choices": grade_choices,
+                   'tab_active': 31,
+                   "tab_demande_active": 0})
 
 
 def _get_offer_type(request):
-    offer_type=None
+    offer_type = None
 
     if request.POST.get('bachelor_type'):
         offer_type = request.POST['bachelor_type']
@@ -100,9 +101,10 @@ def selection_offer(request, offer_id):
     domain = _get_domain(request)
 
     return render(request, "offer_selection.html",
-                           {"gradetypes":  mdl.grade_type.find_all(),
-                            "domains":     mdl.domain.find_all_domains(),
-                            "offers":      None,
-                            "offer":       offer_year,
-                            "offer_type":  grade,
-                            "domain":      domain})
+                           {"gradetypes":         mdl.grade_type.find_all(),
+                            "domains":            mdl.domain.find_all_domains(),
+                            "offers":             None,
+                            "offer":              offer_year,
+                            "offer_type":         grade,
+                            "domain":             domain,
+                            "tab_demande_active": 0})

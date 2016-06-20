@@ -1,5 +1,4 @@
 $("#slt_offer_type").change(function() {
-
     init_static_questions();
     $("#pnl_grade_choices").find("label")
         .remove()
@@ -13,6 +12,7 @@ $("#slt_offer_type").change(function() {
     document.getElementById("txt_offer_year_id").value = "";
 
     document.getElementById("bt_save").disabled = true;
+    document.getElementById("bt_save_up").disabled = true;
     var i=0;
     $.ajax({
         url: "/admission/levels?type=" + $("#slt_offer_type").val()
@@ -71,6 +71,7 @@ function offer_selection_display(){
     document.getElementById("txt_offer_year_id").value = "";
 
     document.getElementById("bt_save").disabled = true;
+    document.getElementById("bt_save_up").disabled = true;
 
     var i=0;
     $.ajax({
@@ -112,17 +113,20 @@ function selection(row_number, offers_length, offer_year_id){
     document.getElementById(elt).style.color = "green";
     document.getElementById("txt_offer_year_id").value = offer_year_id;
     document.getElementById("bt_save").disabled = false;
+    document.getElementById("bt_save_up").disabled = false;
 
 
     if(already_selected == true){
         document.getElementById(elt).style.color = "black";
         document.getElementById("txt_offer_year_id").value = "";
         document.getElementById("bt_save").disabled = true;
+        document.getElementById("bt_save_up").disabled = true;
     }else{
 
         document.getElementById(elt).style.color = "green";
         document.getElementById("txt_offer_year_id").value = offer_year_id;
         document.getElementById("bt_save").disabled = false;
+        document.getElementById("bt_save_up").disabled = false;
         document.getElementById("offer_sel_" + row_number).checked = true;
     }
     set_pnl_questions_empty();

@@ -44,9 +44,10 @@ def applications(request):
 def application_update(request, application_id):
     application = mdl.application.find_by_id(application_id)
     return render(request, "offer_selection.html",
-                           {"offers":      None,
-                            "offer":       application.offer_year,
-                            "application": application})
+                           {"offers":             None,
+                            "offer":              application.offer_year,
+                            "application":        application,
+                            "tab_demande_active": 0})
 
 
 def profile_confirmed(request):
@@ -149,7 +150,7 @@ def save_application_offer(request):
                         answer.value = option.value
                         answer.save()
 
-        return HttpResponseRedirect(reverse('curriculum_update'))
+        return HttpResponseRedirect(reverse('home'))
 
 
 def application_view(request, application_id):
