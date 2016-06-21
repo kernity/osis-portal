@@ -56,6 +56,46 @@ def profile_confirmed(request):
 
 def save_application_offer(request):
     if request.method == 'POST' and 'save' in request.POST:
+        applications = mdl.application.find_by_user(request.user)
+
+        if applications is None or len(applications) == 0:
+            # First demande perharps somme data to save
+            person = mdl.person.find_by_user(request.user)
+            if person is None:
+                person = mdl.person.Person()
+            if request.POST.get('nationality_first'):
+                country_id = request.POST['nationality_first']
+                country = mdl_reference.country.find_by_id(int(country_id))
+                person.nationality = country
+                person.birth_country = country
+            else:
+                person.nationality = None
+            person.save()
+            person_legal_address = mdl.person_address.find_by_person_type(person, 'LEGAL')
+
+            if person_legal_address is None:
+                person_legal_address = mdl.person_address.PersonAddress()
+                person_legal_address.person = person
+                person_legal_address.type = 'LEGAL'
+            if request.POST.get('legal_adr_country'):
+                country_id = request.POST['legal_adr_country']
+                country = mdl_reference.country.find_by_id(int(country_id))
+                person_legal_address.country = country
+            else:
+                person_legal_address.country = None
+            person_legal_address.save()
+            if request.POST.get('rdb_belgian_foreign'):
+                secondary_education = mdl.secondary_education.find_by_person(person)
+                if secondary_education is None:
+                    secondary_education = mdl.secondary_education.SecondaryEducation()
+                    secondary_education.person = person
+                    if request.POST.get('rdb_belgian_foreign') == 'true':
+                        secondary_education.national = True
+                    else:
+                        secondary_education.national = False
+                secondary_education.save()
+
+        #
         offer_year = None
         offer_year_id = request.POST.get('offer_year_id')
 
@@ -149,8 +189,10 @@ def save_application_offer(request):
                         answer.option = option
                         answer.value = option.value
                         answer.save()
-
         return HttpResponseRedirect(reverse('home'))
+        # print(application.id)
+        # return HttpResponseRedirect(reverse('demande_update'), kwargs={'application_id': application.id})
+        # return HttpResponseRedirect(reverse('demande_update'), args=(application.id))
 
 
 def application_view(request, application_id):
@@ -159,3 +201,13 @@ def application_view(request, application_id):
     return render(request, "application.html",
                            {"application": application,
                             "answers": answers})
+
+
+def application_delete(request, application_id):
+    application = mdl.application.find_by_id(application_id)
+    application.delete()
+    return HttpResponseRedirect(reverse('home'))
+
+
+def submission(request):
+    return HttpResponseRedirect(reverse('home'))

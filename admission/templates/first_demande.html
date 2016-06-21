@@ -1,0 +1,90 @@
+
+{% extends "layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block content %}
+<form method="post" action="{% url 'save_offer_selection' %}" id="form_first_questions">
+    {% csrf_token %}
+    <label>{%trans 'nationality'%} *</label>
+    <select class="form-control" id="slt_nationality_first" name="nationality_first">
+        {% for country in countries%}
+        <option value="{{country.id}}">
+                {{ country.name }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+    <label>{% trans 'residence_country'%} *</label>
+    <select class="form-control" id="slt_legal_adr_country" name="legal_adr_country">
+        {% for country in countries%}
+        <option value="{{country.id}}">
+                {{ country }}
+        </option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <label>{% trans 'question_get_diploma'%} *</label>
+    <br><br>
+    <span >{% trans 'label_secondary_education' %}</span>
+    <br><br>
+    <label class="radio-inline">
+      <input type="radio"
+             name="secondary_education_diploma"
+             id="rdb_secondary_education_diploma_true"
+             value="true"
+             onclick="$('#rdb_belgium').prop('disabled', false);$('#rdb_foreign').prop('disabled', false);$('#pnl_belgian_foreign').css('visibility', 'visible');$('#pnl_belgian_foreign').css('display', 'block');$('#rdb_belgium').attr('required', 'required');$('#rdb_foreign').attr('required', 'required');" required> {% trans 'yes'%}
+    </label>
+    <label class="radio-inline">
+      <input type="radio"
+             name="secondary_education_diploma"
+             id="rdb_secondary_education_diploma_false" value="false"
+             onclick="$('#rdb_belgium').prop('disabled', true);$('#rdb_foreign').prop('disabled', true);$('#pnl_belgian_foreign').css('visibility', 'hidden');$('#pnl_belgian_foreign').css('display', 'none');$('#rdb_belgium').removeAttr('required');$('#rdb_foreign').removeAttr('required');"> {% trans 'no'%}
+    </label>
+    <br><br>
+    <div class="form-group" id="pnl_belgian_foreign" style="visibility:hidden;display:none;">
+        <label>
+          {% trans 'pnl_academic_year_secondary_education'%} *
+        </label>
+        <label class="radio-inline">
+          <input type="radio"
+                 name="rdb_belgian_foreign" id="rdb_belgium"
+                 value="true"
+                 > {% trans 'in_belgium'%}
+        </label>
+        <label class="radio-inline">
+          <input type="radio"
+                 name="rdb_belgian_foreign" id="rdb_foreign"
+                 value="false"
+                 > {% trans 'not_in_belgium'%}
+        </label>
+    </div>
+    {% include "demande_offer.html" %}
+</form>
+{% endblock%}
+

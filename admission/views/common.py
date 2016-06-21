@@ -39,15 +39,32 @@ from django.core.urlresolvers import reverse
 def home(request):
     person = mdl.person.find_by_user(request.user)
 
-    if person and person.gender:
-        if person.language:
-            user_language = person.language
-            translation.activate(user_language)
-            request.session[translation.LANGUAGE_SESSION_KEY] = user_language
-        applications = mdl.application.find_by_user(request.user)
+    if person.language:
+        user_language = person.language
+        translation.activate(user_language)
+        request.session[translation.LANGUAGE_SESSION_KEY] = user_language
+    applications = mdl.application.find_by_user(request.user)
+
+    secondary_education = None
+    person_legal_adress = None
+    if person:
+        secondary_education = mdl.secondary_education.find_by_person(person)
+        person_legal_adress = mdl.person_address.find_by_person_type(person, 'LEGAL')
+
+    min_info_filled_out = False
+    if person.nationality or secondary_education or person_legal_adress:
+        min_info_filled_out = True
+
+    if applications or min_info_filled_out:
         return render(request, "home.html", {'applications': applications, 'tab_active': 3})
     else:
-        return profile(request)
+        grade_choices = mdl.grade_type.GRADE_CHOICES
+        countries = mdl_ref.country.find_all()
+        return render(request, "first_demande.html",
+                      {'grade_choices': grade_choices,
+                       'domains':       mdl.domain.find_all_domains(),
+                       'countries':     countries})
+
 
 
 def profile(request, message_success=None):

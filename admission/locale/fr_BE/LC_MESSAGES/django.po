@@ -1070,3 +1070,18 @@ msgstr "Enquête sociologique"
 
 msgid "demande"
 msgstr "Demande"
+
+msgid "submission"
+msgstr "Soumission"
+
+msgid "reference_number"
+msgstr "Numéro de dossier"
+
+msgid "creation"
+msgstr "Création"
+
+msgid "requested_study"
+msgstr "Etude demandée"
+
+msgid "residence_country"
+msgstr "Pays de résidence"

@@ -1061,3 +1061,18 @@ msgstr "Sociological survey"
 
 msgid "demande"
 msgstr "Demande"
+
+msgid "submission"
+msgstr "Submission"
+
+msgid "reference_number"
+msgstr "Reference number"
+
+msgid "creation"
+msgstr "Creation"
+
+msgid "requested_study"
+msgstr "Requested study"
+
+msgid "residence_country"
+msgstr "Residence country"

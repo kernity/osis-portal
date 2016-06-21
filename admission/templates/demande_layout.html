@@ -43,7 +43,16 @@
             {%else%}
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
             {%endif%}
-            &nbsp;&nbsp;{%trans 'accounting'%}</a></li>
+            &nbsp;&nbsp;{%trans 'accounting'%}</a>
+        </li>
+        <li class="{%if tab_demande_active == 2 %}active{%endif%}"><a href="{% url 'submission'%}" id="lnk_demande_submission_tab">
+            {%if validated_submission%}
+                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
+            {%else%}
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
+            {%endif%}
+            &nbsp;&nbsp;{%trans 'submission'%}</a>
+        </li>
     </ul>
     </div>
     <div class="col-md-10">

@@ -43,11 +43,14 @@ urlpatterns = [
     url(r'^admission/user/new/confirm/([0-9]+)/$', identification.account_confirm, name="account_confirm"),
     url(r'^admission/new_password/info/$', identification.new_password_info, name='new_password_info'),
     url(r'^admission/application/([0-9]+)/$', application.application_update, name='application_update'),
+    url(r'^admission/application/delete/([0-9]+)/$', application.application_delete, name='application_delete'),
     url(r'^admission/application/diploma/save/$', secondary_education.diploma_save, name='diploma'),
     url(r'^admission/curriculum/save/$', curriculum.save, name='curriculum'),
     url(r'^curriculum/update/$', curriculum.update, name='curriculum_update'),
     url(r'^diploma/update/$', secondary_education.diploma_update, name='diploma_update'),
     url(r'^admission/offer/$', offer.offer_selection, name='offer_selection'),
+    url(r'^admission/demande/([0-9]+)/$', offer.demande_update, name='demande_update'),
+
     url(r'^admission/offer/save/$', application.save_application_offer, name='save_offer_selection'),
     url(r'^admission/offer/application/([0-9]+)/$', offer.selection_offer, name='selection_offer'),
     url(r'^admission/application/read/([0-9]+)/$', application.application_view, name='application_view'),
@@ -88,6 +91,8 @@ urlpatterns = [
 
     url(r'^admission/application/accounting/$', accounting.accounting, name='accounting'),
     url(r'^admission/application/accounting/update/$', accounting.accounting_update, name='accounting_update'),
+    url(r'^admission/application/submission/$', application.submission, name='submission'),
+
 
 
 ]

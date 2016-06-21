@@ -73,6 +73,21 @@ def offer_selection(request):
                    "tab_demande_active": 0})
 
 
+def demande_update(request, application_id=None):
+    offers = None
+    application = mdl.application.find_by_id(application_id)
+    grade_choices = mdl.grade_type.GRADE_CHOICES
+    return render(request, "offer_selection.html",
+                  {"gradetypes":  mdl.grade_type.find_all(),
+                   "domains":     mdl.domain.find_all_domains(),
+                   "offers":      offers,
+                   "offer":       None,
+                   "application": application,
+                   "grade_choices": grade_choices,
+                   'tab_active': 31,
+                   "tab_demande_active": 0})
+
+
 def _get_offer_type(request):
     offer_type = None
 
