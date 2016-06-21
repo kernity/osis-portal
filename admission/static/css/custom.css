@@ -11,11 +11,8 @@ body {
   font-weight: normal;
 }
 
-.navbar-nav > li > a {
-    padding-top:45px !important;
-    padding-bottom:5px !important;
-}
-
-.navbar {
-    min-height:85px !important
+.navbar-default .navbar-header .navbar-brand {
+  color: #00338C;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
 }
