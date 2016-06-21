@@ -102,17 +102,10 @@
         </div>
     </header>
 
-    <section class="" id="about">
+    <section id="about">
         <div class="container">
-            <div class="row">
-                {% trans 'welcome' %}
-            </div>
-            <br>
-            <div class="row">
-                {% trans 'account_needed'%}
-            </div>
-            <br>
-
+            <p>{% trans 'welcome' %}</p>
+            <p>{% trans 'account_needed'%}</p>
             <div class="row">
                 <div class="col-md-6">
                     <div class="panel panel-default">
@@ -143,7 +136,7 @@
                                 <div class="row">
                                      <input type="hidden" name="next" value="{{ next }}" />
                                      <label>&nbsp;</label>
-                                     <button type="submit" id="post_login_btn" class="btn btn-primary" role="button"
+                                     <button type="submit" id="post_login_btn" class="btn btn-default" role="button"
                                             title="{% trans 'validate'%}">
                                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  {% trans 'validate'%}
                                      </button>
@@ -255,7 +248,7 @@
                             <br>
                             <div class="row">
                                 <label>&nbsp;</label>
-                                <button type="submit" id="bt_submit_user_create" class="btn btn-primary" role="button"
+                                <button type="submit" id="bt_submit_user_create" class="btn btn-default" role="button"
                                         title="{% trans 'help_new_account'%}">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>  {% trans 'validate'%}
                                 </button>

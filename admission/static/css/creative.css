@@ -10,7 +10,7 @@ body {
   width: 100%;
 }
 body {
-  font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 hr {
   border-color: #f05f40;
@@ -24,7 +24,6 @@ a {
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
   transition: all 0.35s;
-  color: #f05f40;
 }
 a:hover,
 a:focus {
@@ -74,7 +73,6 @@ aside {
   color: #f05f40;
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
-  text-transform: uppercase;
 }
 .navbar-default .navbar-header .navbar-brand:hover,
 .navbar-default .navbar-header .navbar-brand:focus {
@@ -280,7 +278,7 @@ header .header-content .header-content-inner p {
 }
 .btn-default {
   color: #222222;
-  background-color: #ffffff;
+  background-color: #f2f2f2;
   border-color: #ffffff;
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
@@ -293,7 +291,7 @@ header .header-content .header-content-inner p {
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #222222;
-  background-color: #f2f2f2;
+  background-color: #c2c2c2;
   border-color: #ededed;
 }
 .btn-default:active,
