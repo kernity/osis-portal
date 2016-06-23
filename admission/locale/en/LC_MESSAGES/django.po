@@ -1115,3 +1115,6 @@ msgstr "Study"
 
 msgid "professional_activity"
 msgstr "Professional activity"
+
+msgid "attachments"
+msgstr "Attachments"

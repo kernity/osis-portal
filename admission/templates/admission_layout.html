@@ -81,6 +81,11 @@
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
                 &nbsp;&nbsp;{%trans 'sociological_survey'%}</a>
         </li>
+        <li class="{%if tab_active == 5 %}active{%endif%}">
+            <a href="{% url 'attachments' %}" id="lnk_attachments_tab">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
+                &nbsp;&nbsp;{%trans 'attachments'%}</a>
+        </li>
     </ul>
     <br>
     <div class="panel panel-default">
