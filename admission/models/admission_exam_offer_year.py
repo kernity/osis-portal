@@ -23,11 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from reference.models import *
+from django.db import models
 from django.contrib import admin
+from admission.models import offer_year_calendar
 
-admin.site.register(country.Country, country.CountryAdmin)
-admin.site.register(language.Language, language.LanguageAdmin)
-admin.site.register(education_institution.EducationInstitution, education_institution.EducationInstitutionAdmin)
-admin.site.register(education_type.EducationType,education_type.EducationTypeAdmin)
 
+class AdmissionExamOfferYearAdmin(admin.ModelAdmin):
+    list_display = ('offer_year','admission_exam_type')
+    fieldsets = ((None, {'fields': ('offer_year','admission_exam_type')}),)
+
+
+class AdmissionExamOfferYear(models.Model):
+    offer_year  = models.ForeignKey('OfferYear')
+    admission_exam_type = models.ForeignKey('AdmissionExamType')

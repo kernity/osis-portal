@@ -75,7 +75,7 @@ class SecondaryEducation(models.Model):
     admission_exam = models.NullBooleanField(default=False)
     admission_exam_date = models.DateField(blank=True, null=True)
     admission_exam_institution = models.CharField(max_length=100, blank=True, null=True)
-    admission_exam_type = models.ForeignKey('reference.AdmissionExamType', blank=True, null=True)
+    admission_exam_type = models.ForeignKey('admission.AdmissionExamType', blank=True, null=True)
     admission_exam_result = models.CharField(max_length=20, choices=RESULT_TYPE, blank=True, null=True)
     professional_exam = models.NullBooleanField(default=False)
     professional_exam_date = models.DateField(blank=True, null=True)

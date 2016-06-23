@@ -72,6 +72,11 @@ admin.site.register(person_assimilation_criteria.PersonAssimilationCriteria,
 admin.site.register(properties.Properties,
                     properties.PropertiesAdmin)
 
+
+admin.site.register(admission_exam_type.AdmissionExamType, admission_exam_type.AdmissionExamTypeAdmin)
+
+admin.site.register(admission_exam_offer_year.AdmissionExamOfferYear, admission_exam_offer_year.AdmissionExamOfferYearAdmin)
+
 admin.site.register(secondary_education.SecondaryEducation,
                     secondary_education.SecondaryEducationAdmin)
 

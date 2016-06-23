@@ -24,6 +24,8 @@
 #
 ##############################################################################
 from admission.models import academic_year
+from admission.models import admission_exam_offer_year
+from admission.models import admission_exam_type
 from admission.models import answer
 from admission.models import application
 from admission.models import assimilation_criteria

@@ -103,18 +103,23 @@
   {"model": "admission.domain", "pk": 24, "fields": {"name" :"Théâtre et arts de la parole" }},
   {"model": "admission.domain", "pk": 25,"fields": { "name" :"Théologie" }},
 
-  {"model": "admission.offeryear", "fields": {"acronym" :"VETE11BA","title" : "Première année de bachelier en médecine vétérinaire", "title_international" : "","academic_year" : 1, "domain" : 1 ,"grade_type" : 1 }},
-  {"model": "admission.offeryear", "fields": {"acronym" :"FSA11BA","title" : "Première année de bachelier en sciences de l'ingénieur, orientation ingénieur civil", "title_international" : "","academic_year" : 1 , "domain" : 1 ,"grade_type" : 1}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"SINF11BA","title" : "Première année de bachelier en sciences informatiques", "title_international" : "","academic_year" : 1 , "domain" : 1 ,"grade_type" : 1}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"CRIM2MS","title" : "Master [120] en criminologie, à finalité spécialisée", "title_international" : "Master [120] in Criminology, Professional Focus","academic_year" : 1, "domain" : 1  ,"grade_type" : 3}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"FOPA2MS","title" : "Master [120] en sciences de l'éducation, à finalité spécialisée (horaire décalé)", "title_international" : "Master [120] in Education, Professional Focus (shift schedule)","academic_year" : 1 , "domain" : 2 ,"grade_type" : 3}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"MSP9CE","title" : "Certificat universitaire de formation médicale spécialisée partielle", "title_international" : "","academic_year" : 1, "domain" : 2,"grade_type" : 9}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"CARD2MC","title" : "Master de spécialisation en cardiologie", "title_international" : "Advanced Master in Cardiology","academic_year" : 1 , "domain" : 3,"grade_type" : 5}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"DERM2MC","title" : "Master de spécialisation en dermato-vénéréologie", "title_international" : "Advanced Master in Dermatology-Venereology","academic_year" : 1 , "domain" : 3,"grade_type" : 5}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"ORTO2MC","title" : "Master de spécialisation en chirurgie orthopédique", "title_international" : "Advanced Master in Orthopaedic Surgery","academic_year" : 1, "domain" : 4,"grade_type" : 5}},
-  {"model": "admission.offeryear", "fields": {"acronym" :"PHYS11BA","title" : "Première année de bachelier en sciences physiques", "title_international" : "","academic_year" : 1, "domain" : 5,"grade_type" : 1}},
+  {"model": "admission.admissionexamtype", "pk":1, "fields": {"name" :"Examen d'admission aux études universitaires de 1er cycle" ,"adhoc" : "False" }},
+  {"model": "admission.admissionexamtype", "pk":2,"fields": {"name" :"Examen de maturité(ou d'aptitude) de la Communauté française de Belgique" ,"adhoc" : "False" }},
+  {"model": "admission.admissionexamtype", "pk":3,"fields": {"name" :"Examen spécial d'admission aux études universitaires de 1er cycle de l'ingénieur (ingénieur civil)" ,"adhoc" : "False" }},
 
+  {"model": "admission.offeryear", "pk":1, "fields": {"acronym" :"VETE11BA","title" : "Première année de bachelier en médecine vétérinaire", "title_international" : "","academic_year" : 1, "domain" : 1 ,"grade_type" : 1 }},
+  {"model": "admission.offeryear", "pk":2, "fields": {"acronym" :"FSA11BA","title" : "Première année de bachelier en sciences de l'ingénieur, orientation ingénieur civil", "title_international" : "","academic_year" : 1 , "domain" : 1 ,"grade_type" : 1}},
+  {"model": "admission.offeryear", "pk":3, "fields": {"acronym" :"SINF11BA","title" : "Première année de bachelier en sciences informatiques", "title_international" : "","academic_year" : 1 , "domain" : 1 ,"grade_type" : 1}},
+  {"model": "admission.offeryear", "pk":4, "fields": {"acronym" :"CRIM2MS","title" : "Master [120] en criminologie, à finalité spécialisée", "title_international" : "Master [120] in Criminology, Professional Focus","academic_year" : 1, "domain" : 1  ,"grade_type" : 3}},
+  {"model": "admission.offeryear", "pk":5, "fields": {"acronym" :"FOPA2MS","title" : "Master [120] en sciences de l'éducation, à finalité spécialisée (horaire décalé)", "title_international" : "Master [120] in Education, Professional Focus (shift schedule)","academic_year" : 1 , "domain" : 2 ,"grade_type" : 3}},
+  {"model": "admission.offeryear", "pk":6, "fields": {"acronym" :"MSP9CE","title" : "Certificat universitaire de formation médicale spécialisée partielle", "title_international" : "","academic_year" : 1, "domain" : 2,"grade_type" : 9}},
+  {"model": "admission.offeryear", "pk":7, "fields": {"acronym" :"CARD2MC","title" : "Master de spécialisation en cardiologie", "title_international" : "Advanced Master in Cardiology","academic_year" : 1 , "domain" : 3,"grade_type" : 5}},
+  {"model": "admission.offeryear", "pk":8, "fields": {"acronym" :"DERM2MC","title" : "Master de spécialisation en dermato-vénéréologie", "title_international" : "Advanced Master in Dermatology-Venereology","academic_year" : 1 , "domain" : 3,"grade_type" : 5}},
+  {"model": "admission.offeryear", "pk":9, "fields": {"acronym" :"ORTO2MC","title" : "Master de spécialisation en chirurgie orthopédique", "title_international" : "Advanced Master in Orthopaedic Surgery","academic_year" : 1, "domain" : 4,"grade_type" : 5}},
+  {"model": "admission.offeryear", "pk":10, "fields": {"acronym" :"PHYS11BA","title" : "Première année de bachelier en sciences physiques", "title_international" : "","academic_year" : 1, "domain" : 5,"grade_type" : 1}},
+  {"model": "admission.offeryear", "pk":11, "fields": {"acronym" :"FSA1BA","title" : "Bachelier en sciences de l'ingénieur, orientation ingénieur civil ", "title_international" : "","academic_year" : 1, "domain" : 16,"grade_type" : 1}},
 
+  {"model": "admission.admissionexamofferyear", "pk":1, "fields": {"offer_year" :11,"admission_exam_type" :3}},
 
   {"model": "reference.country", "pk":1, "fields": {"name" :"Belgique", "european_union" : "True" ,"iso_code" : "BE", "nationality" : "belge"}},
   {"model": "reference.country", "pk":2, "fields": {"name" :"France" , "european_union" : "True"  ,"iso_code" : "FR", "nationality" : "française"}},
@@ -369,13 +374,6 @@
   {"model": "reference.educationtype", "fields": {"type":"QUALIFICATION","name" :"Artistique de qualification" ,"adhoc" : "False" }},
   {"model": "reference.educationtype", "fields": {"type":"QUALIFICATION","name" :"Enseignement professionnel" ,"adhoc" : "False" }},
   {"model": "reference.educationtype", "fields": {"type":"QUALIFICATION","name" :"Enseignement professionnel+Examen de maturité" ,"adhoc" : "False" }},
-
-
-  {"model": "reference.admissionexamtype", "fields": {"name" :"Examen d'admission aux études universitaires de 1er cycle" ,"adhoc" : "False" }},
-  {"model": "reference.admissionexamtype", "fields": {"name" :"Examen de maturité(ou d'aptitude) de la Communauté française de Belgique" ,"adhoc" : "False" }},
-  {"model": "reference.admissionexamtype", "fields": {"name" :"Examen spécial d'admission aux études universitaires de 1er cycle de l'ingénieur (ingénieur civil)" ,"adhoc" : "False" }},
-
-
 
   {"model": "reference.language", "pk":1, "fields": {"name" :"Français", "code" : "fr", "recognized" : "True"}},
   {"model": "reference.language", "pk":2, "fields": {"name" :"Néerlandais", "code" : "nl", "recognized" : "True"}},
