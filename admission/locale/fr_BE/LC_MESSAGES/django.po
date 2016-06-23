@@ -1085,3 +1085,42 @@ msgstr "Etude demandée"
 
 msgid "residence_country"
 msgstr "Pays de résidence"
+
+msgid "brother_sister_number"
+msgstr "Combien de frères et soeurs?"
+
+msgid "father"
+msgstr "Père"
+
+msgid "mother"
+msgstr "Mère"
+
+msgid "student"
+msgstr "Etudiant"
+
+msgid "conjoint"
+msgstr "Conjoint"
+
+msgid "grandfather_profession"
+msgstr "Grand-père (profession)"
+
+msgid "deceased_female"
+msgstr "Décédé(e)"
+
+msgid "deceased_male"
+msgstr "Décédé"
+
+msgid "paternal"
+msgstr "Paternel"
+
+msgid "maternal"
+msgstr "Maternel"
+
+msgid "profession"
+msgstr "Profession"
+
+msgid "study"
+msgstr "Etude"
+
+msgid "professional_activity"
+msgstr "Activité professionelle"

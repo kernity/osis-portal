@@ -25,7 +25,7 @@
 ##############################################################################
 from django.conf.urls import url
 from admission.views import application, common, identification, offer, level, question, option, country, curriculum, \
-    education_institution, language, domain, secondary_education, accounting
+    education_institution, language, domain, secondary_education, accounting, sociological
 from django.contrib.auth.views import logout
 
 
@@ -91,7 +91,9 @@ urlpatterns = [
 
     url(r'^admission/application/accounting/$', accounting.accounting, name='accounting'),
     url(r'^admission/application/accounting/update/$', accounting.accounting_update, name='accounting_update'),
-    url(r'^admission/application/submission/$', application.submission, name='submission'),
+    url(r'^admission/application/submission/([0-9]+)/$', application.submission, name='submission'),
+    url(r'^sociological/$', sociological.update, name='sociological_survey'),
+
 
 
 

@@ -76,6 +76,11 @@
                 {%endif%}
                 &nbsp;&nbsp;{%trans 'demandes'%}</a>
         </li>
+        <li class="{%if tab_active == 4 %}active{%endif%}">
+            <a href="{% url 'sociological_survey' %}" id="lnk_sociological_tab">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
+                &nbsp;&nbsp;{%trans 'sociological_survey'%}</a>
+        </li>
     </ul>
     <br>
     <div class="panel panel-default">
