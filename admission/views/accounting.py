@@ -38,13 +38,18 @@ from admission.forms import AccountingForm
 from admission.views.common import extra_information
 
 
-def accounting(request):
+def accounting(request, application_id=None):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.Application()
+        person_application = mdl.person.find_by_user(request.user)
+        application.person = person_application
     academic_yr = mdl.academic_year.current_academic_year()
     previous_academic_year = mdl.academic_year.find_by_year(academic_yr.year-1)
     sport_affiliation_amount = 0
     culture_affiliation_amount = 0
     solidary_affiliation_amount = 0
-    application = mdl.application.find_first_by_user(request.user)
 
     return render(request, "accounting.html", {"academic_year": academic_yr,
                                                "previous_academic_year":      previous_academic_year,
@@ -57,7 +62,7 @@ def accounting(request):
                                                "third_cycle":                 third_cycle(application),
                                                "tab_active":                  31,
                                                "tab_demande_active":          1,
-                                               "display_admission_exam": extra_information(request, application)})
+                                               "display_admission_exam":      extra_information(request, application)})
 
 
 def accounting_update(request):
@@ -138,18 +143,24 @@ def debts_check(application):
 
 
 def reduction_possible(application):
-    if application.offer_year.acronym.endswith("1BA") or \
-            application.offer_year.acronym.endswith("2M1") or \
-            application.offer_year.acronym.endswith("2MD") or \
-            application.offer_year.acronym.endswith("2MA") or \
-            application.offer_year.acronym.endswith("2MC") or \
-            application.offer_year.acronym.endswith("3D") or \
-            application.offer_year.acronym.find("2MS/") != -1:
-        return True
+    try:
+        if application.offer_year.acronym.endswith("1BA") or \
+           application.offer_year.acronym.endswith("2M1") or \
+           application.offer_year.acronym.endswith("2MD") or \
+           application.offer_year.acronym.endswith("2MA") or \
+           application.offer_year.acronym.endswith("2MC") or \
+           application.offer_year.acronym.endswith("3D") or \
+           application.offer_year.acronym.find("2MS/") != -1:
+            return True
+    except:  # RelatedObjectDoesNotExist
+        return False
     return False
 
 
 def third_cycle(application):
-    if application.offer_year.acronym.endswith("2MC") or application.offer_year.acronym.endswith("3D"):
-        return True
+    try:
+        if application.offer_year.acronym.endswith("2MC") or application.offer_year.acronym.endswith("3D"):
+            return True
+    except:  # RelatedObjectDoesNotExist
+        return False
     return False

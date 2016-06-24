@@ -29,13 +29,7 @@
 {% block demande_tabs %}
 <form method="post" action="{% url 'save_offer_selection' %}" id="form_questions" name="form_questions">
      {% csrf_token %}
-    <button type="submit" id="bt_save_up" class="btn btn-primary" role="button" name="save"
-            title="{% trans 'save'%}" disabled>
 
-        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> {% trans 'save'%}
-    </button>
-    <br>
-    <br>
     {% include "demande_offer.html" %}
 </form>
 {% endblock %}

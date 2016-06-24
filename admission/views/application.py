@@ -210,9 +210,13 @@ def application_delete(request, application_id):
     return HttpResponseRedirect(reverse('home'))
 
 
-def submission(request, application_id):
-    application = mdl.application.find_by_id(application_id)
+def submission(request, application_id=None):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.init_application(request.user)
     return render(request, "demande_submission.html",
                   {'application':            application,
+                   'tab_demande_active':     1,
                    'tab_demande_active':     2,
                    'display_admission_exam': extra_information(request, application)})

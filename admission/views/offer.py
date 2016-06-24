@@ -64,19 +64,22 @@ def offer_selection(request):
     application = mdl.application.find_by_user(request.user)
     grade_choices = mdl.grade_type.GRADE_CHOICES
     return render(request, "offer_selection.html",
-                  {"gradetypes":  mdl.grade_type.find_all(),
-                   "domains":     mdl.domain.find_all_domains(),
-                   "offers":      offers,
-                   "offer":       None,
-                   "application": application,
-                   "grade_choices": grade_choices,
-                   'tab_active': 31,
+                  {"gradetypes":         mdl.grade_type.find_all(),
+                   "domains":            mdl.domain.find_all_domains(),
+                   "offers":             offers,
+                   "offer":              None,
+                   "application":        application,
+                   "grade_choices":      grade_choices,
+                   'tab_active':         31,
                    "tab_demande_active": 0})
 
 
 def demande_update(request, application_id=None):
     offers = None
-    application = mdl.application.find_by_id(application_id)
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.init_application(request.user)
     grade_choices = mdl.grade_type.GRADE_CHOICES
     return render(request, "offer_selection.html",
                   {"gradetypes":             mdl.grade_type.find_all(),

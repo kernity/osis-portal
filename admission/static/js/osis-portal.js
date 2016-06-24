@@ -9,15 +9,15 @@ $("#slt_offer_type").change(function() {
         .end()
     set_pnl_questions_empty();
     //Cancel the previous selection
-    document.getElementById("txt_offer_year_id").value = "";
+    $('#txt_offer_year_id').val("");
+    $('#bt_save').prop("disabled",true);
+    $('#bt_save_up').prop("disabled",true);
 
-    document.getElementById("bt_save").disabled = true;
-    if (document.getElementById("bt_save_up")){
-        document.getElementById("bt_save_up").disabled = true;
-    }
     var i=0;
+    $('#hdn_application_grade_id').val($("#slt_offer_type").val());
     $.ajax({
-        url: "/admission/levels?type=" + $("#slt_offer_type").val()
+        url: "/admission/levels?type=" + $("#slt_offer_type").val(),
+
       }).then(function(data) {
 
         if(data.length >0){
@@ -45,9 +45,60 @@ $("#slt_offer_type").change(function() {
                                                                   .attr("style","visibility:visible;display:block;"))
                                       .append(value.name));
             }
+
         });
         }
+            //If we already have values saved in database
+                    id_grade_choice = '#grade_choice_' + $('#hdn_application_grade_type_id').val();
+
+                    $(id_grade_choice).prop('checked', true);
+
+                    $('#slt_domain option').each(function(){
+                        if($(this).attr('value')==$('#hdn_application_domain_id').val()){
+                            $(this).prop('selected', true);
+                        }
+                    });
+
+                    if($('#hdn_application_offer_year_id').val()){
+                        var id_offer_radio = '#offer_sel_'+$('#hdn_application_offer_year_id').val();
+
+                        $(id_offer_radio).prop('checked', true);
+
+            var row_number=0;
+            var offers_length=$('#hdn_offers_available').val();
+            var id_to_look_for = 'hdn_offer_year_sel_id_'+ $('#hdn_application_offer_year_id').val() +'_';
+            var row_number = 0;
+            if($('input[id^="' + id_to_look_for +'"]').val()){
+                row_number = ($('input[id^="' + id_to_look_for +'"]').val()).replace(id_to_look_for,'');
+            }
+
+
+                        selection(row_number, offers_length, $('#hdn_application_offer_year_id').val());
+                        if ($('#hdn_belgian_degree').val() == 'True'){
+                            $('#rdb_offer_belgiandegree_true').prop('checked', true);
+                        }else{
+                            $('#rdb_offer_belgiandegree_true').prop('checked', false);
+                        }
+                        if ($('#hdn_started_samestudies').val() == 'True'){
+                            $('#rdb_offer_samestudies_true').prop('checked', true);
+                        }else{
+                            $('#rdb_offer_samestudies_false').prop('checked', false);
+                        }
+                        if ($('#hdn_applied_to_sameprogram').val() == 'True'){
+                            $('#rdb_offer_valuecredits_true').prop('checked', true);
+                        }else{
+                            $('#rdb_offer_valuecredits_false').prop('checked', false);
+                        }
+
+                    }
+                    //end - If we already have values saved in database
+
+
+
+      }).done(function(){
+           //selection(row_number, offers_length, $('#hdn_application_offer_year_id').val());
       });
+
 
 });
 
@@ -84,6 +135,7 @@ function offer_selection_display(){
       }).then(function(data) {
       var table_size=data.length;
       if(data.length >0){
+        $('#hdn_offers_available').val(table_size);
         $('#pnl_grade_choices').append($("<table><tr><td></td></tr></table>"));
         var trHTML = '<table class="table table-striped table-hover">';
         trHTML += '<thead><th colspan=\'3\'><label>Cliquez sur votre choix d\'études</label></th></thead>';
@@ -91,7 +143,8 @@ function offer_selection_display(){
             id_str = "offer_row_" + i;
 
             onclick_str = "onclick=\'selection("+ i +", "+table_size+", " + value.id +")\'"
-            trHTML += "<tr id=\'" +  id_str + "\' "+ onclick_str +"><td><input type=\'radio\' name=\'offer_YearSel\' id=\'offer_sel_"+i+"\'></td><td>"+ value.acronym + "</td><td>" + value.title + "</td></tr>";
+
+            trHTML += "<tr id=\'" +  id_str + "\' "+ onclick_str +"><td><input type=\'hidden\' value=\'"+ i +"\' id=\'hdn_offer_year_sel_id_"+value.id+"_"+i +"\'><input type=\'radio\' name=\'offer_YearSel\' id=\'offer_sel_"+i+"\'></td><td>"+ value.acronym + "</td><td>" + value.title + "</td></tr>";
             i++;
         });
         trHTML += '</table>'
@@ -105,37 +158,38 @@ function selection(row_number, offers_length, offer_year_id){
     var cpt = 0;
     var already_selected =new Boolean(false);
     while (cpt < offers_length ){
-        elt = "offer_row_" + cpt;
-        if (document.getElementById(elt).style.color == "green" && document.getElementById("txt_offer_year_id").value == offer_year_id){
+        elt = "#offer_row_" + cpt;
+        if ($(elt).css('color') == "green" && $("#txt_offer_year_id").val() == offer_year_id){
             already_selected=new Boolean(true);
         }
-        document.getElementById(elt).style.color = "black";
-        document.getElementById("offer_sel_" + row_number).checked = false;
+        $(elt).css('color', 'black');
+        $("#offer_sel_" + row_number).prop('checked' , false);
         cpt++;
     }
-    elt = "offer_row_" + row_number;
-    document.getElementById(elt).style.color = "green";
-    document.getElementById("txt_offer_year_id").value = offer_year_id;
-    document.getElementById("bt_save").disabled = false;
-    if(document.getElementById("bt_save_up")){
-        document.getElementById("bt_save_up").disabled = false;
+
+    elt = "#offer_row_" + row_number;
+    if($(elt)){
+        $(elt).css('color', 'green');
+
     }
+
+    $("#txt_offer_year_id").val(offer_year_id);
+    $('#bt_save').prop( "disabled", false);
+    $('#bt_save_up').prop( "disabled", false);
 
 
     if(already_selected == true){
-        document.getElementById(elt).style.color = "black";
-        document.getElementById("txt_offer_year_id").value = "";
-        document.getElementById("bt_save").disabled = true;
-        document.getElementById("bt_save_up").disabled = true;
+        $(elt).css('color', 'black');
+        $('#txt_offer_year_id').val("");
+        $('#bt_save').prop( "disabled", true);
+        $('#bt_save_up').prop( "disabled", true);
     }else{
+        $(elt).css('color', 'green');
 
-        document.getElementById(elt).style.color = "green";
-        document.getElementById("txt_offer_year_id").value = offer_year_id;
-        document.getElementById("bt_save").disabled = false;
-        if(document.getElementById("bt_save_up")){
-            document.getElementById("bt_save_up").disabled = false;
-        }
-        document.getElementById("offer_sel_" + row_number).checked = true;
+        $('#txt_offer_year_id').val(offer_year_id);
+        $('#bt_save').prop( "disabled", false);
+        $('#bt_save_up').prop( "disabled", false);
+        $('#offer_sel_'+ row_number).prop('checked', true);
     }
     set_pnl_questions_empty();
 
@@ -339,8 +393,6 @@ function selection(row_number, offers_length, offer_year_id){
        }).then(function(data) {
 
         init_static_questions();
-//            alert(data.subject_to_quota);
-//            alert(data.grade_type);
         if (data.subject_to_quota){
             $('#pnl_offer_sameprogram').css('visibility', 'visible').css('display','block');
             $('#pnl_offer_sameprogram').find('input').prop('required', true);
@@ -1482,3 +1534,5 @@ function reset_chb(elt_name){
         }
     }
 }
+
+

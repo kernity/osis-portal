@@ -335,7 +335,7 @@ def diploma_update(request):
     person = mdl.person.find_by_user(request.user)
     other_language_regime = mdl_reference.language.find_languages_by_recognized(False)
     recognized_languages = mdl_reference.language.find_languages_by_recognized(True)
-    exam_types = admission.models.admission_exam_type.find_all_by_adhoc(False)
+    exam_types = mdl.admission_exam_type.find_all_by_adhoc(False)
     secondary_education = mdl.secondary_education.find_by_person(person)
     education_type_transition = mdl_reference.education_type.find_education_type_by_adhoc('TRANSITION', False)
     education_type_qualification = mdl_reference.education_type.find_education_type_by_adhoc('QUALIFICATION', False)
@@ -721,14 +721,21 @@ def populate_secondary_education(request, secondary_education):
     return secondary_education
 
 
-def admission_exam_needed(request):
+def admission_exam_needed(request, application_id=None):
     a_person = mdl.person.find_by_user(request.user)
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.Application()
+        application.person = a_person
+
     secondary_education = mdl.secondary_education.find_by_person(a_person)
     if secondary_education is None:
         secondary_education = mdl.secondary_education.SecondaryEducation()
         secondary_education.person = a_person
 
     return render(request, "extra_diploma.html",
-                           {"secondary_education": secondary_education,
-                            "tab_needed_active": 0,
-                            "display_admission_exam": True})
+                           {"secondary_education":    secondary_education,
+                            "tab_needed_active":      0,
+                            "display_admission_exam": True,
+                            "application": application})

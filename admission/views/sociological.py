@@ -23,10 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.shortcuts import render
+from admission import models as mdl
 from admission.views.common import extra_information
 
 
 def update(request):
     return render(request, "home.html",
-                  {'tab_active': 4,
-                   "display_admission_exam": extra_information(request, application)})
+                  {'tab_active': 4})

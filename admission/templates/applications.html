@@ -45,7 +45,7 @@
         <tr>
             <td></td>
             <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
-            <td><a href="{% url 'demande_update' application.id %}">{{ application.offer_year.title }}</a></td>
+            <td><a href="{% url 'demande_update' application.id %}" title="{{application.offer_year.acronym}}">{{ application.offer_year.title }}</a></td>
             <td><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span></td>
             <td>
                  <a href="{% url 'application_delete' application.id %}" title="{%trans 'delete'%}"

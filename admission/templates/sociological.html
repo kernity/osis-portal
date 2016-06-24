@@ -28,18 +28,17 @@
 {% block content %}
 
 
-<form >
-    <div class="form-group">
-        <label>{% trans 'brother_sister_number'%}</label>
-        <input class="form-control" id="txt_brother_sister" name="brother_sister" maxlength="2">
-    </div>
+<form id="form_sociological_survey">
+    <br>
+    <label>{% trans 'brother_sister_number'%}</label>
+    <input class="form-control" id="txt_brother_sister" name="brother_sister" maxlength="2">
     <br>
     <div class="row">
         <div class="col-md-6">
-             <label><h3>{% trans 'father'%}</h3></label>
+             <label>{% trans 'father'%}</label>
         </div>
         <div class="col-md-6">
-            <label><h3>{% trans 'mother'%}</h3></label>
+            <label>{% trans 'mother'%}</label>
         </div>
     </div>
     <div class="row">
@@ -84,7 +83,7 @@
         </div>
     </div>
     <br>
-    <label><h3>{% trans 'student'%}</h3></label>
+    <label>{% trans 'student'%}</label>
     <br>
     <div class="form-group">
         <label>{% trans 'professional_activity'%} : </label>
@@ -102,8 +101,7 @@
             <option value=""></option>
         </select>
     </div>
-    <br>
-    <label><h3>{% trans 'conjoint'%}</h3></label>
+    <label>{% trans 'conjoint'%}</label>
     <br>
     <div class="form-group">
         <label>{% trans 'professional_activity'%} : </label>
@@ -119,8 +117,7 @@
             <option value=""></option>
         </select>
     </div>
-    <br>
-    <label><h3>Grand-père (profession)</h3></label>
+    <label>Grand-père (profession)</label>
     <br>
     <div class="form-group">
         <label>{% trans 'paternal'%} : </label>

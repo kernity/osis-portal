@@ -38,7 +38,53 @@
         vous rappellent l'état d'avancement de votre demande d'inscription que vous pouvez d'ailleurs arrêter et
         reprendre à tout moment.
     </span>
-    <br><br>
+    <div>
+        <br>
+        <a id="lnk_previous_step"
+           class="btn btn-default"
+           {%if tab_active == 0 %}disabled{%endif%}
+           href="{%if tab_active == 1 %}{% url 'profile'%}{%endif%}
+                 {%if tab_active == 2 %}{% url 'diploma_update'%}{%endif%}
+                 {%if tab_active == 3  or tab_active == 31%}{% url 'curriculum_update'%}{%endif%}
+                 {%if tab_active == 4 %}{% url 'applications'%}{%endif%}
+                 {%if tab_active == 5 %}{% url 'sociological_survey'%}{%endif%}"
+           title="{%if tab_active == 1 %}{% trans 'profile'%}{%endif%}
+                  {%if tab_active == 2 %}{% trans 'diploma'%}{%endif%}
+                  {%if tab_active == 3  or tab_active == 31 %}{% trans 'curriculum'%}{%endif%}
+                  {%if tab_active == 4 %}{% trans 'demandes'%}{%endif%}
+                  {%if tab_active == 5 %}{% trans 'sociological_survey'%}{%endif%}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+            {%trans 'previous_step'%}</a>
+        <a id="lnk_save_up" name="bt_save_up" class="btn btn-primary"
+           onclick="{%if tab_active == 0 %}save('form_profile');{%endif%}
+                    {%if tab_active == 1 %}save('form_secondary_education');{%endif%}
+                    {%if tab_active == 2 %}save('form_curriculum');{%endif%}
+                    {%if tab_active == 3  or tab_active == 31%}save('form_questions');{%endif%}
+                    {%if tab_active == 4 %}save('form_sociological_survey');{%endif%}
+                    {%if tab_active == 5 %}save('form_attachments');{%endif%}"
+           title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            {%trans 'save'%}</a>
+        <a id="lnk_next_step"
+           class="btn btn-default"
+           {%if tab_active == 5 %}disabled{%endif%}
+           href="{%if tab_active == 0 %}{% url 'diploma_update'%}{%endif%}
+                 {%if tab_active == 1 %}{% url 'curriculum_update'%}{%endif%}
+                 {%if tab_active == 2 %}{% url 'applications'%}{%endif%}
+                 {%if tab_active == 3  or tab_active == 31%}{% url 'sociological_survey'%}{%endif%}
+                 {%if tab_active == 4 %}{% url 'attachments'%}{%endif%}"
+           title="{%if tab_active == 0 %}{% trans 'diploma'%}{%endif%}
+                  {%if tab_active == 1 %}{% trans 'curriculum'%}{%endif%}
+                  {%if tab_active == 2 %}{% trans 'demandes'%}{%endif%}
+                  {%if tab_active == 3  or tab_active == 31%}{% trans 'sociological_survey'%}{%endif%}
+                  {%if tab_active == 4 %}{% trans 'attachments'%}{%endif%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+            {%trans 'next_step'%}</a>
+        {%if message_success%}
+            <br>
+            <font class="alert alert-success" role="alert" style="margin-left:5px;">
+                {{message_success}}
+            </font>
+        {% endif %}
+    </div>
+    <br>
     <ul class="nav nav-tabs">
         <li class="{%if tab_active == 0 %}active{%endif%}">
             <a href="{% url 'profile' %}" id="lnk_profile_tab">
@@ -88,9 +134,15 @@
         </li>
     </ul>
     <br>
+    {%if tab_demande_active >= 0 and tab_demande_active < 3 and application.offer_year%}
+        <h4>{{application.offer_year.title}}</h4>
+    {%endif%}
+
     <div class="panel panel-default">
         <div class="panel-body">
+            {%if tab_active != 4 %}
             <h5>{% trans 'mandatory_asterisk'%}</h5>
+            {%endif%}
             {% block admission_tabs %}
             {% endblock %}
         </div>
@@ -115,5 +167,11 @@
             });
         }
     });
+
+    function save(form_to_submit){
+        id = 'form#' + form_to_submit;
+        $(id).submit();
+
+    }
     </script>
 {% endblock %}

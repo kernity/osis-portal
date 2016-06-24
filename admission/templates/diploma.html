@@ -183,17 +183,6 @@
     {% csrf_token %}
     <div>
         <br>
-        <button type="submit" id="bt_previous_step_up" name="bt_previous_step_up" class="btn btn-default" role="button"
-                title="{%trans 'previous_step' %}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-            {%trans 'previous_step'%}</button>
-        <button type="submit" id="bt_save_up" name="bt_save_up" class="btn btn-primary" role="button"
-                title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-            {%trans 'save'%}</button>
-        <button type="submit" id="bt_next_step_up" name="bt_next_step_up" class="btn btn-default" role="button"
-                title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            {%trans 'next_step'%}</button>
-        <br>
-        <br>
         {%if validation_messages%}
             <br>
             <font class="error" role="alert" style="margin-left:5px;">
@@ -304,23 +293,6 @@
         </font>
         <br><br>
     {% endif %}
-    <br>
-    <div>
-        <button type="submit" id="bt_previous_step_down" class="btn btn-default" role="button"
-                title="{%trans 'previous_step'%}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-            {%trans 'previous_step'%}</button>
-        <button type="submit" id="bt_save_down" name="bt_save_down" class="btn btn-primary" role="button"
-                title="{%trans 'save'%}"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-            {%trans 'save'%}</button>
-        <button type="submit" id="bt_next_step_down" name="bt_next_step_down" class="btn btn-default" role="button"
-                title="{%trans 'next_step'%}"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            {%trans 'next_step'%}</button>
-        {%if message_success%}
-            <br><br>
-            <font class="alert alert-success" role="alert" style="margin-left:5px;">{{ message_success}}</font>
-            <br><br>
-        {% endif %}
-    </div>
 </form>
 
 

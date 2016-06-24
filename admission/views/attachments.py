@@ -23,18 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
-from admission.forms import NewAccountForm, AccountForm, NewPasswordForm
-from admission.utils import send_mail
-from random import randint
+from django.shortcuts import render
 from admission import models as mdl
-
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import login
-from admission.forms import AccountingForm
 
 
 def update(request):
