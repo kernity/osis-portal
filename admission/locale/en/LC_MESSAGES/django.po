@@ -1124,3 +1124,15 @@ msgstr "Further information required"
 
 msgid "for_curriculum"
 msgstr "For curriculum"
+
+msgid "to_submit"
+msgstr "To submit"
+
+msgid "submitted"
+msgstr "Submitted"
+
+msgid "canceled"
+msgstr "Canceled"
+
+msgid "confirmed"
+msgstr "Confirmed"

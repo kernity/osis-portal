@@ -46,16 +46,31 @@
             <td></td>
             <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
             <td><a href="{% url 'demande_update' application.id %}" title="{{application.offer_year.acronym}}">{{ application.offer_year.title }}</a></td>
-            <td><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span></td>
+            <td>
+                {% if application.application_status == 'TO_SUBMIT'%}
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;" title="{%trans 'to_submit'%}"></span>
+                {%endif%}
+                {% if application.application_status == 'SUBMITTED'%}
+                    <span class="glyphicon glyphicon-send" aria-hidden="true" style="color:blue;" title="{%trans 'submitted'%}"></span>
+                {%endif%}
+                {% if application.application_status == 'CANCELED'%}
+                    <span class="glyphicon glyphicon-minus" aria-hidden="true" style="color:red;" title="{%trans 'canceled'%}"></span>
+                {%endif%}
+                {% if application.application_status == 'CONFIRMED'%}
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;" title="{%trans 'confirmed'%}"></span>
+                {%endif%}
+            </td>
             <td>
                  <a href="{% url 'application_delete' application.id %}" title="{%trans 'delete'%}"
                    class="btn btn-default" role="button" id="lnk_application_delete">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </a>
-               <a href="#" title="{%trans 'cancel'%}"
-                   class="btn btn-default" role="button" id="lnk_application_cancel">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </a>
+               {% if application.application_status == 'SUBMITTED'%}
+                   <a href="#" title="{%trans 'cancel'%}"
+                       class="btn btn-default" role="button" id="lnk_application_cancel">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                {%endif%}
             </td>
         </tr>
         {% endfor%}

@@ -1133,3 +1133,15 @@ msgstr "Informations complémentaires requises"
 
 msgid "for_curriculum"
 msgstr "For curriculum"
+
+msgid "to_submit"
+msgstr "A soumettre"
+
+msgid "submitted"
+msgstr "Soumise"
+
+msgid "canceled"
+msgstr "Annulée"
+
+msgid "confirmed"
+msgstr "Confirmée"

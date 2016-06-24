@@ -29,6 +29,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from admission.views.common import extra_information
+from admission.views.common import home, validated_extra
 
 
 class JSONResponse(HttpResponse):
@@ -81,6 +82,8 @@ def demande_update(request, application_id=None):
     else:
         application = mdl.application.init_application(request.user)
     grade_choices = mdl.grade_type.GRADE_CHOICES
+    a_person = mdl.person.find_by_user(request.user)
+    secondary_education = mdl.secondary_education.find_by_person(a_person)
     return render(request, "offer_selection.html",
                   {"gradetypes":             mdl.grade_type.find_all(),
                    "domains":                mdl.domain.find_all_domains(),
@@ -90,7 +93,8 @@ def demande_update(request, application_id=None):
                    "grade_choices":          grade_choices,
                    'tab_active':             31,
                    "tab_demande_active":     0,
-                   "display_admission_exam": extra_information(request, application)})
+                   "display_admission_exam": extra_information(request, application),
+                   "validated_extra":        validated_extra(secondary_education, application)})
 
 
 def _get_offer_type(request):

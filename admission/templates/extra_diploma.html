@@ -27,5 +27,9 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 {% block demande_tabs %}
-{% include "diploma/admission_exam.html" %}
+<form method="post" action="{%if application%}{% url 'save_admission_exam' application.id%}{%else%}{% url 'save_admission_exam'%}{%endif%}" id="form_questions">
+    {% csrf_token %}
+    {% include "diploma/admission_exam.html" %}
+</form>
 {% endblock %}
+

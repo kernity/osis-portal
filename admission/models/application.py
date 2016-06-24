@@ -34,12 +34,17 @@ from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
 
 class ApplicationAdmin(admin.ModelAdmin):
     list_display = ('person', 'offer_year', 'creation_date', 'application_type', 'doctorate')
-    fieldsets = ((None, {'fields': ('person', 'offer_year', 'application_type', 'doctorate')}),)
+    fieldsets = ((None, {'fields': ('person', 'offer_year', 'application_type', 'doctorate', 'application_status')}),)
 
 
 class Application(models.Model):
     APPLICATION_TYPE = (('ADMISSION', _('admission')),
                         ('INSCRIPTION', _('inscription')))
+
+    APPLICATION_STATUS_CHOICES = (('TO_SUBMIT', _('to_submit')),
+                                  ('SUBMITTED', _('submitted')),
+                                  ('CANCELED', _('canceled')),
+                                  ('CONFIRMED', _('confirmed')))
 
     person = models.ForeignKey('Person')
     offer_year = models.ForeignKey('OfferYear')
@@ -64,6 +69,7 @@ class Application(models.Model):
     bank_account_iban = IBANField(include_countries=IBAN_SEPA_COUNTRIES, blank=True, null=True)
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
+    application_status = models.CharField(max_length=20, choices=APPLICATION_STATUS_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return u"%s" % self.offer_year

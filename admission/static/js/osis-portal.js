@@ -121,12 +121,10 @@ function offer_selection_display(){
       .end()
     set_pnl_questions_empty();
     //Cancel the previous selection
-    document.getElementById("txt_offer_year_id").value = "";
+    $('#txt_offer_year_id').val("");
 
-    document.getElementById("bt_save").disabled = true;
-    if(document.getElementById("bt_save_up")){
-        document.getElementById("bt_save_up").disabled = true;
-    }
+    $('#bt_save').prop("disabled",true);
+    $('#bt_save_up').prop("disabled",true);
 
     var i=0;
     $.ajax({
@@ -1515,7 +1513,7 @@ $.ajaxSetup({
                          break;
                      }
                  }
-             }
+             }po
              return cookieValue;
          }
          if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {

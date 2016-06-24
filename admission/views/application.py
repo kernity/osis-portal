@@ -38,8 +38,8 @@ from admission.views.common import extra_information
 
 
 def applications(request):
-    applications = mdl.application.find_by_user(request.user)
-    return render(request, "home.html", {'applications': applications, 'tab_active': 3})
+    application_list = mdl.application.find_by_user(request.user)
+    return render(request, "home.html", {'applications': application_list, 'tab_active': 3})
 
 
 def application_update(request, application_id):
@@ -57,9 +57,9 @@ def profile_confirmed(request):
 
 def save_application_offer(request):
     if request.method == 'POST' and 'save' in request.POST:
-        applications = mdl.application.find_by_user(request.user)
+        applications_list = mdl.application.find_by_user(request.user)
 
-        if applications is None or len(applications) == 0:
+        if applications_list is None or len(applications_list) == 0:
             # First demande perharps somme data to save
             person = mdl.person.find_by_user(request.user)
             if person is None:
@@ -191,9 +191,6 @@ def save_application_offer(request):
                         answer.value = option.value
                         answer.save()
         return HttpResponseRedirect(reverse('home'))
-        # print(application.id)
-        # return HttpResponseRedirect(reverse('demande_update'), kwargs={'application_id': application.id})
-        # return HttpResponseRedirect(reverse('demande_update'), args=(application.id))
 
 
 def application_view(request, application_id):

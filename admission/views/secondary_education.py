@@ -30,8 +30,10 @@ from django.utils.translation import ugettext_lazy as _
 from functools import cmp_to_key
 
 from admission import models as mdl
-from admission.views.common import home
+from admission.views.common import home, validated_extra
 from reference import models as mdl_reference
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 ALERT_MANDATORY_FIELD = _('mandatory_field')
 
@@ -238,11 +240,11 @@ def diploma_save(request):
             else:
                 if 'bt_save_up' in request.POST or 'bt_save_down' in request.POST:
                     save_step = True
-
+    save_step = True# pas eu le temps d'enlever proprement - Leila
     application = mdl.application.find_first_by_user(request.user)
     other_language_regime = mdl_reference.language.find_languages_by_recognized(False)
     recognized_languages = mdl_reference.language.find_languages_by_recognized(True)
-    exam_types = admission.models.admission_exam_type.find_all_by_adhoc(False)
+    exam_types = mdl.admission_exam_type.find_all_by_adhoc(False)
     person = mdl.person.find_by_user(request.user)
     secondary_education = mdl.secondary_education.find_by_person(person)
 
@@ -261,7 +263,6 @@ def diploma_save(request):
         is_valid, validation_messages, secondary_education = validate_fields_form(request,
                                                                                   secondary_education,
                                                                                   next_step)
-
         if is_valid:
             secondary_education = populate_secondary_education(request, secondary_education)
             secondary_education.save()
@@ -475,18 +476,18 @@ def validate_admission_exam(request, is_valid, validation_messages, secondary_ed
                         validation_messages['admission_exam_type'] = "Pour autre examen il faut préciser"
                         is_valid = False
                     else:
-                        new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
+                        new_admission_exam_type = mdl.admission_exam_type.AdmissionExamType()
                         new_admission_exam_type.adhoc = True
                         new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
                         secondary_education.admission_exam_type = new_admission_exam_type
 
                 if request.POST.get('chb_admission_exam_type_other') == "on":
-                    new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
+                    new_admission_exam_type = mdl.admission_exam_type.AdmissionExamType()
                     new_admission_exam_type.adhoc = True
                     new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
                     secondary_education.admission_exam_type = new_admission_exam_type
                 else:
-                    admission_exam_type_existing = admission.models.admission_exam_type \
+                    admission_exam_type_existing = mdl.admission_exam_type \
                         .find_by_id(int(request.POST.get('admission_exam_type')))
                     secondary_education.admission_exam_type = admission_exam_type_existing
 
@@ -652,41 +653,7 @@ def populate_secondary_education(request, secondary_education):
             academic_year = mdl.academic_year.find_by_id(int(request.POST.get('academic_year')))
         secondary_education.academic_year = academic_year
     # admission_exam
-    secondary_education.admission_exam = None
-    secondary_education.admission_exam_date = None
-    secondary_education.admission_exam_institution = None
-    secondary_education.admission_exam_type = None
-    secondary_education.admission_exam_result = None
-    if request.POST.get('admission_exam'):
-        if request.POST.get('admission_exam') == 'true':
-            secondary_education.admission_exam = True
-            if request.POST.get('admission_exam_date'):
-                secondary_education.admission_exam_date = datetime\
-                    .strptime(request.POST.get('admission_exam_date'), '%d/%m/%Y')
-            if request.POST.get('admission_exam_institution'):
-                secondary_education.admission_exam_institution = request.POST.get('admission_exam_institution')
-            if request.POST.get('admission_exam_type_other') \
-                    and len(request.POST.get('admission_exam_type_other').strip()) > 0:
-                existing_admission_exam_type = admission.models.admission_exam_type \
-                    .find_by_name(request.POST.get('admission_exam_type_other'))
-                if existing_admission_exam_type:
-                    secondary_education.admission_exam_type = existing_admission_exam_type
-                else:
-                    new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
-                    new_admission_exam_type.adhoc = True
-                    new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
-                    new_admission_exam_type.save()
-                    secondary_education.admission_exam_type = new_admission_exam_type
-            else:
-                if request.POST.get('admission_exam_type'):
-                    admission_exam_type_existing = admission.models.admission_exam_type \
-                        .find_by_id(int(request.POST.get('admission_exam_type')))
-                    secondary_education.admission_exam_type = admission_exam_type_existing
-
-            secondary_education.admission_exam_result = request.POST.get('admission_exam_result')
-        else:
-            if request.POST.get('admission_exam') == 'false':
-                secondary_education.admission_exam = False
+    secondary_education = populate_admission_exam(secondary_education, request)
 
     secondary_education.professional_exam = None
     secondary_education.professional_exam_date = None
@@ -728,6 +695,13 @@ def admission_exam_needed(request, application_id=None):
     else:
         application = mdl.application.Application()
         application.person = a_person
+    exam_types = mdl.admission_exam_type.find_all_by_adhoc(False)
+    try:
+        if application.offer_year:
+            admission_exam_offer_yr = mdl.admission_exam_offer_year.find_by_offer_year(application.offer_year)
+            exam_types = [admission_exam_offer_yr.admission_exam_type]
+    except:
+        pass
 
     secondary_education = mdl.secondary_education.find_by_person(a_person)
     if secondary_education is None:
@@ -736,6 +710,80 @@ def admission_exam_needed(request, application_id=None):
 
     return render(request, "extra_diploma.html",
                            {"secondary_education":    secondary_education,
+                            "tab_active":             31,
                             "tab_needed_active":      0,
                             "display_admission_exam": True,
-                            "application": application})
+                            "application":            application,
+                            "exam_types":             exam_types,
+                            "validated_extra":        validated_extra(secondary_education, application)})
+
+
+def populate_admission_exam(secondary_education, request):
+    secondary_education.admission_exam = None
+    secondary_education.admission_exam_date = None
+    secondary_education.admission_exam_institution = None
+    secondary_education.admission_exam_type = None
+    secondary_education.admission_exam_result = None
+    if request.POST.get('admission_exam'):
+        if request.POST.get('admission_exam') == 'true':
+            secondary_education.admission_exam = True
+            if request.POST.get('admission_exam_date'):
+                secondary_education.admission_exam_date = datetime\
+                    .strptime(request.POST.get('admission_exam_date'), '%d/%m/%Y')
+            if request.POST.get('admission_exam_institution'):
+                secondary_education.admission_exam_institution = request.POST.get('admission_exam_institution')
+            if request.POST.get('admission_exam_type_other') \
+                    and len(request.POST.get('admission_exam_type_other').strip()) > 0:
+                existing_admission_exam_type = mdl.admission_exam_type \
+                    .find_by_name(request.POST.get('admission_exam_type_other'))
+                if existing_admission_exam_type:
+                    secondary_education.admission_exam_type = existing_admission_exam_type
+                else:
+                    new_admission_exam_type = mdl.admission_exam_type.AdmissionExamType()
+                    new_admission_exam_type.adhoc = True
+                    new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
+                    new_admission_exam_type.save()
+                    secondary_education.admission_exam_type = new_admission_exam_type
+            else:
+                if request.POST.get('admission_exam_type'):
+                    admission_exam_type_existing = mdl.admission_exam_type \
+                        .find_by_id(int(request.POST.get('admission_exam_type')))
+                    secondary_education.admission_exam_type = admission_exam_type_existing
+
+            secondary_education.admission_exam_result = request.POST.get('admission_exam_result')
+        else:
+            if request.POST.get('admission_exam') == 'false':
+                secondary_education.admission_exam = False
+    return secondary_education
+
+
+def save_admission_exam(request, application_id=None):
+    a_person = mdl.person.find_by_user(request.user)
+    secondary_education = mdl.secondary_education.find_by_person(a_person)
+    secondary_education = populate_admission_exam(secondary_education, request)
+    secondary_education.save()
+    a_person = mdl.person.find_by_user(request.user)
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.Application()
+        application.person = a_person
+    exam_types = mdl.admission_exam_type.find_all_by_adhoc(False)
+    try:
+        if application.offer_year:
+            admission_exam_offer_yr = mdl.admission_exam_offer_year.find_by_offer_year(application.offer_year)
+            exam_types = [admission_exam_offer_yr.admission_exam_type]
+    except:
+        pass
+    return render(request, "extra_diploma.html",
+                           {"secondary_education":    secondary_education,
+                            "tab_active":             31,
+                            "tab_needed_active":      0,
+                            "display_admission_exam": True,
+                            "application":            application,
+                            "exam_types":             exam_types,
+                            "validated_extra":        validated_extra(secondary_education, application)})
+
+
+
+

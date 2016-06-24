@@ -166,9 +166,20 @@
                 }
             });
         }
+        $('#txt_admission_exam_date').val('');
+        $('#txt_admission_exam_institution').val('');
+        $('[id^="rdb_admission_exam_type_"]').prop( "checked", false);
+        $('#txt_admission_exam_type_other').val('');
+        $('#txt_admission_exam_type_other').prop( "disabled", true);
+        $('#chb_admission_exam_type').prop( "checked", false);
+        $('#rdb_admission_exam_result_low').prop( "checked", false);
+        $('#rdb_admission_exam_result_middle').prop( "checked", false);
+        $('#rdb_admission_exam_result_high').prop( "checked", false);
+        populate_exam_admin();
     });
 
     function save(form_to_submit){
+        alert('save');
         id = 'form#' + form_to_submit;
         $(id).submit();
 

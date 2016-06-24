@@ -58,7 +58,11 @@
     {% trans 'further_information_required'%}
     <ul class="nav nav-pills nav-stacked">
         <li class="{%if tab_needed_active == 0 %}active{%endif%}"><a {%if application.id%}href="{% url 'admission_exam_needed' application.id %}"{%else%}href="{% url 'admission_exam_needed'  %}"{%endif%}>
+            {%if validated_extra%}
+            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
+            {%else%}
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
+            {%endif%}
             &nbsp;&nbsp;{% trans 'diploma'%}</a>
         </li>
     </ul>
@@ -69,6 +73,8 @@
         {% endblock %}
     </div>
   </div>
+
 {% endblock %}
 {% block footer%}
 {% endblock %}
+

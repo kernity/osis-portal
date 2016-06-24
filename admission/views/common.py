@@ -310,10 +310,27 @@ def extra_information(request, application):
     try:
         if application.offer_year:
             admission_exam_offer_yr = mdl.admission_exam_offer_year.find_by_offer_year(application.offer_year)
-            if admission_exam_offer_yr \
-                    and (secondary_education is None or
-                         secondary_education.admission_exam_type != admission_exam_offer_yr.admission_exam_type):
+            # if admission_exam_offer_yr \
+            #         and (secondary_education is None or
+            #              secondary_education.admission_exam_type != admission_exam_offer_yr.admission_exam_type):
+            if admission_exam_offer_yr:
                 return True
         return False
-    except :  # RelatedObjectDoesNotExist
+    except:  # RelatedObjectDoesNotExist
         return False
+
+
+def validated_extra(secondary_education, application):
+    if secondary_education:
+        try:
+            if application.offer_year:
+                admission_exam_offer_yr = mdl.admission_exam_offer_year.find_by_offer_year(application.offer_year)
+                if secondary_education.admission_exam_type == admission_exam_offer_yr.admission_exam_type \
+                        and secondary_education.admission_exam and secondary_education.admission_exam_date \
+                        and secondary_education.admission_exam_institution \
+                        and secondary_education.admission_exam_result:
+                    return True
+        except:
+            return True
+
+    return False
