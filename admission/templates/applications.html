@@ -45,12 +45,16 @@
         <tr>
             <td></td>
             <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
-            <td><a href="{% url 'application_view' application.id %}">{{ application.offer_year.title }}</a></td>
+            <td><a href="{% url 'demande_update' application.id %}">{{ application.offer_year.title }}</a></td>
             <td><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span></td>
             <td>
                  <a href="{% url 'application_delete' application.id %}" title="{%trans 'delete'%}"
                    class="btn btn-default" role="button" id="lnk_application_delete">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> {% trans 'delete'%}
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </a>
+               <a href="#" title="{%trans 'cancel'%}"
+                   class="btn btn-default" role="button" id="lnk_application_cancel">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </a>
             </td>
         </tr>

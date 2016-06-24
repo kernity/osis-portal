@@ -28,6 +28,7 @@ from admission import models as mdl
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
+from admission.views.common import extra_information
 
 
 class JSONResponse(HttpResponse):
@@ -78,14 +79,15 @@ def demande_update(request, application_id=None):
     application = mdl.application.find_by_id(application_id)
     grade_choices = mdl.grade_type.GRADE_CHOICES
     return render(request, "offer_selection.html",
-                  {"gradetypes":  mdl.grade_type.find_all(),
-                   "domains":     mdl.domain.find_all_domains(),
-                   "offers":      offers,
-                   "offer":       None,
-                   "application": application,
-                   "grade_choices": grade_choices,
-                   'tab_active': 31,
-                   "tab_demande_active": 0})
+                  {"gradetypes":             mdl.grade_type.find_all(),
+                   "domains":                mdl.domain.find_all_domains(),
+                   "offers":                 offers,
+                   "offer":                  None,
+                   "application":            application,
+                   "grade_choices":          grade_choices,
+                   'tab_active':             31,
+                   "tab_demande_active":     0,
+                   "display_admission_exam": extra_information(request, application)})
 
 
 def _get_offer_type(request):
@@ -123,3 +125,4 @@ def selection_offer(request, offer_id):
                             "offer_type":         grade,
                             "domain":             domain,
                             "tab_demande_active": 0})
+

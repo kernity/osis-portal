@@ -1118,3 +1118,9 @@ msgstr "Professional activity"
 
 msgid "attachments"
 msgstr "Attachments"
+
+msgid "further_information_required"
+msgstr "Further information required"
+
+msgid "for_curriculum"
+msgstr "For curriculum"

@@ -23,16 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from admission import models as mdl
-from django.shortcuts import render, get_object_or_404
-from reference import models as mdl_reference
-
-from datetime import datetime
-from admission.views.common import home
-from functools import cmp_to_key
 import locale
+from datetime import datetime
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from functools import cmp_to_key
 
+from admission import models as mdl
+from admission.views.common import home
+from reference import models as mdl_reference
 
 ALERT_MANDATORY_FIELD = _('mandatory_field')
 
@@ -243,7 +242,7 @@ def diploma_save(request):
     application = mdl.application.find_first_by_user(request.user)
     other_language_regime = mdl_reference.language.find_languages_by_recognized(False)
     recognized_languages = mdl_reference.language.find_languages_by_recognized(True)
-    exam_types = mdl_reference.admission_exam_type.find_all_by_adhoc(False)
+    exam_types = admission.models.admission_exam_type.find_all_by_adhoc(False)
     person = mdl.person.find_by_user(request.user)
     secondary_education = mdl.secondary_education.find_by_person(person)
 
@@ -336,7 +335,7 @@ def diploma_update(request):
     person = mdl.person.find_by_user(request.user)
     other_language_regime = mdl_reference.language.find_languages_by_recognized(False)
     recognized_languages = mdl_reference.language.find_languages_by_recognized(True)
-    exam_types = mdl_reference.admission_exam_type.find_all_by_adhoc(False)
+    exam_types = admission.models.admission_exam_type.find_all_by_adhoc(False)
     secondary_education = mdl.secondary_education.find_by_person(person)
     education_type_transition = mdl_reference.education_type.find_education_type_by_adhoc('TRANSITION', False)
     education_type_qualification = mdl_reference.education_type.find_education_type_by_adhoc('QUALIFICATION', False)
@@ -476,18 +475,18 @@ def validate_admission_exam(request, is_valid, validation_messages, secondary_ed
                         validation_messages['admission_exam_type'] = "Pour autre examen il faut préciser"
                         is_valid = False
                     else:
-                        new_admission_exam_type = mdl_reference.admission_exam_type.AdmissionExamType()
+                        new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
                         new_admission_exam_type.adhoc = True
                         new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
                         secondary_education.admission_exam_type = new_admission_exam_type
 
                 if request.POST.get('chb_admission_exam_type_other') == "on":
-                    new_admission_exam_type = mdl_reference.admission_exam_type.AdmissionExamType()
+                    new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
                     new_admission_exam_type.adhoc = True
                     new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
                     secondary_education.admission_exam_type = new_admission_exam_type
                 else:
-                    admission_exam_type_existing = mdl_reference.admission_exam_type\
+                    admission_exam_type_existing = admission.models.admission_exam_type \
                         .find_by_id(int(request.POST.get('admission_exam_type')))
                     secondary_education.admission_exam_type = admission_exam_type_existing
 
@@ -668,19 +667,19 @@ def populate_secondary_education(request, secondary_education):
                 secondary_education.admission_exam_institution = request.POST.get('admission_exam_institution')
             if request.POST.get('admission_exam_type_other') \
                     and len(request.POST.get('admission_exam_type_other').strip()) > 0:
-                existing_admission_exam_type = mdl_reference.admission_exam_type\
+                existing_admission_exam_type = admission.models.admission_exam_type \
                     .find_by_name(request.POST.get('admission_exam_type_other'))
                 if existing_admission_exam_type:
                     secondary_education.admission_exam_type = existing_admission_exam_type
                 else:
-                    new_admission_exam_type = mdl_reference.admission_exam_type.AdmissionExamType()
+                    new_admission_exam_type = admission.models.admission_exam_type.AdmissionExamType()
                     new_admission_exam_type.adhoc = True
                     new_admission_exam_type.name = request.POST.get('admission_exam_type_other')
                     new_admission_exam_type.save()
                     secondary_education.admission_exam_type = new_admission_exam_type
             else:
                 if request.POST.get('admission_exam_type'):
-                    admission_exam_type_existing = mdl_reference.admission_exam_type\
+                    admission_exam_type_existing = admission.models.admission_exam_type \
                         .find_by_id(int(request.POST.get('admission_exam_type')))
                     secondary_education.admission_exam_type = admission_exam_type_existing
 
@@ -721,3 +720,15 @@ def populate_secondary_education(request, secondary_education):
 
     return secondary_education
 
+
+def admission_exam_needed(request):
+    a_person = mdl.person.find_by_user(request.user)
+    secondary_education = mdl.secondary_education.find_by_person(a_person)
+    if secondary_education is None:
+        secondary_education = mdl.secondary_education.SecondaryEducation()
+        secondary_education.person = a_person
+
+    return render(request, "extra_diploma.html",
+                           {"secondary_education": secondary_education,
+                            "tab_needed_active": 0,
+                            "display_admission_exam": True})

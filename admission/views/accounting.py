@@ -35,6 +35,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login
 from admission.forms import AccountingForm
+from admission.views.common import extra_information
 
 
 def accounting(request):
@@ -55,7 +56,8 @@ def accounting(request):
                                                "reduction_possible":          reduction_possible(application),
                                                "third_cycle":                 third_cycle(application),
                                                "tab_active":                  31,
-                                               "tab_demande_active":          1})
+                                               "tab_demande_active":          1,
+                                               "display_admission_exam": extra_information(request, application)})
 
 
 def accounting_update(request):
@@ -142,7 +144,7 @@ def reduction_possible(application):
             application.offer_year.acronym.endswith("2MA") or \
             application.offer_year.acronym.endswith("2MC") or \
             application.offer_year.acronym.endswith("3D") or \
-            application.offer_year.acronym.indexOf("2MS/") != -1:
+            application.offer_year.acronym.find("2MS/") != -1:
         return True
     return False
 

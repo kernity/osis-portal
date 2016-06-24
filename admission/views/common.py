@@ -66,7 +66,6 @@ def home(request):
                        'countries':     countries})
 
 
-
 def profile(request, message_success=None):
     if request.method == 'POST':
         person_form = PersonForm(data=request.POST)
@@ -303,3 +302,15 @@ def profile(request, message_success=None):
                                          'validated_applications': False,
                                          'validated_demande': False,
                                          'validated_accounting': False})
+
+
+def extra_information(request, application):
+    a_person = mdl.person.find_by_user(request.user)
+    secondary_education = mdl.secondary_education.find_by_person(a_person)
+    if application.offer_year:
+        admission_exam_offer_yr = mdl.admission_exam_offer_year.find_by_offer_year(application.offer_year)
+        if admission_exam_offer_yr \
+                and (secondary_education is None or
+                     secondary_education.admission_exam_type != admission_exam_offer_yr.admission_exam_type):
+            return True
+    return False

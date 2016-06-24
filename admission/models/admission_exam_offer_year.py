@@ -29,10 +29,14 @@ from admission.models import offer_year_calendar
 
 
 class AdmissionExamOfferYearAdmin(admin.ModelAdmin):
-    list_display = ('offer_year','admission_exam_type')
-    fieldsets = ((None, {'fields': ('offer_year','admission_exam_type')}),)
+    list_display = ('offer_year', 'admission_exam_type')
+    fieldsets = ((None, {'fields': ('offer_year', 'admission_exam_type')}),)
 
 
 class AdmissionExamOfferYear(models.Model):
-    offer_year  = models.ForeignKey('OfferYear')
+    offer_year = models.ForeignKey('OfferYear')
     admission_exam_type = models.ForeignKey('AdmissionExamType')
+
+
+def find_by_offer_year(an_offer_year):
+    return AdmissionExamOfferYear.objects.filter(offer_year=an_offer_year).first()

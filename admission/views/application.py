@@ -34,6 +34,7 @@ import locale
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from admission.views.common import extra_information
 
 
 def applications(request):
@@ -209,5 +210,9 @@ def application_delete(request, application_id):
     return HttpResponseRedirect(reverse('home'))
 
 
-def submission(request):
-    return HttpResponseRedirect(reverse('home'))
+def submission(request, application_id):
+    application = mdl.application.find_by_id(application_id)
+    return render(request, "demande_submission.html",
+                  {'application':            application,
+                   'tab_demande_active':     2,
+                   'display_admission_exam': extra_information(request, application)})

@@ -1127,3 +1127,9 @@ msgstr "Activité professionelle"
 
 msgid "attachments"
 msgstr "Pïèces jointes"
+
+msgid "further_information_required"
+msgstr "Informations complémentaires requises"
+
+msgid "for_curriculum"
+msgstr "For curriculum"

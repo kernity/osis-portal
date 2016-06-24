@@ -94,6 +94,8 @@ urlpatterns = [
     url(r'^admission/application/submission/([0-9]+)/$', application.submission, name='submission'),
     url(r'^sociological/$', sociological.update, name='sociological_survey'),
     url(r'^attachments/$', attachments.update, name='attachments'),
+    url(r'^diploma/admisson_exam/$', secondary_education.admission_exam_needed, name='admission_exam_needed'),
+
 
 
 

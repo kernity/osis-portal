@@ -1,6 +1,7 @@
 {% extends "demande_layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
+{% load message %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -25,33 +26,6 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-
 {% block demande_tabs %}
-<form method="post" action="{% url 'save_offer_selection' %}" id="form_questions" name="form_questions">
-     {% csrf_token %}
-    <button type="submit" id="bt_save_up" class="btn btn-primary" role="button" name="save"
-            title="{% trans 'save'%}" disabled>
-
-        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> {% trans 'save'%}
-    </button>
-    <br>
-    <br>
-    {% include "demande_offer.html" %}
-</form>
-{% endblock %}
-{% block script %}
-<script >
-$(document).ready(function() {
-    if ($('#hdn_application_id').val()){
-        $('#slt_offer_type option').each(function(){
-            if($(this).attr('value')==$('#hdn_application_grade').val()){
-                $(this).prop('selected', true);
-            }
-        });
-        $('#slt_offer_type').trigger('change');
-
-
-    }
-});
-</script>
+{% include "diploma/admission_exam.html" %}
 {% endblock %}

@@ -25,6 +25,15 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
+<input type="hidden" value="{{application.id}}" id="hdn_application_id">
+<input type="hidden" value="{{application.offer_year.grade_type.grade}}" id="hdn_application_grade">
+<input type="hidden" value="{{application.offer_year.grade_type.id}}" id="hdn_application_grade_type_id">
+<input type="hidden" value="{{application.offer_year.domain.id}}" id="hdn_application_domain_id">
+<input type="hidden" value="{{application.offer_year.id}}" id="hdn_application_offer_year_id" name="hdn_application_offer_year_id">
+<input type="hidden" value="{{application.belgian_degree}}" id="hdn_belgian_degree">
+<input type="hidden" value="{{application.started_samestudies}}" id="hdn_started_samestudies">
+<input type="hidden" value="{{application.applied_to_sameprogram}}" id="hdn_applied_to_sameprogram">
+
 {% trans 'instruction_offer_selection_part1' %}
 <br>
 {% trans 'instruction_offer_selection_part2' %}
@@ -66,6 +75,7 @@
 
 <br>
 <div id="pnl_offers">
+    <input type="hidden" id="hdn_offers_available">
 </div>
 
 {% if message%}

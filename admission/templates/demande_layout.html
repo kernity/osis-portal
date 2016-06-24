@@ -30,7 +30,7 @@
   <div class="row" >
     <div class="col-md-2">
     <ul class="nav nav-pills nav-stacked">
-        <li class="{%if tab_demande_active == 0 %}active{%endif%}"><a href="{% url 'demande_update' application.id %}">
+        <li class="{%if tab_demande_active == 0 %}active{%endif%}"><a {%if application.id%}href="{% url 'demande_update' application.id %}"{%endif%}>
             {%if validated_demande%}
                 <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
             {%else%}
@@ -45,7 +45,7 @@
             {%endif%}
             &nbsp;&nbsp;{%trans 'accounting'%}</a>
         </li>
-        <li class="{%if tab_demande_active == 2 %}active{%endif%}"><a href="{% url 'submission' application.id %}" id="lnk_demande_submission_tab">
+        <li class="{%if tab_demande_active == 2 %}active{%endif%}"><a {%if application.id%}href="{% url 'submission' application.id %}"{%endif%} id="lnk_demande_submission_tab">
             {%if validated_submission%}
                 <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
             {%else%}
@@ -54,10 +54,18 @@
             &nbsp;&nbsp;{%trans 'submission'%}</a>
         </li>
     </ul>
+    {%if display_admission_exam%}
+    {% trans 'further_information_required'%}
+    <ul class="nav nav-pills nav-stacked">
+        <li class="{%if tab_needed_active == 0 %}active{%endif%}"><a href="{% url 'admission_exam_needed' %}">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
+            &nbsp;&nbsp;{% trans 'diploma'%}</a>
+        </li>
+    </ul>
+    {%endif%}
     </div>
     <div class="col-md-10">
         {% block demande_tabs %}
-
         {% endblock %}
     </div>
   </div>
