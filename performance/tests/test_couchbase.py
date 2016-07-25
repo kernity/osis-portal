@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-import json
 from django.test import TestCase
 from performance.models import student_performance
 
