@@ -24,8 +24,12 @@
 #
 ##############################################################################
 
+# This class tests if the correct resolver and templates are used for the url
+# concerning the performance application.
+
+
 from django.test import TestCase, Client
-from base.models import student, person, tutor
+from base.models import student, person
 import performance.views.main as perf_views
 from django.contrib.auth.models import User
 
@@ -34,7 +38,7 @@ class TemplatesPerformanceTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.createStudentUser()
-        self.createTutorUser()
+        #self.createTutorUser()
 
     # ********************* UNLOGGED USER ******************************
 
@@ -77,29 +81,29 @@ class TemplatesPerformanceTest(TestCase):
 
     # ************************ TUTOR USER *******************************
 
-    def testHomeTutorLogged(self):
-        self.client.login(username=self.tutor_username, password=self.tutor_password)
-
-        response = self.client.get("/performance/")
-
-        self.assertEqual(response.resolver_match.func, perf_views.home)
-        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
-                                                    "access performance app")
-        self.assertTemplateUsed(response=response, template_name="performance_home.html")
-
-        self.client.logout()
-
-    def testResultTutorlogged(self):
-        self.client.login(username=self.tutor_username, password=self.tutor_password)
-
-        response = self.client.get("/performance/result/2015/sinf2msg/")
-
-        self.assertEqual(response.resolver_match.func, perf_views.result_by_year_and_program)
-        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
-                                                    "access performance app")
-        self.assertTemplateUsed(response=response, template_name="performance_result.html")
-
-        self.client.logout()
+    # def testHomeTutorLogged(self):
+    #     self.client.login(username=self.tutor_username, password=self.tutor_password)
+    #
+    #     response = self.client.get("/performance/")
+    #
+    #     self.assertEqual(response.resolver_match.func, perf_views.home)
+    #     self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+    #                                                 "access performance app")
+    #     self.assertTemplateUsed(response=response, template_name="performance_home.html")
+    #
+    #     self.client.logout()
+    #
+    # def testResultTutorlogged(self):
+    #     self.client.login(username=self.tutor_username, password=self.tutor_password)
+    #
+    #     response = self.client.get("/performance/result/2015/sinf2msg/")
+    #
+    #     self.assertEqual(response.resolver_match.func, perf_views.result_by_year_and_program)
+    #     self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+    #                                                 "access performance app")
+    #     self.assertTemplateUsed(response=response, template_name="performance_result.html")
+    #
+    #     self.client.logout()
 
     # ************************ UTILITY FUNCTIONS ***********************
 
@@ -117,16 +121,16 @@ class TemplatesPerformanceTest(TestCase):
                                     registration_id="45451000")
         self.stud.save()
 
-    def createTutorUser(self):
-        self.tutor_username = "user_tutor"
-        self.tutor_password = "user_pass"
-        user_tutor = User.objects.create_user(self.tutor_username, password=self.tutor_password)
-        person_tutor = person.Person(user=user_tutor,
-                                       global_id="85451000",
-                                       first_name="Tutor",
-                                       last_name="Professeur",
-                                       email="tutor@tut.com")
-        person_tutor.save()
-        self.tut= tutor.Tutor(person=person_tutor,
-                                    registration_id="85451000")
-        self.tut.save()
+    # def createTutorUser(self):
+    #     self.tutor_username = "user_tutor"
+    #     self.tutor_password = "user_pass"
+    #     user_tutor = User.objects.create_user(self.tutor_username, password=self.tutor_password)
+    #     person_tutor = person.Person(user=user_tutor,
+    #                                    global_id="85451000",
+    #                                    first_name="Tutor",
+    #                                    last_name="Professeur",
+    #                                    email="tutor@tut.com")
+    #     person_tutor.save()
+    #     self.tut= tutor.Tutor(person=person_tutor,
+    #                                 registration_id="85451000")
+    #     self.tut.save()
