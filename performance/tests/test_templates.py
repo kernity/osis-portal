@@ -25,7 +25,7 @@
 ##############################################################################
 
 from django.test import TestCase, Client
-from base.models import student, person
+from base.models import student, person, tutor
 import performance.views.main as perf_views
 from django.contrib.auth.models import User
 
@@ -33,8 +33,75 @@ from django.contrib.auth.models import User
 class TemplatesPerformanceTest(TestCase):
     def setUp(self):
         self.client = Client()
-        # Create student user
         self.createStudentUser()
+        self.createTutorUser()
+
+    # ********************* UNLOGGED USER ******************************
+
+    def testHomeUnlogged(self):
+        response = self.client.get("/performance/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.home)
+        self.assertRedirects(response, "/login/?next=/performance/")
+
+    def testResultUnlogged(self):
+        response = self.client.get("/performance/result/2015/sinf2msg/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.result_by_year_and_program)
+        self.assertRedirects(response, "/login/?next=/performance/result/2015/sinf2msg/")
+
+    # *********************** STUDENT USER **************************
+
+    def testHomeStudentLogged(self):
+        self.client.login(username=self.student_username, password=self.student_password)
+
+        response = self.client.get("/performance/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.home)
+        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+                                                    "access performance app")
+        self.assertTemplateUsed(response=response, template_name="performance_home.html")
+
+        self.client.logout()
+
+    def testResultStudentlogged(self):
+        self.client.login(username=self.student_username, password=self.student_password)
+        response = self.client.get("/performance/result/2015/sinf2msg/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.result_by_year_and_program)
+        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+                                                   "access performance app")
+        self.assertTemplateUsed(response=response, template_name="performance_result.html")
+
+        self.client.logout()
+
+    # ************************ TUTOR USER *******************************
+
+    def testHomeTutorLogged(self):
+        self.client.login(username=self.tutor_username, password=self.tutor_password)
+
+        response = self.client.get("/performance/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.home)
+        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+                                                    "access performance app")
+        self.assertTemplateUsed(response=response, template_name="performance_home.html")
+
+        self.client.logout()
+
+    def testResultTutorlogged(self):
+        self.client.login(username=self.tutor_username, password=self.tutor_password)
+
+        response = self.client.get("/performance/result/2015/sinf2msg/")
+
+        self.assertEqual(response.resolver_match.func, perf_views.result_by_year_and_program)
+        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
+                                                    "access performance app")
+        self.assertTemplateUsed(response=response, template_name="performance_result.html")
+
+        self.client.logout()
+
+    # ************************ UTILITY FUNCTIONS ***********************
 
     def createStudentUser(self):
         self.student_username = "user_student"
@@ -50,24 +117,16 @@ class TemplatesPerformanceTest(TestCase):
                                     registration_id="45451000")
         self.stud.save()
 
-    def testHomeUnlogged(self):
-        # User is not logged
-        # result/2015/sinf2msg/
-        response = self.client.get("/performance/")
-
-        # Check resolver function, status code and finally template(s) used.
-        self.assertEqual(response.resolver_match.func, perf_views.home)
-        self.assertRedirects(response, "/login/?next=/performance/")
-
-    def testHomeLogged(self):
-        # User is logged
-        self.client.login(username=self.student_username, password=self.student_password)
-
-        response = self.client.get("/performance/")
-
-        self.assertEqual(response.resolver_match.func, perf_views.home)
-        self.assertEqual(response.status_code, 200, "Logged in student user should be able to "
-                                                    "access performance app")
-        self.assertTemplateUsed(response=response, template_name="performance_home.html")
-
-        self.client.logout()
+    def createTutorUser(self):
+        self.tutor_username = "user_tutor"
+        self.tutor_password = "user_pass"
+        user_tutor = User.objects.create_user(self.tutor_username, password=self.tutor_password)
+        person_tutor = person.Person(user=user_tutor,
+                                       global_id="85451000",
+                                       first_name="Tutor",
+                                       last_name="Professeur",
+                                       email="tutor@tut.com")
+        person_tutor.save()
+        self.tut= tutor.Tutor(person=person_tutor,
+                                    registration_id="85451000")
+        self.tut.save()
