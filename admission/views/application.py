@@ -37,7 +37,6 @@ from django.core.urlresolvers import reverse
 from admission.views.common import extra_information
 from admission.views import demande_validation
 from admission.views import tabs
-from admission.views import tabs
 
 
 def application_update(request, application_id):

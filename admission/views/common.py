@@ -92,18 +92,10 @@ def profile(request, application_id=None, message_success=None):
             person_legal_address.person = applicant
             person_legal_address.type = 'LEGAL'
 
-        if request.POST['last_name']:
-            applicant.user.last_name = request.POST['last_name']
-        else:
-            applicant.user.last_name = None
-        if request.POST['first_name']:
-            applicant.user.first_name = request.POST['first_name']
-        else:
-            applicant.user.first_name = None
-        if request.POST['middle_name']:
-            applicant.middle_name = request.POST['middle_name']
-        else:
-            applicant.middle_name = None
+        applicant.user.last_name = request.POST.get('last_name', None)
+        applicant.user.first_name = request.POST.get('first_name', None)
+        applicant.middle_name = request.POST.get('middle_name', None)
+        # TODO Need to check it when validating the fom
         if request.POST['birth_date']:
             try:
                 applicant.birth_date = datetime.strptime(request.POST['birth_date'], '%d/%m/%Y')
@@ -113,70 +105,35 @@ def profile(request, application_id=None, message_success=None):
                     'birth_date']
         else:
             applicant.birth_date = None
-        if request.POST['birth_place']:
-            applicant.birth_place = request.POST['birth_place']
-        else:
-            applicant.birth_place = None
+
+        applicant.birth_place = request.POST.get('birth_place', None)
+
+        applicant.birth_country = None
         if request.POST.get('birth_country'):
             birth_country_id = request.POST['birth_country']
             birth_country = mdl_ref.country.find_by_id(birth_country_id)
             applicant.birth_country = birth_country
-        else:
-            applicant.birth_country = None
-        if request.POST.get('gender'):
-            applicant.gender = request.POST['gender']
-        else:
-            applicant.gender = None
-        if request.POST['civil_status']:
-            applicant.civil_status = request.POST['civil_status']
-        else:
-            applicant.civil_status = None
-        if request.POST['number_children']:
-            applicant.number_children = request.POST['number_children']
-        else:
-            applicant.number_children = None
-        if request.POST['spouse_name']:
-            applicant.spouse_name = request.POST['spouse_name']
-        else:
-            applicant.spouse_name = None
+
+        applicant.gender = request.POST.get('gender', None)
+        applicant.civil_status = request.POST.get('civil_status', None)
+        applicant.number_children = request.POST.get('number_children', None)
+        applicant.spouse_name = request.POST.get('spouse_name', None)
+
+        applicant.nationality = None
         if request.POST.get('nationality'):
             country_id = request.POST['nationality']
             country = mdl_ref.country.find_by_id(country_id)
             applicant.nationality = country
-        else:
-            applicant.nationality = None
-        if request.POST['national_id']:
-            applicant.national_id = request.POST['national_id']
-        else:
-            applicant.national_id = None
-        if request.POST['id_card_number']:
-            applicant.id_card_number = request.POST['id_card_number']
-        else:
-            applicant.id_card_number = None
-        if request.POST['passport_number']:
-            applicant.passport_number = request.POST['passport_number']
-        else:
-            applicant.passport_number = None
-        if request.POST['legal_adr_street']:
-            person_legal_address.street = request.POST['legal_adr_street']
-        else:
-            person_legal_address.street = None
-        if request.POST['legal_adr_number']:
-            person_legal_address.number = request.POST['legal_adr_number']
-        else:
-            person_legal_address.number = None
-        if request.POST['legal_adr_complement']:
-            person_legal_address.complement = request.POST['legal_adr_complement']
-        else:
-            person_legal_address.complement = None
-        if request.POST['legal_adr_postal_code']:
-            person_legal_address.postal_code = request.POST['legal_adr_postal_code']
-        else:
-            person_legal_address.postal_code = None
-        if request.POST['legal_adr_city']:
-            person_legal_address.city = request.POST['legal_adr_city']
-        else:
-            person_legal_address.city = None
+
+        applicant.national_id = request.POST.get('national_id', None)
+        applicant.id_card_number = request.POST.get('id_card_number', None)
+        applicant.passport_number = request.POST.get('passport_number', None)
+        person_legal_address.street = request.POST.get('legal_adr_street', None)
+        person_legal_address.number = request.POST.get('legal_adr_number', None)
+        person_legal_address.complement = request.POST.get('legal_adr_complement', None)
+        person_legal_address.postal_code = request.POST.get('legal_adr_postal_code', None)
+        person_legal_address.city = request.POST.get('legal_adr_city', None)
+
         if request.POST.get('legal_adr_country'):
             country_id = request.POST['legal_adr_country']
             country = mdl_ref.country.find_by_id(country_id)
@@ -191,33 +148,20 @@ def profile(request, application_id=None, message_success=None):
                 person_contact_address.person = applicant
                 person_contact_address.type = 'CONTACT'
 
-            if request.POST['contact_adr_street']:
-                person_contact_address.street = request.POST['contact_adr_street']
-            else:
-                person_contact_address.street = None
-            if request.POST['contact_adr_number']:
-                person_contact_address.number = request.POST['contact_adr_number']
-            else:
-                person_contact_address.number = None
-            if request.POST['contact_adr_complement']:
-                person_contact_address.complement = request.POST['contact_adr_complement']
-            else:
-                person_contact_address.complement = None
-            if request.POST['contact_adr_postal_code']:
-                person_contact_address.postal_code = request.POST['contact_adr_postal_code']
-            else:
-                person_contact_address.postal_code = None
-            if request.POST['contact_adr_city']:
-                person_contact_address.city = request.POST['contact_adr_city']
-            else:
-                person_contact_address.city = None
+            person_contact_address.street = request.POST.get('contact_adr_street', None)
+            person_contact_address.number = request.POST.get('contact_adr_number', None)
+            person_contact_address.complement = request.POST.get('contact_adr_complement', None)
+            person_contact_address.postal_code = request.POST.get('contact_adr_postal_code', None)
+            person_contact_address.city = request.POST.get('contact_adr_city', None)
+
+            person_contact_address.country = None
             if request.POST['contact_adr_country']:
                 country_id = request.POST['contact_adr_country']
                 country = mdl_ref.country.find_by_id(country_id)
                 person_contact_address.country = country
-            else:
-                person_contact_address.country = None
+
             same_addresses = False
+
         else:
             # Question que faire si true, mais qu'une adresse de contact existe déjà
             person_contact_address = None
