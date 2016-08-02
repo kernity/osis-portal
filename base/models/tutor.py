@@ -61,6 +61,7 @@ def find_by_user(a_user):
     except ObjectDoesNotExist:
         return None
 
+
 def is_tutor(a_user):
     if find_by_user(a_user):
         return True
