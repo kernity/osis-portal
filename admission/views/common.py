@@ -63,6 +63,7 @@ def home(request):
         else:
             tab_status = tabs.init(request)
             return render(request, "admission_home.html", {'applications': applications,
+                                                           'applicant': applicant,
                                                            "tab_active": 0,
                                                            "first": True,
                                                            "countries": mdl_ref.country.find_all(),

@@ -1166,3 +1166,6 @@ msgstr "Pré-requis"
 
 msgid "back_demandes_list"
 msgstr "Retour à la liste des demandes"
+
+msgid "other_name"
+msgstr "Nom"
