@@ -23,32 +23,26 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db import models
-from django.contrib import admin
-from admission.models import form
-from admission.enums.question_types import QUESTION_TYPES
+from django.utils.translation import ugettext_lazy as _
+LABEL = "LABEL"
+SHORT_INPUT_TEXT = "SHORT_INPUT_TEXT"
+LONG_INPUT_TEXT = "LONG_INPUT_TEXT"
+RADIO_BUTTON = "RADIO_BUTTON"
+CHECKBOX = "CHECKBOX"
+DROPDOWN_LIST = "DROPDOWN_LIST"
+UPLOAD_BUTTON = "UPLOAD_BUTTON"
+DOWNLOAD_LINK = "DOWNLOAD_LINK"
+HTTP_LINK = "HTTP_LINK"
 
 
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('label', 'type', 'form', 'order')
-    fieldsets = ((None, {'fields': ('label', 'description', 'type', 'order', 'required', 'form')}),)
-    list_filter = ('form',)
-
-
-class Question(models.Model):
-    label = models.CharField(max_length=255)
-    description = models.TextField()
-    type = models.CharField(max_length=20, choices=QUESTION_TYPES)
-    order = models.IntegerField()
-    required = models.BooleanField(default=False)
-    form = models.ForeignKey('Form')
-
-    def __str__(self):
-        return u"%s" % self.label
-
-
-def find_form_ordered_questions(offer_year):
-    form_offer_yr = form.Form.objects.filter(offer_year=offer_year)
-    if form_offer_yr:
-        return Question.objects.filter(form=form_offer_yr).order_by("order")
-    return None
+QUESTION_TYPES = (
+    (LABEL, _(LABEL)),
+    (SHORT_INPUT_TEXT, _(SHORT_INPUT_TEXT)),
+    (LONG_INPUT_TEXT, _(LONG_INPUT_TEXT)),
+    (RADIO_BUTTON, _(RADIO_BUTTON)),
+    (CHECKBOX, _(CHECKBOX)),
+    (DROPDOWN_LIST, _(DROPDOWN_LIST)),
+    (UPLOAD_BUTTON, _(UPLOAD_BUTTON)),
+    (DOWNLOAD_LINK, _(DOWNLOAD_LINK)),
+    (HTTP_LINK, _(HTTP_LINK))
+)
