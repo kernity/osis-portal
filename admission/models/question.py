@@ -26,8 +26,20 @@
 from django.db import models
 from django.contrib import admin
 from admission.models import form
-from admission.enums.question_types import QUESTION_TYPES
+from django.utils.translation import ugettext_lazy as _
 from osis_common.models.serializable_model import SerializableModel
+
+
+QUESTION_TYPES = (
+    ('LABEL', _('label')),
+    ('SHORT_INPUT_TEXT', _('short_input_text')),
+    ('LONG_INPUT_TEXT', _('long_input_text')),
+    ('RADIO_BUTTON', _('radio_button')),
+    ('CHECKBOX', _('checkbox')),
+    ('DROPDOWN_LIST', _('dropdown_list')),
+    ('UPLOAD_BUTTON', _('Upuload_button')),
+    ('DOWNLOAD_LINK', _('download_link')),
+    ('HTTP_LINK', _('HTTP_link')))
 
 
 class QuestionAdmin(admin.ModelAdmin):
