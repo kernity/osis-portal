@@ -17,6 +17,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "CHECKBOX"
+msgstr "Case à cocher"
+
+msgid "DOWNLOAD_LINK"
+msgstr "Lien de téléchargement"
+
+msgid "DROPDOWN_LIST"
+msgstr "Liste déroulante"
+
+msgid "HTTP_LINK"
+msgstr "Lien http"
+
+msgid "LABEL"
+msgstr "Label"
+
+msgid "LONG_INPUT_TEXT"
+msgstr "Long texte d'entrée"
+
+msgid "RADIO_BUTTON"
+msgstr "Bouton radio"
+
+msgid "SHORT_INPUT_TEXT"
+msgstr "Court texte d'entrée"
+
+msgid "UPLOAD_BUTTON"
+msgstr "Bouton d'upload"
+
 msgid "academic_year"
 msgstr "Année académique"
 
