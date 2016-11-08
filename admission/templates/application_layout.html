@@ -1056,5 +1056,15 @@
         return true;
     });
 
+    $('[id="chb_agree"]').click(function(event) {
+        var target = $(event.target);
+        var val = target.val();
+        $('[id="bt_confirm_submission"]').prop( "disabled", true);
+        if(target.prop("checked")){
+            $('[id="bt_confirm_submission"]').prop( "disabled", false);
+        }
+        return true;
+    });
+
     </script>
 {% endblock %}
