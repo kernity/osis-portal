@@ -1524,3 +1524,9 @@ msgstr "Le Service des inscriptions de l'Université catholique de Louvain vous 
 
 msgid "study_domain"
 msgstr "Domaine d'études"
+
+msgid "academic_graduation_year"
+msgstr "Année académique d'obtention"
+
+msgid "files"
+msgstr "Fichiers"

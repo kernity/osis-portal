@@ -325,11 +325,28 @@ def get_application_status(data):
 
 
 def application_read(request, application_id=None):
+    tab_active = navigation.DEMAND_TAB
+    data = get_data_application_offer_read(application_id, tab_active)
+
+    return render(request, "reading/admission_home.html", data)
+
+
+def get_data_application_offer_read(application_id, tab_active):
     if application_id:
         application = mdl.application.find_by_id(application_id)
         applicant = application.applicant
-    data = {'application' : application,
-            'tab_active' : navigation.DEMAND_TAB
-    }
+    data = {'application': application,
+            'tab_active': tab_active,
+            'domain': mdl_base.offer_year_domain.find_by_offer_year(application.offer_year),
+            'curriculum': mdl.curriculum.find_user(applicant),
+            'secondary_education': mdl.secondary_education.find_by_person(applicant),
+            'education_type_transition': mdl_reference.education_type.find_education_type_by_adhoc('TRANSITION', False),
+            'education_type_qualification' : mdl_reference.education_type.find_education_type_by_adhoc('QUALIFICATION', False)
+            }
+    return data
 
+
+def application_navigation(request, application_id=None, tab_active=None):
+
+    data = get_data_application_offer_read(application_id, tab_active)
     return render(request, "reading/admission_home.html", data)

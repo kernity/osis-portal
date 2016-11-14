@@ -821,3 +821,15 @@ def data_dictionnary_building(request, curriculum_year):
                  'activity_type': request.POST.get('activity_type_%s' % curriculum_year),
                  'activity_place': request.POST.get('activity_place_%s' % curriculum_year)}
     return data_dict
+
+
+def read(request, application_id=None):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+        applicant = application.applicant
+    data = {'application': application,
+            'tab_active': navigation.CURRICULUM_TAB,
+            "curricula": mdl.curriculum.find_user(applicant),
+            }
+
+    return render(request, "reading/admission_home.html", data)

@@ -114,4 +114,10 @@ urlpatterns = [
     url(r'^postalcodes/$', places.find_postal_codes_by_city),
     url(r'^educationinstitution/cities/$', places.find_cities_by_postal_code),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^admission/application/readonly/([0-9]+)/$', application.application_read, name='application_read'),
+    url(r'^admission/application/read/nav/([0-9]+)/([0-9]+)/$', application.application_navigation, name='application_navigation'),
+    url(r'^admission/application/read/prerequisites/([0-9]+)/$', secondary_education.read, name='secondary_education_read'),
+    url(r'^admission/application/read/curriculum/([0-9]+)/$', curriculum.read, name='curriculum_read'),
+
+
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

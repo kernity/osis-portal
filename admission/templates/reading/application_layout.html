@@ -1,4 +1,4 @@
-{% extends "admission_layout.html" %}
+{% extends "reading/admission_layout.html" %}
 {% load staticfiles %}
 {% load i18n %}
 
@@ -52,89 +52,41 @@
             <br>
             <br>
             <ul class="nav nav-pills nav-stacked">
-                <li class="{%if tab_active == '0' %}active{%endif%}">
-                    <a href="{%if application.id%}{% url 'profile' application.id%}{%else%}{% url 'profile' %}{%endif%}"
-                       id="lnk_profile_tab">
-                        {% if validated_profil %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
-                        &nbsp;&nbsp;{%trans 'profile'%}</a>
-                </li>
                 <li class="{%if tab_active == '1' %}active{%endif%}">
 
-                    <a href="{%if application.id%}{% url 'applications' application.id%}{%else%}{% url 'applications' %}{%endif%}"
+                    <a href="{% url 'application_navigation' application.id 1 %}"
                        id="lnk_application_tab">
-                        {% if validated_application %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                         &nbsp;&nbsp;{%trans 'offer_choice'%}
-                    {%if application.offer_year %}
-                        ({{application.offer_year.acronym}})
-                    {%endif%}</a>
-
+                        ({{application.offer_year.acronym}})</a>
                 </li>
                 <li class="{%if tab_active == '2' %}active{%endif%}"  id="mn_diploma">
-                    <a href="{%if application.id %}{% url 'diploma_update' application_id=application.id%}{%else%}{% url 'diploma_update'%}{%endif%}"
+                    <a href="{% url 'secondary_education_read'  application.id %}"
                        id="lnk_diploma_tab">
-                        {% if validated_diploma == True%}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                         &nbsp;&nbsp;{%trans 'prerequisites'%}</a>
                 </li>
                 <li class="{%if tab_active == '3' %}active{%endif%}" id="mn_curriculum">
-                    <a href="{%if tab_curriculum and application.id %}{% url 'curriculum_update' application.id %}{%else%}{% url 'curriculum_update' %}{%endif%}"
+                    <a href="{% url 'curriculum_read' application.id %}"
                        id="lnk_curriculum_tab">
-                        {% if validated_curriculum %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                         &nbsp;&nbsp;{%trans 'curriculum'%}</a>
                 </li>
                 <li class="{%if tab_active == '4' %}active{%endif%}" id="mn_accounting">
-                    <a href="{%if application.id%}{% url 'accounting_update' application.id%}{%else%}{% url 'accounting_update' %}{%endif%}"
+                    <a href="{% url 'application_navigation' application.id 4 %}"
                            id="lnk_accounting_tab">
-                        {% if validated_accounting %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                             &nbsp;&nbsp;{%trans 'accounting'%}</a>
                 </li>
                 <li class="{%if tab_active == '5' %}active{%endif%}" id="mn_sociological">
                     <a id="lnk_sociological_tab"
-                       href="{%if application.id%}{% url 'sociological_survey' application.id%}{%else%}{% url 'sociological_survey' %}{%endif%}">
-                        {% if validated_sociological %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
+                       href="{% url 'application_navigation' application.id 5 %}">
                         &nbsp;&nbsp;{%trans 'sociological_survey'%}</a>
                 </li>
                 <li class="{%if tab_active == '6' %}active{%endif%}" id="mn_attachments">
-                    <a href="{%if application.id%}{% url 'attachments' application.id %}{%else%}{% url 'attachments' %}{%endif%}"
+                    <a href="{% url 'application_navigation' application.id 6 %}"
                        id="lnk_attachments_tab" >
-                        {% if validated_attachments %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                         &nbsp;&nbsp;{%trans 'attachments'%}</a>
                 </li>
                 <li class="{%if tab_active == '7' %}active{%endif%}" id="mn_submission">
-                    <a href="{%if application.id%}{% url 'submission' application.id %}{%else%}{% url 'submission' %}{%endif%}"
+                    <a href="{% url 'application_navigation' application.id 7 %}"
                        id="lnk_submission_tab">
-                        {% if validated_submission %}
-                            <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>
-                        {%else%}
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>
-                        {%endif%}
                         &nbsp;&nbsp;{%trans 'submission'%}</a>
                 </li>
             </ul>
@@ -159,5 +111,4 @@
 {% block script %}
     <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
     <script src="{% static 'js/application.js' %}"></script>
-
 {% endblock %}

@@ -1,0 +1,73 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<input type="hidden"
+       value="{{pnl_other_error}}"
+       id="hdn_pnl_other_error_{{curriculum.academic_year}}">
+<div id="pnl_other_{{curriculum.academic_year}}">
+    <br>
+    <label> {% trans 'activity_type'%}</label>
+<br>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year}}"
+                       id="rdb_activity_type_job_{{curriculum.academic_year}}"
+                       value="JOB"
+                       disabled> {% trans 'job'%}
+            </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year}}"
+                       id="rdb_activity_type_internship_{{curriculum.academic_year}}"
+                       value="INTERNSHIP"
+                       disabled> {% trans 'internship'%}
+            </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year}}"
+                       id="rdb_activity_type_volunteering_{{curriculum.academic_year}}"
+                       value="VOLUNTEERING"
+                       disabled> {% trans 'volunteering'%}
+            </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year}}"
+                       id="rdb_activity_type_unemployment_{{curriculum.academic_year}}"
+                       value="UNEMPLOYMENT"
+                       disabled> {% trans 'unemployment'%}
+            </label>
+            <label class="radio-inline">
+                <input type="radio"
+                       name="activity_type_{{curriculum.academic_year}}"
+                       id="rdb_activity_type_illness_{{curriculum.academic_year}}"
+                       value="ILLNESS"
+                       disabled> {% trans 'illness'%}
+            </label>
+
+    <div class="row" id="pnl_activity_detail_{{curriculum.academic_year}}">
+        <br>
+        <div class="col-md-6">
+            <label>{% trans 'question_activity' %}</label>
+            <input type="text" id="txt_activity_{{curriculum.academic_year}}"
+                   name="activity_{{curriculum.academic_year}}"
+                   class="form-control" >
+        </div>
+        <div class="col-md-6">
+            <label>{% trans 'question_activity_place' %}</label>
+            <input type="text" id="txt_activity_place_{{curriculum.academic_year}}"
+                   name="activity_place_{{curriculum.academic_year}}"
+                   class="form-control" >
+
+        </div>
+    </div>
+    <div id="pnl_onem_{{curriculum.academic_year}}" >
+        <br>
+        <label>{% trans 'onem_needed' %}</label>
+        <button type="button" class="btn btn-default"
+                title="{% trans 'onem_needed'%}"
+                id="bt_upload_onem_file_{{curriculum.academic_year}}"
+                style="width:250px;">
+            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> {% trans 'click_to_add'%}
+        </button>
+    </div>
+</div>

@@ -564,3 +564,18 @@ def get_boolean_value(field):
             if field == FIELD_FALSE_STATUS:
                 return False
     return None
+
+
+def read(request, application_id=None):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+        applicant = application.applicant
+    secondary_education = mdl.secondary_education.find_by_person(applicant)
+    data = {'application': application,
+            'tab_active': navigation.PREREQUISITES_TAB,
+            'secondary_education': secondary_education,
+            }
+    data.update(get_secondary_education_exams(secondary_education))
+    data.update(get_secondary_education_files(application))
+
+    return render(request, "reading/admission_home.html", data)

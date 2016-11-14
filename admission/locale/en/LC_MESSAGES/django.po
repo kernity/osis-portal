@@ -1504,3 +1504,9 @@ msgstr ""
 
 msgid "study_domain"
 msgstr "Study domain"
+
+msgid "academic_graduation_year"
+msgstr "Academic year of graduating from high school"
+
+msgid "files"
+msgstr "files"
