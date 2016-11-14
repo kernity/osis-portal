@@ -1476,3 +1476,51 @@ msgstr "Union européenne"
 
 msgid "NON_EUROPEAN_UNION"
 msgstr "Non union européenne"
+
+msgid "submission_confirmation_part1"
+msgstr "Vous voici arrivé(e) sur l'onglet de confirmation de votre demande d'inscription."
+
+msgid "submission_confirmation_part2"
+msgstr ""
+"AVANT de la confirmer ci-dessous, relisez les données que vous avez introduites dans les onglets précédents afin de "
+"vous assurer de ne pas avoir fait d'erreur ou d'omission. Ce sont en effet ces mêmes données qui seront "
+"exploitées tout au long de vos études universitaires."
+
+msgid "submission_confirmation_part3"
+msgstr "Les onglets avec "
+
+msgid "submission_confirmation_part4"
+msgstr " indiquent que les données ne sont pas complètes"
+
+msgid "submission_confirmation_part5"
+msgstr ""
+"Si tout vous parait correct, vous pouvez alors confirmer votre demande d'inscription ci-dessous."
+
+msgid "reading_agreement_part1"
+msgstr "J'ai lu "
+
+msgid "reading_agreement_part2"
+msgstr "le réglement de l'Université et les dispositions relatives à la protection de la vie privée "
+
+msgid "reading_agreement_part3"
+msgstr "et j'en accepte les termes."
+
+msgid "validate_demand"
+msgstr "Vérifier la demande"
+
+msgid "confirm_demand"
+msgstr "Confirmer ma demande d'inscription"
+
+msgid "NEW"
+msgstr "Nouveau"
+
+msgid "SUBMITTED"
+msgstr "Soumis"
+
+msgid "msg_submitted"
+msgstr ""
+msgstr "Le Service des inscriptions de l'Université catholique de Louvain vous confirme avoir reçu une demande "
+"d'inscription de votre part qui porte le numéro de référence : "
+
+msgid "study_domain"
+msgstr "Domaine d'études"

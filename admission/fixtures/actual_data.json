@@ -89414,7 +89414,8 @@
         "grade_type": 12,
         "subject_to_quota": false,
         "offer": 996,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {
@@ -89430,7 +89431,8 @@
         "grade_type": 12,
         "subject_to_quota": false,
         "offer": 999,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {
@@ -89462,7 +89464,8 @@
         "grade_type": 12,
         "subject_to_quota": false,
         "offer": 1004,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {
@@ -89478,7 +89481,8 @@
         "grade_type": 12,
         "subject_to_quota": false,
         "offer": 1006,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {
@@ -89494,7 +89498,8 @@
         "grade_type": 17,
         "subject_to_quota": false,
         "offer": 1009,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {
@@ -92854,7 +92859,8 @@
         "grade_type": 12,
         "subject_to_quota": false,
         "offer": 4217,
-        "campus": 3
+        "campus": 3,
+        "enrollment_enabled": true
     }
 },
 {

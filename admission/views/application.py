@@ -28,7 +28,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from admission import models as mdl
-from admission.models.enums import coverage_access_degree as coverage_access_degree_choices
+from admission.models.enums import coverage_access_degree as coverage_access_degree_choices, application_state
 from admission.views import common, demande_validation, navigation
 from admission.views.common import extra_information
 from admission.views.common import get_picture_id, get_id_document
@@ -176,10 +176,7 @@ def applications(request, application_id=None):
 
 
 def submission(request, application_id=None):
-    if application_id:
-        application = mdl.application.find_by_id(application_id)
-    else:
-        application = mdl.application.init_application(request.user)
+    application = get_application(application_id, request)
     data = {
         'application': application,
         'display_admission_exam': extra_information(application),
@@ -187,7 +184,23 @@ def submission(request, application_id=None):
         'applications': mdl.application.find_by_user(request.user)
     }
     applicant = mdl.applicant.find_by_user(request.user)
-    data.update(demande_validation.get_validation_status(application, applicant))
+    # zut à decommenter et supprimer ce qui suit data.update(demande_validation.get_validation_status(application, applicant))
+    data.update({
+        "validated_profil":             True,
+        "validated_diploma":            True,
+        "validated_curriculum":         True,
+        "validated_application":        True,
+        "validated_accounting":         True,
+        "validated_sociological":       True,
+        "validated_attachments":        True,
+        "validated_submission":         True,
+        "validation_message":           None})
+
+    data.update({"application_valide": get_application_status(data)})
+    if request.method == 'POST':
+        application.state = application_state.SUBMITTED
+        application.save()
+
     return render(request, "admission_home.html", data)
 
 
@@ -298,3 +311,25 @@ def delete_application_assimilation_criteria(application):
         for a in mdl.application_assimilation_criteria.find_by_application(application):
             a.delete()
 
+
+def get_application(application_id, request):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.init_application(request.user)
+    return application
+
+
+def get_application_status(data):
+    return True
+
+
+def application_read(request, application_id=None):
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+        applicant = application.applicant
+    data = {'application' : application,
+            'tab_active' : navigation.DEMAND_TAB
+    }
+
+    return render(request, "reading/admission_home.html", data)

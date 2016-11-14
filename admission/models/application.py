@@ -29,7 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from admission.models import applicant
 from localflavor.generic.models import IBANField, BICField
 from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
-from admission.models.enums import application_type, coverage_access_degree
+from admission.models.enums import application_type, coverage_access_degree, application_state
 
 
 class ApplicationAdmin(admin.ModelAdmin):
@@ -63,6 +63,7 @@ class Application(models.Model):
     bank_account_iban = IBANField(include_countries=IBAN_SEPA_COUNTRIES, blank=True, null=True)
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=35, choices=application_state.APPLICATION_STATE_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return u"%s %s" % (self.applicant, self.offer_year)
