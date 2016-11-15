@@ -1534,3 +1534,9 @@ msgstr "Certificate of achievement or a proof of your enrollment"
 
 msgid "status"
 msgstr "Status"
+
+msgid "PROFESSIONAL_EXAM_CERTIFICATE"
+msgstr "Copy of your certificate or a proof of your exam enrollment"
+
+msgid "ADMISSION_EXAM_CERTIFICATE"
+msgstr "Copy of your certificate or a proof of your enrollment to "

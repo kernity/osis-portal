@@ -1554,3 +1554,9 @@ msgstr "Attestation de réussite ou la preuve d'inscription"
 
 msgid "status"
 msgstr "Statut"
+
+msgid "PROFESSIONAL_EXAM_CERTIFICATE"
+msgstr "Copie de votre certificat ou une preuve d'inscription à l'examen"
+
+msgid "ADMISSION_EXAM_CERTIFICATE"
+msgstr "Copie de votre certificat ou une preuve d'inscription"

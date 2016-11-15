@@ -54,12 +54,12 @@
             {% endif %}
             <br>
             <br>
-            <label> {% trans 'add_enrollment_file' %} </label>
+            <label> {% trans 'file' %} </label>
             <br>
             &nbsp;&nbsp;
              {%if admission_exam_file %}
                  <a href="../../../../../upload/download/{{ admission_exam_file.id }}" target="_blank">
-                     {% trans 'add_professional_exam_file' %}
+                     {% trans  admission_exam_file.document_file.description %}
                  </a>
              {%else%}
                 -

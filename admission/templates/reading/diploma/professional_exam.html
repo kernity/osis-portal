@@ -43,7 +43,7 @@
             <br>
             {%if professional_exam_file %}
                 <a href="../../../../../upload/download/{{ professional_exam_file.id }}" target="_blank">
-                    {% trans 'add_professional_exam_file' %}
+                    {% trans  professional_exam_file.document_file.description %}
                 </a>
             {%else%}
                 -

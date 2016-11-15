@@ -434,9 +434,10 @@ $("#bt_upload_document").click(function(event) {
         'text/plain'];
     if(file){
         if ($.inArray(file.type,accepted_types) >= 0){
+            var url = build_url('upload/save/', '');
             data.append('file', file);
             $.ajax({
-                url: "{% url 'save_uploaded_file' %}",
+                url: url,
                 enctype: 'multipart/form-data',
                 type: 'POST',
                 data : data,

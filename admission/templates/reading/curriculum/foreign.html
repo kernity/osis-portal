@@ -56,55 +56,32 @@
     <br>
     <div class="form-group">
         <label>{% trans 'question_domain' %}</label>
-        <div>
-            <label class="radio-inline">
-                <input type="radio"
-                       name="corresponds_to_domain_foreign_{{curriculum.academic_year}}"
-                       id="rdb_corresponds_to_domain_foreign_true_{{curriculum.academic_year}}"
-                       value="true"
-                       disabled
-                > {% trans 'yes' %}
-            </label>
-            <label class="radio-inline">
-                <input type="radio"
-                       name="corresponds_to_domain_foreign_{{curriculum.academic_year}}"
-                       id="rdb_corresponds_to_domain_foreign_false_{{curriculum.academic_year}}" value="false"
-                       disabled
-                > {% trans 'no' %}
-            </label>
-
-        </div>
+        <br>
+        {%  if  curriculum.diploma_title %}
+            {% trans 'no'%}
+        {% else %}
+            {% trans 'yes'%}
+        {% endif %}
     </div>
     <br>
     <div>
        <label>{% trans 'question_domain_title' %}</label>
        <br>
-       {{ curriculum.diploma_title  | default_if_none:'' }}
+        {% if curriculum.diploma_title and not curriculum.diploma_title = '' %}
+            {{ curriculum.diploma_title}}
+        {% else %}
+            -
+        {% endif %}
     </div>
     <br>
     <div class="form-group">
         <label>{% trans 'question_year_diploma' %}</label>
-        <div>
-            <label class="radio-inline">
-                <input type="radio"
-                       name="diploma_foreign_{{curriculum.academic_year}}"
-                       id="rdb_diploma_foreign_true_{{curriculum.academic_year}}"
-                       value="true"
-                       {%if curriculum.diploma == True %}checked="checked"{%endif%}
-                       disabled
-                > {% trans 'yes' %}
-            </label>
-            <label class="radio-inline">
-                <input type="radio"
-                       name="diploma_foreign_{{curriculum.academic_year}}"
-                       id="rdb_diploma_foreign_false_{{curriculum.academic_year}}"
-                       value="false"
-                       {%if  curriculum.diploma == False %}checked="checked"{%endif%}
-                       disabled
-                > {% trans 'no' %}
-            </label>
-
-        </div>
+        <br>
+        {%  if curriculum.diploma %}
+            {% trans 'yes'%}
+        {% else %}
+            {% trans 'no'%}
+        {% endif %}
     </div>
     <br>
     <div class="row">
