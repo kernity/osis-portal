@@ -335,9 +335,12 @@ def get_data_application_offer_read(application_id, tab_active):
     if application_id:
         application = mdl.application.find_by_id(application_id)
         applicant = application.applicant
+    domain = mdl_base.offer_year_domain.find_by_offer_year(application.offer_year)
     data = {'application': application,
             'tab_active': tab_active,
-            'domain': mdl_base.offer_year_domain.find_by_offer_year(application.offer_year),
+            'domain': domain,
+            'parent': domain.domain.parent,
+
             'curriculum': mdl.curriculum.find_user(applicant),
             'secondary_education': mdl.secondary_education.find_by_person(applicant),
             'education_type_transition': mdl_reference.education_type.find_education_type_by_adhoc('TRANSITION', False),

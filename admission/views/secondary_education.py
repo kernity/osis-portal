@@ -574,6 +574,7 @@ def read(request, application_id=None):
     data = {'application': application,
             'tab_active': navigation.PREREQUISITES_TAB,
             'secondary_education': secondary_education,
+            "local_language_exam_needed":   common.is_local_language_exam_needed(request.user)
             }
     data.update(get_secondary_education_exams(secondary_education))
     data.update(get_secondary_education_files(application))

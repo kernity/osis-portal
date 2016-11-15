@@ -73,3 +73,11 @@ def update(request, application_id=None):
     return render(request, "admission_home.html", data)
 
 
+def read(request, application_id):
+    application = mdl.application.find_by_id(application_id)
+    sociological_survey = sociological_survey_mdl.find_by_applicant(application.applicant)
+    data = {'application': application,
+            'tab_active': navigation.SOCIOLOGICAL_SURVEY_TAB,
+            'sociological_survey': sociological_survey
+            }
+    return render(request, "reading/admission_home.html", data)

@@ -118,6 +118,9 @@ urlpatterns = [
     url(r'^admission/application/read/nav/([0-9]+)/([0-9]+)/$', application.application_navigation, name='application_navigation'),
     url(r'^admission/application/read/prerequisites/([0-9]+)/$', secondary_education.read, name='secondary_education_read'),
     url(r'^admission/application/read/curriculum/([0-9]+)/$', curriculum.read, name='curriculum_read'),
+    url(r'^admission/application/read/attachments/([0-9]+)/$', attachments.read, name='attachments_read'),
+    url(r'^admission/application/read/accounting/([0-9]+)/$', accounting.read, name='accounting_read'),
+    url(r'^admission/application/read/sociological/([0-9]+)/$', sociological.read, name='sociological_read'),
 
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

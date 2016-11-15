@@ -93,7 +93,7 @@ def find_by_id(an_id):
 
 
 def find_user(a_person):
-    return Curriculum.objects.filter(person=a_person)
+    return Curriculum.objects.filter(person=a_person).order_by("-academic_year")
 
 
 def find_by_person_year(a_person, year):

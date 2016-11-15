@@ -25,329 +25,244 @@
 * at the root of the source code of this program.  If not,
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
-<form method="post"
-      id="form_accounting"
-      action="{%if application%}
-                {% url 'accounting_update' application.id %}
-              {%else%}
-                {% url 'accounting_update' %}
-              {%endif%}">
-    {% csrf_token %}
-    <input type="hidden"
-           value="{{application.id}}"
-           name="application_id"
-           id="hdn_application_id"/>
-    <input type="hidden"
-           value="{{application.offer_year.acronym}}"
-           id="hdn_offer_name"/>
-    <input type="hidden"
-           value="{{third_cycle}}"
-           id="hdn_third_cycle"/>
-    <input type="hidden"
-           value="{{application.study_grant}}"
-           id="hdn_study_grant"/>
-    <input type="hidden"
-           id="hdn_following_accounting_tab"
-           name="following_accounting_tab">
-    <div class="row">
-        <div class="col-md-8">
-            <h5>{% trans 'mandatory_asterisk'%}</h5>
-        </div>
-        <div class="col-md-4">
-            <button type="submit" id="bt_submit_accounting" class="btn btn-default pull-right" role="button"
-                    title="{%trans 'save'%}">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                {%trans 'save'%}
-            </button>
-        </div>
+<input type="hidden"
+       value="{{application.id}}"
+       name="application_id"
+       id="hdn_application_id"/>
+<input type="hidden"
+       value="{{application.offer_year.acronym}}"
+       id="hdn_offer_name"/>
+<input type="hidden"
+       value="{{third_cycle}}"
+       id="hdn_third_cycle"/>
+<input type="hidden"
+       value="{{application.study_grant}}"
+       id="hdn_study_grant"/>
+
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-6">
+        <a href="{% url 'curriculum_read' application.id %}"
+           id="lnk_previous_accounting_step_up"
+           class="btn btn-default"
+           title="{% trans 'curriculum'%}">
+            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+            {%trans 'previous_step'%} : {%trans 'curriculum'%}
+        </a>
     </div>
-    <div class="row" style="margin-top:5px;">
-        <div class="col-md-6">
-            <button type="submit"
-                    id="bt_previous_accounting_step_up"
-                    class="btn btn-default"
-                    title="{% trans 'curriculum'%}"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-                {%trans 'previous_step'%} : {%trans 'curriculum'%}</button>
-        </div>
-        <div class="col-md-6">
-            <button type="submit"
-                    id="bt_next_accounting_step_up"
-                    class="btn btn-default pull-right"
-                    title="{% trans 'sociological_survey'%}">{%trans 'next_step'%} : {%trans 'sociological_survey'%}
-                <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            </button>
-        </div>
+    <div class="col-md-6">
+        <a href="{% url 'sociological_read' application.id %}"
+           id="lnk_next_accounting_step_up"
+           class="btn btn-default pull-right"
+           title="{% trans 'sociological_survey'%}">{%trans 'next_step'%} : {%trans 'sociological_survey'%}
+            <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </a>
     </div>
-    <br>
-    {%if form.errors%}
+</div>
+<br>
+
+<div class="panel panel-default"
+     id="pnl_reduction"
+     style="{%if reduction_possible %}visibility:visible;display:block;{%else%}visibility:hidden;display:none;{%endif%}">
+    <div class="panel-heading">{% trans 'reduction'%}</div>
+    <div class="panel-body">
+        <label>{% trans 'question_study_grant'%}</label>
         <br>
-        <span class="error" role="alert" style="margin-left:5px;">
-            {% trans 'there_are' %} {{ form.errors|length}} {% trans 'errors'%}
-        </span>
-        <br><br>
-    {% endif %}
-    <div class="panel panel-default"
-         id="pnl_reduction"
-         style="{%if reduction_possible%}visibility:visible;display:block;{%else%}visibility:hidden;display:none;{%endif%}">
-        <div class="panel-heading">{% trans 'reduction'%}</div>
-        <div class="panel-body">
-            <label>{% trans 'question_study_grant'%}</label>
-            <br>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="study_grant"
-                     id="rdb_study_grant_true"
-                     value="true"
-                     disabled
-                     {%if application.study_grant = True %}checked{%endif%}> {% trans 'yes' %}
-            </label>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="study_grant"
-                     id="rdb_study_grant_false"
-                     value="false"
-                     disabled
-                     {%if application.study_grant != True %}checked{%endif%}> {% trans 'no' %}
-            </label>
+        {% if application.study_grant  %}
+            {% trans 'yes'%}
+        {% else %}
+            {% trans 'no'%}
+        {% endif %}
+        <br>
+        <br>
+        <div id="pnl_no_third_cycle" >
+            {%trans 'additional_information'%} : <a target="_blank" href="http://www.federation-wallonie-bruxelles.be/">
+            {% trans 'french_community_grant'%}</a> ou <a target="_blank" href="http://www.uclouvain.be/aide">
+            {% trans 'institution_help_center'%}</a>
             <br>
             <br>
-            <div id="pnl_no_third_cycle" >
-                {%trans 'additional_information'%} : <a target="_blank" href="http://www.federation-wallonie-bruxelles.be/">
-                {% trans 'french_community_grant'%}</a> ou <a target="_blank" href="http://www.uclouvain.be/aide">
-                {% trans 'institution_help_center'%}</a>
+            <div id="pnl_study_grant_number">
+                <label>{% trans 'study_grant_number'%}</label>
                 <br>
-                <br>
-                <div id="pnl_study_grant_number">
-                    <label>{% trans 'study_grant_number'%}</label>
-                    <br>
-                    <input id="txt_study_grant_number"
-                           name="study_grant_number"
-                           value="{{application.study_grant_number | default_if_none:''}}"
-                           class="form-control">
+                {{application.study_grant_number | default_if_none:'-'}}
 
-                    <span style="font-style:italic;font-size:smaller">{% trans 'unknow_number_yet'%}</span>
-                </div>
-                <div id="pnl_no_study_grant">
-
-                    <label>{%trans 'question_reduction_children'%}</label>
-                    <br>
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="deduction_children"
-                             id="rdb_deduction_children_true"
-                             value="true"
-                             disabled
-                            {%if application.deduction_children = True %}checked{%endif%}> {% trans 'yes' %}
-                    </label>
-                    <label class="radio-inline">
-                      <input type="radio"
-                             name="deduction_children"
-                             id="rdb_deduction_children_false"
-                             value="false"
-                             disabled
-                            {%if application.deduction_children != True %}checked{%endif%}> {% trans 'no' %}
-                    </label>
-                    <br>
-                    <br>
-                    {% trans 'additional_information'%}
-                    <a target="_blank"
-                       href="http://www.uclouvain.be/67986.html"
-                       id="lnk_ucl_children_deduction">Université catholique de Louvain</a>
-                    {% trans 'or'%}
-                    <a target="_blank"
-                       href="http://www.lmv.ucl.ac.be/SITE%20LMV%20REN/index.html"
-                       id="lnk_martin_v_children_deduction">Lycée Martin V</a>
-                    <br>
-                    <br>
-                    <label>{% trans 'add_file_children_deduction'%}</label>
-                    <input type="button" value="{% trans 'add' %}">
-                </div>
+                <span style="font-style:italic;font-size:smaller">{% trans 'unknow_number_yet'%}</span>
             </div>
-            <div id="pnl_third_cycle">
+            <div id="pnl_no_study_grant">
+
+                <label>{%trans 'question_reduction_children'%}</label>
+                <br>
+                {% if application.deduction_children  %}
+                    {% trans 'yes'%}
+                {% else %}
+                    {% trans 'no'%}
+                {% endif %}
+                <br>
+                <br>
                 {% trans 'additional_information'%}
                 <a target="_blank"
-                   href="http://www.uclouvain.be/513082.html"
-                   id="lnk_ucl_third_cycle_deduction">Réduction "3e cycle" ou "Master complémentaire" </a>
+                   href="http://www.uclouvain.be/67986.html"
+                   id="lnk_ucl_children_deduction">Université catholique de Louvain</a>
+                {% trans 'or'%}
+                <a target="_blank"
+                   href="http://www.lmv.ucl.ac.be/SITE%20LMV%20REN/index.html"
+                   id="lnk_martin_v_children_deduction">Lycée Martin V</a>
                 <br>
-                <label>{% trans 'add_file_children_deduction'%}</label>
-                <input type="button" value="{% trans 'add' %}">
+                <br>
             </div>
-            <div id="pnl_study_grant_detail">
-                <br>
-                <label>{%trans 'other_study_grant'%}</label>
-                <br>
-                <label class="radio-inline">
-                  <input type="radio" name="scholarship"
-                         id="rdb_scholarship_true"
-                         value="true"
-                         disabled
-                         {%if application.scholarship = True %}checked{%endif%}> {% trans 'yes' %}
-                </label>
-                <label class="radio-inline">
-                  <input type="radio"
-                         name="scholarship"
-                         id="rdb_scholarship_false"
-                         value="false"
-                         disabled
-                        {%if application.scholarship != True %}checked{%endif%}> {% trans 'no' %}
-                </label>
+        </div>
+        <div id="pnl_third_cycle">
+            {% trans 'additional_information'%}
+            <a target="_blank"
+               href="http://www.uclouvain.be/513082.html"
+               id="lnk_ucl_third_cycle_deduction">Réduction "3e cycle" ou "Master complémentaire" </a>
+            <br>
+            <label>{% trans 'add_file_children_deduction'%}</label>
+            <input type="button" value="{% trans 'add' %}">
+        </div>
+        <div id="pnl_study_grant_detail">
+            <br>
+            <label>{%trans 'other_study_grant'%}</label>
+            <br>
+            {% if application.scholarship  %}
+                {% trans 'yes'%}
+            {% else %}
+                {% trans 'no'%}
+            {% endif %}
+            <label class="radio-inline">
+              <input type="radio" name="scholarship"
+                     id="rdb_scholarship_true"
+                     value="true"
+                     disabled
+                     {%if application.scholarship = True %}checked{%endif%}> {% trans 'yes' %}
+            </label>
+            <label class="radio-inline">
+              <input type="radio"
+                     name="scholarship"
+                     id="rdb_scholarship_false"
+                     value="false"
+                     disabled
+                    {%if application.scholarship != True %}checked{%endif%}> {% trans 'no' %}
+            </label>
 
-                <div id="pnl_scholarship_organization">
-                    <br>
-                    <label>{% trans 'other_study_grant_address'%}</label>
-                    <br>
-                    <textarea id="txt_scholarship_organization"
-                              name="scholarship_organization"
-                              class="form-control"
-                           >{{application.scholarship_organization | default_if_none:''}}</textarea>
-                    {% if form.scholarship_organization.errors %}
-                        <br>
-                        <font class="error">{{ form.scholarship_organization.errors | striptags  }}</font>
-                    {%endif%}
-                </div>
+            <div id="pnl_scholarship_organization">
                 <br>
-                <label>{%trans 'general_notice'%}</label>&nbsp;{%trans 'general_reduction_notice'%}
-                <a target="_blank" href="http://www.uclouvain.be/270686.html">http://www.uclouvain.be/270686.html</a>
+                <label>{% trans 'other_study_grant_address'%}</label>
+                <br>
+                <textarea id="txt_scholarship_organization"
+                          name="scholarship_organization"
+                          class="form-control"
+                       >{{application.scholarship_organization | default_if_none:''}}</textarea>
             </div>
+            <br>
+            <label>{%trans 'general_notice'%}</label>&nbsp;{%trans 'general_reduction_notice'%}
+            <a target="_blank" href="http://www.uclouvain.be/270686.html">http://www.uclouvain.be/270686.html</a>
         </div>
     </div>
-    <div class="panel panel-default" id="pnl_debts" style="{%if debts_check%}visibility:visible;display:block;{%else%}visibility:hidden;display:none;{%endif%}">
-        <div class="panel-heading">{% trans 'title_no_debts'%}</div>
-        <div class="panel-body">
-            <label>{% trans 'add_file_no_debts'%}</label>
-            {{ previous_academic_year }} &nbsp;&nbsp; <input type="button" value="{% trans 'add' %}">
-        </div>
+</div>
+<div class="panel panel-default" id="pnl_debts" style="{%if debts_check%}visibility:visible;display:block;{%else%}visibility:hidden;display:none;{%endif%}">
+    <div class="panel-heading">{% trans 'title_no_debts'%}</div>
+    <div class="panel-body">
+        <label>{% trans 'add_file_no_debts'%}</label>
+        {{ previous_academic_year }} &nbsp;&nbsp; <input type="button" value="{% trans 'add' %}">
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">{% trans 'sport_affiliation'%} {{ academic_year}}</div>
-        <div class="panel-body">
-            <label>{% trans 'sport_affiliation_lln'%}</label>
-            <br>
-            <label class="error">{%trans 'affiliation_cost_part1'%} {{sport_affiliation_amount}}
-                {%trans 'affiliation_cost_part2'%}</label>
-            <br>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="sport_membership"
-                     id="rdb_sport_membership_true"
-                     value="true"
-                     disabled
-                     {%if application.sport_membership = True %}checked{%endif%}> {%trans 'yes'%}
-            </label>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="sport_membership"
-                     id="rdb_sport_membership_false"
-                     value="false"
-                     disabled
-                     {%if application.sport_membership != True %}checked{%endif%}> {%trans 'no'%}
-            </label>
-            <br>
-            {%trans 'sport_affiliation_lln_information'%}
-            <a target="_blank" href="http://www.uclouvain.be/sport-infos">http://www.uclouvain.be/sport-infos</a>
-        </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans 'sport_affiliation'%} {{ academic_year}}</div>
+    <div class="panel-body">
+        <label>{% trans 'sport_affiliation_lln'%}</label>
+        <br>
+        <label class="error">{%trans 'affiliation_cost_part1'%} {{sport_affiliation_amount}}
+            {%trans 'affiliation_cost_part2'%}</label>
+        <br>
+        {% if application.sport_membership  %}
+            {% trans 'yes'%}
+        {% else %}
+            {% trans 'no'%}
+        {% endif %}
+        <br>
+        {%trans 'sport_affiliation_lln_information'%}
+        <a target="_blank" href="http://www.uclouvain.be/sport-infos">http://www.uclouvain.be/sport-infos</a>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">{%trans 'culture_card'%} {{ academic_year}}</div>
-        <div class="panel-body">
-            <label>{% trans 'question_culture_card'%}</label>
-            <br>
-            <label class="error">{% trans 'affiliation_cost_part1'%}{{culture_affiliation_amount}}
-                {% trans 'affiliation_cost_part2'%}</label>
-            <br>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="culture_membership"
-                     id="rdb_culture_membership_true"
-                     value="true"
-                     disabled
-                     {%if application.culture_membership = True %}checked{%endif%}> {% trans 'yes'%}
-            </label>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="culture_membership"
-                     id="rdb_culture_membership_false"
-                     value="false"
-                     disabled
-                     {%if application.culture_membership != True %}checked{%endif%}> {% trans 'no'%}
-            </label>
-            <br>
-            {% trans 'additional_info_culture_card'%}
-            <a target="_blank" href="http://www.carteculture.be">http://www.carteculture.be</a>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">{% trans 'solidarity_card'%} {{ academic_year}}</div>
-        <div class="panel-body">
-            <label>{% trans 'question_solidarity_card'%} </label>
-            <br>
-            <label class="error">{% trans 'affiliation_cost_part1'%} {{solidary_affiliation_amount}}
-                {% trans 'affiliation_cost_part2'%}</label>
-            <br>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="solidarity_membership"
-                     id="rdb_solidarity_membership_true"
-                     value="true"
-                     disabled
-                     {%if application.solidarity_membership = True %}checked{%endif%}> {% trans 'yes'%}
-            </label>
-            <label class="radio-inline">
-              <input type="radio"
-                     name="solidarity_membership"
-                     id="rdb_solidarity_membership_false"
-                     value="false"
-                     disabled
-                     {%if application.solidarity_membership != True %}checked{%endif%}> {% trans 'no'%}
-            </label>
-            <br>
-            {% trans 'additional_info_solidarity_card'%}
-            <a target="_blank" href="http://www.louvaincooperation.org/index.php/la-carte-solidaire">
-                http://www.louvaincooperation.org/index.php/la-carte-solidaire</a>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">{% trans 'bank_account'%}</div>
-        <div class="panel-body">
-            {%trans 'belgian_bank_account'%}
-            <br>
-            {% trans 'belgian_bank_account_precision'%}
-            <br>
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <label>{% trans 'iban_number'%}</label>
-                    <br>
-                    {{application.bank_account_iban | default_if_none:'-'}}
-                </div>
-                 <div class="col-md-6">
-                    <label>{% trans 'bic_number'%}</label><br>
-                    {{application.bank_account_bic | default_if_none:'-'}}
-                </div>
-            </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{%trans 'culture_card'%} {{ academic_year}}</div>
+    <div class="panel-body">
+        <label>{% trans 'question_culture_card'%}</label>
+        <br>
+        <label class="error">{% trans 'affiliation_cost_part1'%}{{culture_affiliation_amount}}
+            {% trans 'affiliation_cost_part2'%}</label>
+        <br>
+        {% if application.culture_membership  %}
+            {% trans 'yes'%}
+        {% else %}
+            {% trans 'no'%}
+        {% endif %}
 
-            <br>
-            <label>{% trans 'bank_account_holder_name'%}</label><br>
-            {{application.bank_account_name | default_if_none:'-'}}
-        </div>
+        <br>
+        {% trans 'additional_info_culture_card'%}
+        <a target="_blank" href="http://www.carteculture.be">http://www.carteculture.be</a>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <button id="bt_previous_accounting_step_down"
-                    type="submit"
-                    class="btn btn-default"
-                    title="{% trans 'curriculum'%}">
-                <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-                {%trans 'previous_step'%} : {%trans 'curriculum'%}
-            </button>
-        </div>
-        <div class="col-md-6">
-            <button id="bt_next_accounting_step_down"
-                    type="submit"
-                    class="btn btn-default pull-right"
-                    title="{% trans 'sociological_survey'%}">{%trans 'next_step'%} : {%trans 'sociological_survey'%}
-                <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-            </button>
-        </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans 'solidarity_card'%} {{ academic_year}}</div>
+    <div class="panel-body">
+        <label>{% trans 'question_solidarity_card'%} </label>
+        <br>
+        <label class="error">{% trans 'affiliation_cost_part1'%} {{solidary_affiliation_amount}}
+            {% trans 'affiliation_cost_part2'%}</label>
+        <br>
+        {% if application.solidarity_membership  %}
+            {% trans 'yes'%}
+        {% else %}
+            {% trans 'no'%}
+        {% endif %}
+        <br>
+        {% trans 'additional_info_solidarity_card'%}
+        <a target="_blank" href="http://www.louvaincooperation.org/index.php/la-carte-solidaire">
+            http://www.louvaincooperation.org/index.php/la-carte-solidaire</a>
     </div>
-</form>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans 'bank_account'%}</div>
+    <div class="panel-body">
+        {%trans 'belgian_bank_account'%}
+        <br>
+        {% trans 'belgian_bank_account_precision'%}
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <label>{% trans 'iban_number'%}</label>
+                <br>
+                {{application.bank_account_iban | default_if_none:'-'}}
+            </div>
+             <div class="col-md-6">
+                <label>{% trans 'bic_number'%}</label><br>
+                {{application.bank_account_bic | default_if_none:'-'}}
+            </div>
+        </div>
+
+        <br>
+        <label>{% trans 'bank_account_holder_name'%}</label><br>
+        {{application.bank_account_name | default_if_none:'-'}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <a href="{% url 'curriculum_read' application.id %}"
+           id="lnk_previous_accounting_step_down"
+           class="btn btn-default"
+           title="{% trans 'curriculum'%}">
+            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+            {%trans 'previous_step'%} : {%trans 'curriculum'%}
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="{% url 'sociological_read' application.id %}"
+           id="lnk_next_accounting_step_down"
+           class="btn btn-default pull-right"
+           title="{% trans 'sociological_survey'%}">{%trans 'next_step'%} : {%trans 'sociological_survey'%}
+            <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </a>
+    </div>
+</div>

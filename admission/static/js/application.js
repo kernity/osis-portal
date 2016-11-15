@@ -24,8 +24,7 @@ $(document).ready(function() {
     $('#chb_admission_exam_type').prop( "checked", false);
 
     populate_exam_admin();
-
-    if($('#hdn_current_application_id').val() != '') {
+    if ($('#hdn_current_application_id').val() != '') {
         $('#txt_offer_year_id').val($('#hdn_application_offer_year_id').val());
         $('#slt_offer_type').val($('#hdn_application_grade_type_id').val());
         display_known_offer($('#hdn_application_offer_year_id').val());
@@ -896,4 +895,3 @@ $('[id="chb_agree"]').click(function(event) {
     }
     return true;
 });
-

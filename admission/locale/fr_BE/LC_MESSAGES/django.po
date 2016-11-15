@@ -1519,7 +1519,7 @@ msgstr "Soumis"
 
 msgid "msg_submitted"
 msgstr ""
-msgstr "Le Service des inscriptions de l'Université catholique de Louvain vous confirme avoir reçu une demande "
+"Le Service des inscriptions de l'Université catholique de Louvain vous confirme avoir reçu une demande "
 "d'inscription de votre part qui porte le numéro de référence : "
 
 msgid "study_domain"
@@ -1530,3 +1530,27 @@ msgstr "Année académique d'obtention"
 
 msgid "files"
 msgstr "Fichiers"
+
+msgid "type"
+msgstr "Type"
+
+msgid "LOW"
+msgstr "Moins de 65%"
+
+msgid "MIDDLE"
+msgstr "Entre 65 et 75%"
+
+msgid "HIGH"
+msgstr "Plus que 75%"
+
+msgid "FRENCH"
+msgstr "Communauté française de Belgique "
+
+msgid "DUTCH"
+msgstr "Communauté flammande de Belgique "
+
+msgid "success_proof_file"
+msgstr "Attestation de réussite ou la preuve d'inscription"
+
+msgid "status"
+msgstr "Statut"

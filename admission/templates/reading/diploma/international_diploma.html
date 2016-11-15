@@ -7,67 +7,33 @@
         <br>
         <label>{% trans 'international_diploma_question'%}</label>
         <br>
-        <input type="radio"
-               name="international_diploma"
-               id="rdb_foreign_baccalaureate_diploma_national"
-               value="NATIONAL"
-               disabled>&nbsp;&nbsp;{% trans 'baccalaureat_national' %}
+        {% if secondary_education.international_diploma = 'NATIONAL' %}
+            {% trans 'baccalaureat_national' %}
+        {% endif %}
+        {% if secondary_education.international_diploma = 'EUROPEAN' %}
+            {% trans 'baccalaureat_european' %}
+            <img src="{% static 'img/schola_europaea.jpg' %}" height="50px">
+        {% endif %}
         <br>
-        <input type="radio"
-               name="international_diploma"
-               id="rdb_foreign_baccalaureate_diploma_european"
-               value="EUROPEAN"
-               disabled>&nbsp;&nbsp;{% trans 'baccalaureat_european' %}&nbsp;&nbsp;
-        <img src="{% static 'img/schola_europaea.jpg' %}" height="50px">
-        <br>
-        <input type="radio"
-               name="international_diploma"
-               id="rdb_foreign_baccalaureate_diploma_international"
-               value="INTERNATIONAL"
-               disabled>&nbsp;&nbsp;{% trans 'baccalaureat_international' %}&nbsp;&nbsp;
-        <img src="{% static 'img/ib-world-school.png' %}" height="50px">
+        {% if secondary_education.international_diploma = 'INTERNATIONAL' %}
+            {% trans 'baccalaureat_international' %}
+            <img src="{% static 'img/ib-world-school.png' %}" height="50px">
+        {% endif %}
+
         <br><br>
     </div>
     <div class="row">
         <div class="col-md-5">
             <label>{%trans 'awarding_country' %}</label>
-            <select class="form-control"
-                     id="slt_country"
-                     name="international_diploma_country">
-                <option value="-">-</option>
-                {% for c in countries %}
-                    <option value="{{ c.id }}">{{ c }}</option>
-                {% endfor %}
-            </select>
+            <br>
+            {{ secondary_education.international_diploma_country.name | default_if_none:'-'}}
         </div>
         <div class="col-md-7">
             <label >{% trans 'linguistic_regime'%}</label>
-            <select class="form-control"
-                     id="slt_language_diploma"
-                     name="international_diploma_language">
-                <option value="-" style="font-style: italic;color:grey">--- {% trans 'linguistic_regime' %} ---</option>
-                {%for recognized_lang in recognized_languages %}
-                    <option value="{{ recognized_lang.id }}">{{ recognized_lang.name }}</option>
-                {%endfor%}
-                <option value="-" style="font-style: italic;color:grey">--- {% trans 'other_linguistic_regime' %} --- </option>
-                {% for l in languages %}
-                    <option value="{{ l.id }}">{{ l }}</option>
-                {% endfor %}
-            </select>
+            <br>
+            {{ secondary_education.international_diploma_language | default_if_none:'-'}}
         </div>
     </div>
-    <select id="slt_language_diploma_recognized"
-             name="international_diploma_language_recognized"
-             style="visibility:hidden;display:none;">
-        <option value="-">--- {% trans 'linguistic_regime' %} ---</option>
-        {%for recognized_lang in recognized_languages %}
-            <option value="{{ recognized_lang.id }}">{{ recognized_lang.recognized }}</option>
-        {%endfor%}
-        <option value="-">--- {% trans 'other_linguistic_regime' %} --- </option>
-        {%for l in languages %}
-            <option value="{{ l.id }}">{{ l.recognized }}</option>
-        {% endfor %}
-    </select>
     <br>
 
     <div id="pnl_equivalence"
@@ -128,28 +94,11 @@
         <div class="panel-body">
             <label>{% trans 'which_result'%}</label>
             <br>
-            <label class="radio-inline">
-                <input type="radio"
-                     name="foreign_result"
-                     id="rdb_foreign_result_low"
-                     value="LOW"
-                     disabled> {% trans 'low_result'%}
-            </label>
-            <label class="radio-inline">
-                <input type="radio"
-                     name="foreign_result"
-                     id="rdb_foreign_result_middle"
-                     value="MIDDLE"
-                     disabled> {% trans 'middle_result'%}
-            </label>
-            <label class="radio-inline">
-                <input type="radio"
-                     name="foreign_result"
-                     id="rdb_foreign_result_high"
-                     value="HIGH"
-                     disabled> {% trans 'high_result'%}
-            </label>
-
+            {% if secondary_education.result %}
+                {%  trans  secondary_education.result %}
+            {% else %}
+                -
+            {% endif %}
         </div>
     </div>
     <div class="panel panel-default">
@@ -160,174 +109,107 @@
             <br>
             <label>{% trans 'original_of' %}</label>
             <br>
-            <div class="row">
-                <div class="col-md-6">
-                    {%if international_diploma_recto%}
-                        <button type="button" class="btn btn-success"
-                                title="{%trans 'modify' %}{% trans 'high_school_diploma'%} - {% trans 'recto'%}"
-                                id="bt_load_doc_INTERNATIONAL_DIPLOMA_RECTO"
-                                data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                  id="spn_bt_load_doc_INTERNATIONAL_DIPLOMA_RECTO"></span> {% trans 'high_school_diploma'%} - {% trans 'recto'%}
-                        </button>
-                    {%else%}
-                        <button type="button" class="btn btn-default"
-                                title="{%trans 'add' %} {% trans 'high_school_diploma'%} - {% trans 'recto'%}"
-                                id="bt_load_doc_INTERNATIONAL_DIPLOMA_RECTO"
-                                data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                  id="spn_bt_load_doc_INTERNATIONAL_DIPLOMA_RECTO"></span> {% trans 'high_school_diploma'%} - {% trans 'recto'%}
-                        </button>
-                    {%endif%}
-                </div>
-                <div class="col-md-6">
-                    {% if international_diploma_verso%}
-                        <button type="button" class="btn btn-success"
-                                title="{% trans 'modify'%} {% trans 'high_school_diploma'%} - {% trans 'verso'%}"
-                                id="bt_load_doc_INTERNATIONAL_DIPLOMA_VERSO"
-                                data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                  id="spn_bt_load_doc_INTERNATIONAL_DIPLOMA_VERSO"></span> {% trans 'high_school_diploma'%} - {% trans 'verso'%}
-                        </button>
-                    {%else%}
-                        <button type="button" class="btn btn-default"
-                                title="{% trans 'add'%} {% trans 'high_school_diploma'%} - {% trans 'verso'%}"
-                                id="bt_load_doc_INTERNATIONAL_DIPLOMA_VERSO"
-                                data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                  id="spn_bt_load_doc_INTERNATIONAL_DIPLOMA_VERSO"></span> {% trans 'high_school_diploma'%} - {% trans 'verso'%}
-                        </button>
-                    {%endif%}
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    {%if high_school_scores_transcript_recto%}
-                        <button type="button"
-                                 class="btn btn-success"
-                                 title="{%trans 'modify'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}"
-                                 id="bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"
-                                 data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                  id="spn_bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
-                        </button>
-                    {%else%}
-                        <button type="button"
-                                 class="btn btn-default"
-                                 title="{%trans 'add'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}"
-                                 id="bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"
-                                 data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                  id="spn_bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
-                        </button>
-                    {%endif%}
-                </div>
-                <div class="col-md-6">
-                    {%if high_school_scores_transcript_verso%}
-                        <button type="button" class="btn btn-success"
-                                 title="{% trans 'modify'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'verso'%}"
-                                 id="bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"
-                                 data-toggle="modal" data-target="#pnl_upload_documents">
-                           <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                  id="spn_bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'verso'%}
-                        </button>
-                    {%else%}
-                        <button type="button" class="btn btn-default"
-                                 title="{% trans 'add'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'verso'%}"
-                                 id="bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"
-                                 data-toggle="modal" data-target="#pnl_upload_documents">
-                            <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                  id="spn_bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'verso'%}
-                        </button>
-                    {%endif%}
-                </div>
-            </div>
-            <br>
+            <ul>
+                {% if international_diploma_recto or international_diploma_verso or high_school_scores_transcript_recto or high_school_scores_transcript_verso%}
+                    {%if international_diploma_recto %}
+                        <li>
+                            <a href="../../../../../upload/download/{{ international_diploma_recto.id }}" target="_blank">
+                                {% trans 'high_school_diploma'%} - {% trans 'recto'%}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {%if international_diploma_verso %}
+                        <li>
+                            <a href="../../../../../upload/download/{{ international_diploma_verso.id }}" target="_blank">
+                                {% trans 'high_school_diploma'%} - {% trans 'verso'%}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {%if high_school_scores_transcript_recto %}
+                        <li>
+                            <a href="../../../../../upload/download/{{ high_school_scores_transcript_recto.id }}" target="_blank">
+                                {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {%if high_school_scores_transcript_verso %}
+                        <li>
+                            <a href="../../../../../upload/download/{{ high_school_scores_transcript_verso.id }}" target="_blank">
+                                {% trans 'high_school_diploma_transcript'%} - {% trans 'verso'%}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </ul>
+
             <div id="pnl_translation">
                 <label>{% trans 'high_school_diplome_translation'%}</label>
                 <br>
-                <div class="row">
-                    <div class="col-md-6">
+                {%if translated_international_diploma_recto or translated_international_diploma_verso or translated_high_school_scores_transcript_recto or translated_high_school_scores_transcript_verso or translated_international_diploma_recto or translated_international_diploma_verso or translated_high_school_scores_transcript_recto or translated_high_school_scores_transcript_verso %}
+                    <ul>
                         {%if translated_international_diploma_recto%}
-                            <button type="button" class="btn btn-success"
-                                    title="{%trans 'modify'%} {% trans 'high_school_diploma'%} - {% trans 'recto'%}"
-                                    id="bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_RECTO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                        <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                              id="spn_bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_RECTO"></span> {% trans 'high_school_diploma'%} - {% trans 'recto'%}
-                            </button>
-                        {%else%}
-                            <button type="button" class="btn btn-default"
-                                    title="{%trans 'add'%} {% trans 'high_school_diploma'%} - {% trans 'recto'%}"
-                                    id="bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_RECTO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                        <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                              id="spn_bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_RECTO"></span> {% trans 'high_school_diploma'%} - {% trans 'recto'%}
-                            </button>
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_international_diploma_recto.id }}" target="_blank">
+                                    {% trans 'high_school_diploma'%} - {% trans 'recto'%}
+                                </a>
+                            </li>
                         {%endif%}
-                    </div>
-                    <div class="col-md-6">
                         {%if translated_international_diploma_verso%}
-                            <button type="button" class="btn btn-success"
-                                    title="{%trans 'modify'%} {% trans 'high_school_diploma'%} - {% trans 'verso'%}"
-                                    id="bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_VERSO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_VERSO"></span> {% trans 'high_school_diploma'%} - {% trans 'verso'%}
-                            </button>
-                        {%else%}
-                            <button type="button" class="btn btn-default"
-                                    title="{%trans 'add'%} {% trans 'high_school_diploma'%} - {% trans 'verso'%}"
-                                    id="bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_VERSO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_INTERNATIONAL_DIPLOMA_VERSO"></span> {% trans 'high_school_diploma'%} - {% trans 'verso'%}
-                            </button>
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_international_diploma_verso.id }}" target="_blank">
+                                    {% trans 'high_school_diploma'%} - {% trans 'verso'%}
+                                </a>
+                            </li>
                         {%endif%}
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
                         {% if translated_high_school_scores_transcript_recto%}
-                            <button type="button" class="btn btn-success"
-                                    title="{% trans 'modify'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}"
-                                    id="bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
-                            </button>
-                        {%else%}
-                            <button type="button" class="btn btn-default"
-                                    title="{% trans 'add'%} {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}"
-                                    id="bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO"></span> {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
-                            </button>
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_high_school_scores_transcript_recto.id }}" target="_blank">
+                                    {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
+                                </a>
+                            </li>
                         {%endif%}
-                    </div>
-                    <div class="col-md-6">
                         {%if translated_high_school_scores_transcript_verso%}
-                            <button type="button" class="btn btn-success"
-                                    title="{% trans 'modify'%} {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}"
-                                    id="bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"></span> {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}
-                            </button>
-                        {%else%}
-                            <button type="button" class="btn btn-default"
-                                    title="{% trans 'add'%} {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}"
-                                    id="bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"
-                                    data-toggle="modal" data-target="#pnl_upload_documents">
-                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"
-                                          id="spn_bt_load_doc_TRANSLATED_HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO"></span> {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}
-                            </button>
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_high_school_scores_transcript_verso.id }}" target="_blank">
+                                    {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}
+                                </a>
+                            </li>
                         {%endif%}
-                    </div>
-                </div>
+                        {%if translated_international_diploma_recto%}
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_international_diploma_recto.id }}" target="_blank">
+                                    {% trans 'high_school_diploma'%} - {% trans 'recto'%}
+                                </a>
+                            </li>
+                        {%endif%}
+                        {%if translated_international_diploma_verso%}
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_international_diploma_verso.id }}" target="_blank">
+                                    {% trans 'high_school_diploma'%} - {% trans 'verso'%}
+                                </a>
+                            </li>
+                        {%endif%}
+                        {% if translated_high_school_scores_transcript_recto%}
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_high_school_scores_transcript_recto.id }}" target="_blank">
+                                    {% trans 'high_school_diploma_transcript'%} - {% trans 'recto'%}
+                                </a>
+                            </li>
+                        {%endif%}
+                        {%if translated_high_school_scores_transcript_verso%}
+                            <li>
+                                <a href="../../../../../upload/download/{{ translated_high_school_scores_transcript_verso.id }}" target="_blank">
+                                    {% trans 'high_school_diploma_transcript' %} - {% trans 'verso'%}
+                                </a>
+                            </li>
+                        {%endif%}
+                    </ul>
+                {%else%}
+                    -
+                {%endif%}
+                <br>
             </div>
         </div>
     </div>

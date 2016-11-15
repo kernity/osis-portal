@@ -174,3 +174,14 @@ def third_cycle(application):
     except:  # RelatedObjectDoesNotExist
         return False
     return False
+
+
+def read(request, application_id=None):
+    application = mdl.application.find_by_id(application_id)
+    data = {'application': application,
+            'tab_active': navigation.ACCOUNTING_TAB,
+            "debts_check": debts_check(application),
+            "reduction_possible": reduction_possible(application),
+            "third_cycle": third_cycle(application)
+            }
+    return render(request, "reading/admission_home.html", data)

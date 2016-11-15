@@ -443,7 +443,7 @@ def validate_local_fields_form(curriculum, curriculum_year, validation_messages,
         if data_dict['diploma'] == "true":
             curriculum.diploma = True
 
-    if curriculum.academic_year.year >= 2014:
+    if curriculum.academic_year >= 2014:
         if data_dict['credits_enrolled'] is None or len(data_dict['credits_enrolled']) == 0:
             validation_messages['credits_enrolled_%s' % curriculum_year] = _('mandatory_field')
             is_valid = False
@@ -463,7 +463,7 @@ def validate_local_fields_form(curriculum, curriculum_year, validation_messages,
             validation_messages['credits_enrolled_%s' % curriculum_year] = _('numeric_field')
             is_valid = False
 
-    if curriculum.academic_year.year >= 2014:
+    if curriculum.academic_year >= 2014:
         if data_dict['credits_obtained'] is None \
                 or len(data_dict['credits_obtained']) == 0:
             validation_messages['credits_obtained_%s' % curriculum_year] = _('mandatory_field')

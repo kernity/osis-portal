@@ -146,3 +146,13 @@ def save_document_from_form(document, user):
     applicant_document_file = ApplicantDocumentFile(applicant=applicant, document_file=doc_file)
     applicant_document_file.save()
 
+
+def read(request, application_id=None):
+    application = mdl.application.find_by_id(application_id)
+    past_attachments = list_attachments(request.user)
+    data = {'application': application,
+            'tab_active': navigation.ATTACHMENTS_TAB,
+            "attachments": past_attachments,
+            }
+
+    return render(request, "reading/admission_home.html", data)

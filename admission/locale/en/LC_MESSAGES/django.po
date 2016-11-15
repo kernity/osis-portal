@@ -1510,3 +1510,27 @@ msgstr "Academic year of graduating from high school"
 
 msgid "files"
 msgstr "files"
+
+msgid "type"
+msgstr "Type"
+
+msgid "LOW"
+msgstr "Less than 65%"
+
+msgid "MIDDLE"
+msgstr "Between 65 and 75%"
+
+msgid "HIGH"
+msgstr "More than 75%"
+
+msgid "FRENCH"
+msgstr "French-speaking Community of Belgium"
+
+msgid "DUTCH"
+msgstr "Dutch-speaking Community of Belgium"
+
+msgid "success_proof_file"
+msgstr "Certificate of achievement or a proof of your enrollment"
+
+msgid "status"
+msgstr "Status"

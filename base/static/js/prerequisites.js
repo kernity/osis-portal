@@ -1001,10 +1001,9 @@ function disabled_other_language(){
 }
 
 function enabled_other_language(){
-    document.getElementById('slt_country').selectedIndex = 0;
-    document.getElementById('slt_country').disabled=true;
-    document.getElementById('pnl_translation').style="visibility:visible;display:block;";
-
+    $('#slt_country').prop("selectedIndex",0);
+    $('#slt_country').prop("disabled",true);
+    $('#pnl_translation').css('visibility', 'visible').css('display','block');
 }
 
 $("#slt_schools").change(function(event) {
