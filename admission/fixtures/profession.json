@@ -1,16 +1,138 @@
 [
-  {
+{
     "model": "admission.profession",
     "pk": 1,
     "fields": {
-      "name": "Inconnu"
+        "name": "Chef d’une exploitation agricole de moins de 30 ha",
+        "adhoc": false
     }
-  },
-  {
+},
+{
     "model": "admission.profession",
     "pk": 2,
     "fields": {
-      "name": "Chef d'une exploitation agricole de moins de 30 ha."
+        "name": "Chef d’une exploitation agricole de plus de 30 ha",
+        "adhoc": false
     }
-  }
+},
+{
+    "model": "admission.profession",
+    "pk": 3,
+    "fields": {
+        "name": "Indépendant isolé ou chef d’une entreprise occupant moins de 5 personnes(ex: artisan, commerçant, détaillant, coiffeur, cordonnier, tailleur, modiste,etc)",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 5,
+    "fields": {
+        "name": "Chef d’une entreprise industrielle ou commerciale occupant en moyenne de 5 à 49 personnes",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 6,
+    "fields": {
+        "name": "Chef d’une entreprise industrielle ou commerciale occupant en moyenne 50 personnes et plus",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 7,
+    "fields": {
+        "name": "Titulaire d’une profession libérale, soit uniquement: médecin, pharmacien, dentiste, vétérinaire, avocat, notaire, ingénieur-conseil, architecte",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 8,
+    "fields": {
+        "name": "Titulaire d’une autre profession indépendante non reprise ci-dessus, telle que courtier, agent d’assurances, agent de change, expert immobilier, kinésithérapeute, huissier de justice, commerce de luxe, hôtellerie, etc",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 9,
+    "fields": {
+        "name": "Ouvrier, ouvrier agricole, manoeuvre, mineur, cheminot, cuisiner, chauffeur de camion, etc",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 10,
+    "fields": {
+        "name": "Contremaître, chef d’équipe",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 11,
+    "fields": {
+        "name": "Employé (niveau enseignement primaire ou secondaire inférieur), puéricultrice, sous-officier sans qualification",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 12,
+    "fields": {
+        "name": "Employé qualifié(niveau enseignement secondaire supérieur complet), sous officier avec qualification",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 13,
+    "fields": {
+        "name": "Cadre (niveau enseignement supérieur non universitaire), instituteur, régent, directeur d’école primaire, assistant social, officier subalterne, etc",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 14,
+    "fields": {
+        "name": "Cadre supérieur (niveau universitaire), professeur dans le secondaire supérieur, chercheur, officier supérieur,etc",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 15,
+    "fields": {
+        "name": "Cadre dirigeant (directeur général, secrétaire général, PDG, professeur d’université, etc), président de cour d’appel, officier général",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 16,
+    "fields": {
+        "name": "Administrateur de société",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 17,
+    "fields": {
+        "name": "Homme politique, sénateur, député, bourgmestre d’une commune de plus de 30.000 habitants",
+        "adhoc": false
+    }
+},
+{
+    "model": "admission.profession",
+    "pk": 18,
+    "fields": {
+        "name": "Comédien, artiste, sportif, musicien",
+        "adhoc": false
+    }
+}
 ]
