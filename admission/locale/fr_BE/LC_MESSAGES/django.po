@@ -1519,7 +1519,7 @@ msgstr "Soumis"
 
 msgid "msg_submitted"
 msgstr ""
-msgstr "Le Service des inscriptions de l'Université catholique de Louvain vous confirme avoir reçu une demande "
+"Le Service des inscriptions de l'Université catholique de Louvain vous confirme avoir reçu une demande "
 "d'inscription de votre part qui porte le numéro de référence : "
 
 msgid "study_domain"

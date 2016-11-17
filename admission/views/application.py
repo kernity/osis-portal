@@ -184,18 +184,7 @@ def submission(request, application_id=None):
         'applications': mdl.application.find_by_user(request.user)
     }
     applicant = mdl.applicant.find_by_user(request.user)
-    # zut à decommenter et supprimer ce qui suit data.update(demande_validation.get_validation_status(application, applicant))
-    data.update({
-        "validated_profil":             True,
-        "validated_diploma":            True,
-        "validated_curriculum":         True,
-        "validated_application":        True,
-        "validated_accounting":         True,
-        "validated_sociological":       True,
-        "validated_attachments":        True,
-        "validated_submission":         True,
-        "validation_message":           None})
-
+    data.update(demande_validation.get_validation_status(application, applicant))
     data.update({"application_valide": get_application_status(data)})
     if request.method == 'POST':
         application.state = application_state.SUBMITTED
@@ -321,15 +310,14 @@ def get_application(application_id, request):
 
 
 def get_application_status(data):
-    return True
-
-
-def application_read(request, application_id=None):
-    if application_id:
-        application = mdl.application.find_by_id(application_id)
-        applicant = application.applicant
-    data = {'application' : application,
-            'tab_active' : navigation.DEMAND_TAB
-    }
-
-    return render(request, "reading/admission_home.html", data)
+    if(data['validated_profil'] and
+       data['validated_diploma'] and
+       data['validated_curriculum'] and
+       data['validated_application'] and
+       data['validated_accounting'] and
+       data['validated_sociological'] and
+       data['validated_attachments'] and
+       data['validated_submission'] and
+       data['validation_message'] is None):
+        return True
+    return False
