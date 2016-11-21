@@ -21,8 +21,11 @@
                 <br>
                 <label>{% trans 'question_date_session'%}</label>
                 <br>
-                {{ professional_exam.exam_date | default_if_none:'' | date:'d/m/Y' }}
-
+                {% if professional_exam.exam_date %}
+                    {{ professional_exam.exam_date | date:'d/m/Y' }}
+                {% else %}
+                    -
+                {% endif %}
                 <br><br>
                 <label>{% trans 'question_institution_name_nice' %}</label>
                 <br>

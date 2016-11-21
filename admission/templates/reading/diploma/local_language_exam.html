@@ -25,7 +25,11 @@
                 <br>
                 <label>{% trans 'question_date_session' %}</label>
                 <br>
-                {{ local_language_exam.exam_date | default_if_none:'-' | date:'d/m/Y' }}
+                {% if local_language_exam.exam_date %}
+                    {{ local_language_exam.exam_date | date:'d/m/Y' }}
+                {% else %}
+                    -
+                {% endif %}
                 <br>
                 <br>
                 <div class="form-group">
