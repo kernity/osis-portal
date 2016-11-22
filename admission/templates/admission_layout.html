@@ -108,6 +108,8 @@
     <script src="{% static 'js/sociological.js' %}"></script>
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     {% block script %}
+        <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+        <script src="{% static 'js/application.js' %}"></script>
         <script type="text/javascript">
             // To avoid cut and paste on the email fields
             $(document).ready(function () {

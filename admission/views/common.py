@@ -51,46 +51,22 @@ RADIO_NAME_ASSIMILATION_CRITERIA = "assimilation_criteria_"
 @login_required(login_url=settings.ADMISSION_LOGIN_URL)
 def home(request):
     applicant = mdl.applicant.find_by_user(request.user)
-    same_addresses = True
-    person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
-    if person_contact_address:
-        same_addresses = False
     if applicant:
         if applicant.language:
             user_language = applicant.language
             translation.activate(user_language)
             request.session[translation.LANGUAGE_SESSION_KEY] = user_language
         applications = mdl.application.find_by_user(request.user)
-        person_legal_address = mdl.person_address.find_by_person_type(applicant, 'LEGAL')
-        person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
+        applicant_form = ApplicantForm()
         if applications:
-            applicant_form = ApplicantForm()
-
-            return render(request, "applications.html", {'applications': applications,
-                                                         'applicant': applicant,
-                                                         'applicant_form': applicant_form,
-                                                         'person_legal_address': person_legal_address,
-                                                         'person_contact_address': person_contact_address,
-                                                         "tab_active": -1})
+            data = {"full_display": False}
+            data.update(get_profile_data(applicant_form, None, None, applicant))
+            return render(request, "applications.html", data)
         else:
-            assimilation_criteria = assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES
-            applicant_assimilation_criteria = mdl.applicant_assimilation_criteria.find_by_applicant(applicant.id)
-            return render(request, "admission_home.html", {
-                'applications': applications,
-                'applicant': applicant,
-                'tab_active': navigation.PROFILE_TAB,
-                'first': True,
-                'countries': mdl_ref.country.find_all(),
-                'main_status': 0,
-                'picture': get_picture_id(request.user),
-                'id_document': get_id_document(request.user),
-                'person_legal_address': person_legal_address,
-                'person_contact_address': person_contact_address,
-                'assimilation_criteria': assimilation_criteria,
-                'applicant_assimilation_criteria': applicant_assimilation_criteria,
-                'assimilation_basic_documents': assimilation_criteria_view.find_assimilation_basic_documents(),
-                'assimilation_documents_existing': get_assimilation_documents_existing(request.user),
-                'same_addresses': same_addresses})
+            data = {"tab_active": navigation.PROFILE_TAB,
+                    "full_display": True}
+            data.update(get_profile_data(applicant_form, None, None,applicant))
+            return render(request, "admission_home.html", data)
 
     else:
         return profile(request)
@@ -103,11 +79,14 @@ def profile(request, application_id=None, message_success=None):
 
     if application_id:
         application = mdl.application.find_by_id(application_id)
+    full_display = True
     if request.method == 'POST':
         applicant_form = ApplicantForm(data=request.POST)
         applicant = mdl.applicant.find_by_user(request.user)
         person_legal_address = mdl.person_address.find_by_person_type(applicant, 'LEGAL')
-
+        print(request.POST['full_display'])
+        if request.POST['full_display'] and request.POST['full_display']=='False' :
+            full_display = False
         if person_legal_address is None:
             person_legal_address = mdl.person_address.PersonAddress()
             person_legal_address.person = applicant
@@ -256,7 +235,6 @@ def profile(request, application_id=None, message_success=None):
             same_addresses = False
             person_contact_address.save()
         else:
-            same_addresses = True
             person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
             if person_contact_address:
                 person_contact_address.delete()
@@ -278,11 +256,11 @@ def profile(request, application_id=None, message_success=None):
                 applicant.last_academic_year = request.POST['last_academic_year']
             else:
                 applicant.last_academic_year = None
-            previous_enrollment = True
+
         else:
             applicant.registration_id = None
             applicant.last_academic_year = None
-            previous_enrollment = False
+
         if assimilation_case:
             # verify if it exists one record per criteria
             default_criteria_list = assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES
@@ -399,7 +377,6 @@ def profile(request, application_id=None, message_success=None):
         else:
             # cleanup the database if needed
             delete_previous_criteria(applicant, application)
-        message_success = None
 
         if person_contact_address:
             person_contact_address.save()
@@ -419,33 +396,40 @@ def profile(request, application_id=None, message_success=None):
     else:
         applicant = mdl.applicant.find_by_user(request.user)
         applicant_form = ApplicantForm()
-        if applicant:
-            person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
-            same_addresses = True
-            if person_contact_address:
-                same_addresses = False
-
-            previous_enrollment = False
-            if applicant.registration_id or applicant.last_academic_year:
-                previous_enrollment = True
-        else:
+        if applicant is None:
             return HttpResponseRedirect('/admission/logout')
 
-    countries = mdl_ref.country.find_all()
+    if full_display is False:
+        return home(request)
+    data = {'tab_active':   navigation.PROFILE_TAB,
+            "full_display": full_display}
+    data.update(demande_validation.get_validation_status(application, applicant))
+    data.update(get_profile_data(applicant_form, application, message_info,applicant))
+    return render(request, "admission_home.html", data)
+
+
+def get_profile_data(applicant_form, application, message_info, applicant):
+    person_legal_address = mdl.person_address.find_by_person_type(applicant, 'LEGAL')
+    person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
+    document_formset = UploadDocumentFileForm()
+    message_success = None
     props = mdl.properties.find_by_key('INSTITUTION')
     if props:
         institution_name = props.value
     else:
         institution_name = None
-
     assimilation_criteria = assimilation_criteria_enum.ASSIMILATION_CRITERIA_CHOICES
     applicant_assimilation_criteria = mdl.applicant_assimilation_criteria.find_by_applicant(applicant.id)
+    countries = mdl_ref.country.find_all()
 
-    # validated are not ready yet, to be achieved in another issue - Leila
-    person_legal_address = mdl.person_address.find_by_person_type(applicant, 'LEGAL')
-    person_contact_address = mdl.person_address.find_by_person_type(applicant, 'CONTACT')
+    previous_enrollment = False
+    if applicant.registration_id or applicant.last_academic_year:
+        previous_enrollment = True
 
-    document_formset = UploadDocumentFileForm()
+    same_addresses = True
+    if person_contact_address:
+        same_addresses = False
+
     data = {
         'applicant': applicant,
         'applicant_form': applicant_form,
@@ -458,17 +442,15 @@ def profile(request, application_id=None, message_success=None):
         'previous_enrollment': previous_enrollment,
         'institution': institution_name,
         'message_success': message_success,
-        'tab_active': navigation.PROFILE_TAB,
         'application': application,
-        'applications': mdl.application.find_by_user(request.user),
-        'picture': get_picture_id(request.user),
-        'id_document': get_id_document(request.user),
+        'applications': mdl.application.find_by_user(applicant.user),
+        'picture': get_picture_id(applicant.user),
+        'id_document': get_id_document(applicant.user),
         'assimilation_basic_documents': assimilation_criteria_view.find_assimilation_basic_documents(),
-        'assimilation_documents_existing': get_assimilation_documents_existing(request.user),
+        'assimilation_documents_existing': get_assimilation_documents_existing(applicant.user),
         'document_formset': document_formset,
         'message_info': message_info}
-    data.update(demande_validation.get_validation_status(application, applicant))
-    return render(request, "admission_home.html", data)
+    return data
 
 
 @login_required(login_url=settings.ADMISSION_LOGIN_URL)

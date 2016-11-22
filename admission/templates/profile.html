@@ -35,6 +35,7 @@
            name="following_profile_tab">
         <input type="hidden" id="hdn_original_last_name">
         <input type="hidden" id="hdn_original_first_name">
+        <input type="text" id="hdn_full_display" name="full_display" value="{{ full_display }}">
         <div class="row">
             <div class="col-md-8">
                 <h5>{% trans 'mandatory_asterisk'%}</h5>
@@ -52,14 +53,15 @@
         <span id="txt_message_error_profile_up"
                class="alert alert-warning"
                style="visibility:hidden;display:none;"></span>
-        <button type="submit"
-                id="lnk_profil_next_step_up"
-                class="btn btn-default pull-right"
-                style="margin-top:5px;"
-                title="{% trans 'demandes'%}">{%trans 'next_step'%} : {%trans 'offer_choice'%}
-            <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-        </button><br><br>
-
+        {% if full_display %}
+            <button type="submit"
+                    id="lnk_profil_next_step_up"
+                    class="btn btn-default pull-right"
+                    style="margin-top:5px;"
+                    title="{% trans 'demandes'%}">{%trans 'next_step'%} : {%trans 'offer_choice'%}
+                <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+            </button><br><br>
+        {% endif %}
         {% if applicant_form.errors %}
         <span class="error">{% if applicant_form.errors %}{% trans 'errors_validation_warning'%}{%endif%}</span>
         <br>
@@ -511,11 +513,12 @@
         <span id="txt_message_error_profile"
                class="alert alert-warning"
                style="visibility:hidden;display:none;"></span><br>
-        <button type="submit"
-                id="lnk_profil_next_step"
-                class="btn btn-default pull-right"
-                title="{% trans 'demandes'%}">{%trans 'next_step'%} : {%trans 'offer_choice'%}<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-        </button>
-
+        {% if full_display %}
+            <button type="submit"
+                    id="lnk_profil_next_step"
+                    class="btn btn-default pull-right"
+                    title="{% trans 'demandes'%}">{%trans 'next_step'%} : {%trans 'offer_choice'%}<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+            </button>
+        {% endif %}
         <div id="pnl_files"><div id="pnl_uploaded_files" style="visibility:hidden;display:none;" ></div></div>
     </form>
