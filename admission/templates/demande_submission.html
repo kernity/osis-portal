@@ -45,44 +45,42 @@
     <br>
     <br>
     <br>
-    {% if application.state == "SUBMITTED" %}
-        {% trans 'msg_submitted' %}
-    {% else %}
-        {% trans 'submission_confirmation_part1' %}
-        <br>
-        <br>
-        {% trans 'submission_confirmation_part2' %}
-        <br>
-        <br>
-        {% if not application_valide %}
-            {% trans 'submission_confirmation_part3' %}<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>{% trans 'submission_confirmation_part4' %}
-            <br>
-            <br>
-        {% endif %}
-        {% trans 'submission_confirmation_part5' %}
-        <br>
-        <br>
-        <br>
-        <input type="checkbox"
-               value="true"
-               id="chb_agree"><label>{% trans 'reading_agreement_part1'%}
-                                     <a href="http://www.uclouvain.be/cps/ucl/doc/etudiant/documents/Doc_reglement_vie_privee.pdf"
-                                         target="_blank">{% trans 'reading_agreement_part2'%}</a>
-                                     {% trans 'reading_agreement_part3'%}</label>
-        <br>
-        <br>
-        <br>
 
-        <div>
-            <button type="submit"
-                    class="btn btn-primary pull-right"
-                    id="bt_confirm_submission"
-                    name="confirm_submission"
-                    disabled>{% trans 'confirm_demand' %}</button>
-        </div>
-
-
+    {% trans 'submission_confirmation_part1' %}
+    <br>
+    <br>
+    {% trans 'submission_confirmation_part2' %}
+    <br>
+    <br>
+    {% if not application_valide %}
+        {% trans 'submission_confirmation_part3' %}<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color:orange;"></span>{% trans 'submission_confirmation_part4' %}
+        <br>
+        <br>
     {% endif %}
+    {% trans 'submission_confirmation_part5' %}
+    <br>
+    <br>
+    <br>
+    <input type="checkbox"
+           value="true"
+           id="chb_agree"><label>{% trans 'reading_agreement_part1'%}
+                                 <a href="http://www.uclouvain.be/cps/ucl/doc/etudiant/documents/Doc_reglement_vie_privee.pdf"
+                                     target="_blank">{% trans 'reading_agreement_part2'%}</a>
+                                 {% trans 'reading_agreement_part3'%}</label>
+    <br>
+    <br>
+    <br>
+
+    <div>
+        <button type="submit"
+                class="btn btn-primary pull-right"
+                id="bt_confirm_submission"
+                name="confirm_submission"
+                disabled>{% trans 'confirm_demand' %}</button>
+    </div>
+
+
+
     <br>
     <br>
     <br>

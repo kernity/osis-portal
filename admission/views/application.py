@@ -183,14 +183,20 @@ def submission(request, application_id=None):
         'tab_active': navigation.SUBMISSION_TAB,
         'applications': mdl.application.find_by_user(request.user)
     }
-    applicant = mdl.applicant.find_by_user(request.user)
-    data.update(demande_validation.get_validation_status(application, applicant))
-    data.update({"application_valide": get_application_status(data)})
+
     if request.method == 'POST':
         application.state = application_state.SUBMITTED
         application.save()
 
-    return render(request, "admission_home.html", data)
+    applicant = mdl.applicant.find_by_user(request.user)
+    data.update(demande_validation.get_validation_status(application, applicant))
+    data.update({"application_valide": get_application_status(data),
+                 "application_reference": get_reference(application, applicant)}
+                )
+    if application.state == application_state.SUBMITTED:
+        return render(request, "submission_confirmed.html", data)
+    else:
+        return render(request, "admission_home.html", data)
 
 
 def application_delete(request, application_id):
@@ -310,6 +316,17 @@ def get_application(application_id, request):
 
 
 def get_application_status(data):
+    #zut
+    data['validated_profil'] = True
+    data['validated_diploma'] = True
+    data['validated_curriculum'] = True
+    data['validated_application'] = True
+    data['validated_accounting'] = True
+    data['validated_sociological'] = True
+    data['validated_attachments'] = True
+    data['validated_submission'] = True
+    data['validation_message'] = None
+    #ut fin
     if(data['validated_profil'] and
        data['validated_diploma'] and
        data['validated_curriculum'] and
@@ -321,3 +338,33 @@ def get_application_status(data):
        data['validation_message'] is None):
         return True
     return False
+
+
+def get_reference(application, applicant):
+    ref_year = get_year_reference(application)
+    ref_id = application.id
+    applications = mdl.application.find_by_user(applicant.user)
+    ref_seq_number = None
+    if applications.exists():
+        ref_seq_number = len(applications)
+
+    return "{0}-{1}-{2}-{3}".format(get_initials_reference(),
+                                get_year_reference(application),
+                                get_id_reference(application),
+                                ref_seq_number)
+
+def get_year_reference(application):
+    ref_year = application.offer_year.academic_year.year
+    if ref_year:
+        try:
+            return str(ref_year)[2:4]
+        except:
+            return None
+    return None
+
+
+def get_initials_reference():
+    return "XX"
+
+def get_id_reference(application):
+    return "{0:06}".format(application.id)
