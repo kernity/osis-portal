@@ -155,5 +155,4 @@ def get_title(applicant):
 def send_soumission_email(self.application):
     reference = ""
     title = get_title()
-
     return None
