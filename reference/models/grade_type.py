@@ -47,6 +47,7 @@ class GradeType(SerializableModel):
                                                 choices=enum_institutional_grade_type.INSTITUTIONAL_GRADE_CHOICES,
                                                 blank=True,
                                                 null=True)
+    url_info = models.CharField(max_length=250)
 
     def __str__(self):
         return self.name
