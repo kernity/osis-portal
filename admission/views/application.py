@@ -297,3 +297,12 @@ def delete_application_assimilation_criteria(application):
         # delete all existing application_assimilation_criteria
         for a in mdl.application_assimilation_criteria.find_by_application(application):
             a.delete()
+
+
+
+def title(gender):
+    if gender == "MALE":
+        return _('mister')
+    if gender == "FEMALE":
+        return _('miss')
+    return _('miss') + ", " + _('mister')

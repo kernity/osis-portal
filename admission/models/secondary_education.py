@@ -75,3 +75,13 @@ class SecondaryEducation(models.Model):
 
 def find_by_person(an_applicant):
     return SecondaryEducation.objects.filter(person=an_applicant).first()
+
+
+def search(applicant=None, diploma=None):
+    queryset = SecondaryEducation.objects
+    if applicant:
+        queryset = queryset.filter(person=applicant)
+    if diploma:
+        queryset = queryset.filter(diploma=diploma)
+
+    return queryset

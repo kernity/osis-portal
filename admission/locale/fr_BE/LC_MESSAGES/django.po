@@ -1479,3 +1479,51 @@ msgstr "Pas encore de résultat"
 
 msgid "no_identification_number"
 msgstr "Veuillez indiquer au moins un numéro de registre national, de carte d'identité ou de passeport."
+
+msgid "ms"
+msgstr "Mademoiselle"
+
+msgid "madam"
+msgstr "Madame"
+
+msgid "subject_to_quota_txt_part1"
+msgstr "PARTICULARITE PROPRE A VOTRE DEMANDE :"
+
+msgid "subject_to_quota_txt_part2"
+msgstr ""
+"La formation que vous avez choisie fait partie des études dites 'contingentées' soumises à des modalités "
+"administratives complémentaires."
+
+msgid "subject_to_quota_txt_part3"
+msgstr "Vous en trouverez les informations utiles y relatives à la page http://www.uclouvain.be/22310.html"
+
+msgid "unemployment_doc_needed"
+msgstr ""
+"l’attestation de l'ONEM indiquant que vous n'avez jamais eu de dérogation de leur service pour entreprendre des "
+"études supérieures ;"
+
+msgid "other_doc_needed"
+msgstr ""
+"une photocopie de l'attestation justifiant votre/vos activité(s) (avec les dates de début et de fin de ces"
+"" activités) pour toute l'année académique "
+
+msgid "studies_doc_needed"
+msgstr ""
+"une photocopie du relevé de notes officiel (+ du diplôme, le cas échéant) avec mention du résultat obtenu et/ou "
+"des crédits totaux inscrits et acquis lors de l'année académique"
+
+msgid "special_exam_admission_doc_needed"
+msgstr "
+"une photocopie de l'attestation de réussite de l'examen d'admission aux études de 1er cycle en sciences de "
+"l'ingénieur (ingénieur civil) ;"
+
+msgid "exam_admission_doc_needed"
+msgstr "une photocopie de l'attestation de réussite de l'examen d'admission au premier cycle"
+
+msgid "secondary_diploma_needed"
+msgstr "une photocopie de votre diplôme d'études secondaires : "
+
+msgid "capaes_doc_needed"
+msgstr ""
+"le document "Attestation de fonction dans le cadre d'une inscription à la formation CAPAES dûment complété et signé ;"
+

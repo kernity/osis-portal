@@ -26,6 +26,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+
 from reference.enums.education_institution_national_comunity import NATIONAL_COMMUNITY_TYPES
 
 
@@ -35,26 +36,25 @@ class CurriculumAdmin(admin.ModelAdmin):
 
 class Curriculum(models.Model):
 
-    PATH_TYPES = (
-            ('LOCAL_UNIVERSITY', _('national_university')),
-            ('FOREIGN_UNIVERSITY', _('foreign_university')),
-            ('LOCAL_HIGH_EDUCATION', _('high_national_non_university')),
-            ('FOREIGN_HIGH_EDUCATION', _('high_foreign_non_university')),
-            ('ANOTHER_ACTIVITY', _('other')),
-            )
+    PATH_TYPES = (('LOCAL_UNIVERSITY', _('national_university')),
+                  ('FOREIGN_UNIVERSITY', _('foreign_university')),
+                  ('LOCAL_HIGH_EDUCATION', _('high_national_non_university')),
+                  ('FOREIGN_HIGH_EDUCATION', _('high_foreign_non_university')),
+                  ('ANOTHER_ACTIVITY', _('other')),
+                    )
 
     RESULT_TYPE = (('SUCCEED', _('succeeded')),
                    ('FAILED', _('failed')),
                    ('NO_RESULT', _('no_result')))
 
     ACTIVITY_TYPES = (
-            ('JOB', _('job')),
-            ('INTERNSHIP', _('internship')),
-            ('VOLUNTEERING', _('volunteering')),
-            ('UNEMPLOYMENT', _('unemployment')),
-            ('ILLNESS', _('illness')),
-            ('OTHER', _('other')),
-            )
+        ('JOB', _('job')),
+        ('INTERNSHIP', _('internship')),
+        ('VOLUNTEERING', _('volunteering')),
+        ('UNEMPLOYMENT', _('unemployment')),
+        ('ILLNESS', _('illness')),
+        ('OTHER', _('other')),
+        )
 
     GRADE_TYPE_NO_UNIVERSITY = (
         ('HIGHER_NON_UNIVERSITY', _('higher_non_university')),
@@ -107,3 +107,22 @@ def find_local_french(a_person, an_academic_year):
                                      academic_year=an_academic_year,
                                      national_education='FRENCH',
                                      national_institution__country__iso_code='BE')
+
+
+def search(an_applicant=None, activity_type=None, path_type=None):
+    queryset = Curriculum.objects
+
+    if an_applicant:
+        queryset = queryset.filter(person=an_applicant)
+
+    if activity_type:
+        queryset = queryset.filter(activity_type=activity_type)
+
+    if path_type:
+        queryset = queryset.filter(path_type=path_type)
+    return queryset
+
+
+def find_by_path_type_list(an_applicant, path_types):
+    return Curriculum.objects.filter(person=an_applicant,
+                                     path_type__in=path_types)

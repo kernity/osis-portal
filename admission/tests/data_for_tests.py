@@ -29,6 +29,8 @@ from base import models as mdl_base
 from reference import models as mdl_reference
 from osis_common import models as mdl_osis_common
 from reference.enums import assimilation_criteria as assimilation_criteria_enum
+from django.utils import timezone
+import datetime
 
 
 def create_user():
@@ -161,3 +163,52 @@ def create_applicant_document_file(an_applicant, description):
     an_applicant_document_file.document_file = a_document_file
     an_applicant_document_file.save()
     return an_applicant_document_file
+
+
+def create_message_template(a_reference,a_subject,a_template,a_format,a_language):
+    message_template = mdl_osis_common.message_template.MessageTemplate(reference=a_reference,
+                                                                        subject=a_subject,
+                                                                        template=a_template,
+                                                                        format=a_format,
+                                                                        language=a_language)
+
+    message_template.save()
+    return message_template
+
+def create_curriculum(an_applicant, an_activity_type):
+    curriculum = mdl.curriculum.Curriculum(person=an_applicant,
+                                           activity_type=an_activity_type)
+    curriculum.save()
+    return curriculum
+
+def create_current_academic_year():
+    now = datetime.datetime.now()
+    an_academic_year = mdl_base.academic_year.AcademicYear()
+    an_academic_year.year = now.year
+    an_academic_year.start_date = now-  datetime.timedelta(2)
+    an_academic_year.end_date = now+  datetime.timedelta(2)
+    an_academic_year.save()
+    return an_academic_year
+
+def create_education_institution(a_name, a_country):
+    education_institution = mdl_reference.education_institution.EducationInstitution(name=a_name,country=a_country)
+    education_institution.save()
+    return education_institution
+
+def create_admission_exam_type():
+    admission_exam_type = mdl.admission_exam_type.AdmissionExamType(name='Admission exam type')
+    admission_exam_type.save()
+    return admission_exam_type
+
+def create_offer_admission_exam_type(an_offer_year):
+    admission_exam_type = create_admission_exam_type()
+    offer_admission_exam_type  = mdl.offer_admission_exam_type.OfferAdmissionExamType(
+        offer_year=an_offer_year,
+        admission_exam_type=admission_exam_type)
+    offer_admission_exam_type.save()
+    return offer_admission_exam_type
+
+def create_secondary_education_with_applicant(an_applicant):
+    a_secondary_education = mdl.secondary_education.SecondaryEducation(person=an_applicant)
+    a_secondary_education.save()
+    return a_secondary_education

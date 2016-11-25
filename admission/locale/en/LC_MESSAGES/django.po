@@ -1459,3 +1459,44 @@ msgstr "No result yet"
 
 msgid "no_identification_number"
 msgstr "Please mention at least a national register number, an identity card number or a passport number."
+
+msgid "ms"
+msgstr "Miss"
+
+msgid "madam"
+msgstr "Madam"
+
+msgid "subject_to_quota_txt_part1"
+msgstr "subject_to_quota_txt_part1"
+
+msgid "subject_to_quota_txt_part2"
+msgstr "subject_to_quota_txt_part2"
+
+msgid "subject_to_quota_txt_part3"
+msgstr "subject_to_quota_txt_part3"
+
+msgid "unemployment_doc_needed"
+msgstr "unemployment_doc_needed"
+
+msgid "other_doc_needed"
+msgstr "other_doc_needed"
+
+msgid "studies_doc_needed"
+msgstr "studies_doc_needed"
+
+msgid "special_exam_admission_doc_needed"
+msgstr "special_exam_admission_doc_needed"
+
+msgid "exam_admission_doc_needed"
+msgstr "exam_admission_doc_needed"
+
+msgid "secondary_diploma_needed"
+msgstr "secondary_diploma_needed"
+
+msgid "capaes_doc_needed"
+msgstr "capaes_doc_needed"
+
+
+
+
+
