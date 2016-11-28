@@ -1496,7 +1496,29 @@ msgstr "secondary_diploma_needed"
 msgid "capaes_doc_needed"
 msgstr "capaes_doc_needed"
 
+msgid "capaes_identification_doc_needed"
+msgstr "capaes_identification_doc_needed"
 
+msgid "opes_url"
+msgstr "opes_url"
 
+msgid "fopa_url"
+msgstr "fopa_url"
 
+msgid "capaes_limit_date_part1"
+msgstr "capaes_limit_date_part1"
 
+msgid "capaes_limit_date_part2_start"
+msgstr "capaes_limit_date_part2_start"
+
+msgid "capaes_limit_date_part2_middle"
+msgstr "capaes_limit_date_part2_middle"
+
+msgid "capaes_limit_date_part2_end"
+msgstr "capaes_limit_date_part2_end"
+
+msgid "capaes_limit_date_part3_start"
+msgstr "capaes_limit_date_part3_start"
+
+msgid "capaes_limit_date_part3_end"
+msgstr "capaes_limit_date_part3_end"

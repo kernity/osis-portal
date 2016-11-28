@@ -28,6 +28,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils.translation import activate
+from django.utils.translation import ugettext_lazy as _
 
 import admission.tests.data_for_tests as data_model
 from admission.views import submission
@@ -36,6 +37,8 @@ from admission import models as mdl
 from reference import models as mdl_ref
 from base import models as mdl_base
 from reference.enums import institutional_grade_type as enum_institutional_grade_type
+
+NUMBER_OF_LINES_IN_CAPAES_PARAGRAPH = 3
 
 BASIC_URL_PART1 = 'http://www.uclouvain.be/'
 BASIC_URL_PART2 = '357540.html'
@@ -112,10 +115,10 @@ class SubmissionTest(TestCase):
         self.assertIsNone((submission.get_submission_docs_url(grade_type)))
 
     def test_find_model_admission(self):
-        self.assertTrue(submission.find_model_reference(application_type.ADMISSION) == submission.MODELE_ADMISSION)
+        self.assertTrue(submission.find_model_reference(application_type.ADMISSION) == submission.MODEL_ADMISSION)
 
     def test_find_model_inscription(self):
-        self.assertTrue(submission.find_model_reference(application_type.INSCRIPTION) == submission.MODELE_INSCRIPTON)
+        self.assertTrue(submission.find_model_reference(application_type.INSCRIPTION) == submission.MODEL_INSCRIPTON)
 
     def test_find_model_unkknown_application_type(self):
         self.assertIsNone(submission.find_model_reference("wrong_application_type"))
@@ -124,9 +127,9 @@ class SubmissionTest(TestCase):
         self.assertIsNone(submission.find_model_reference(None))
 
     def test_get_model_message_admission(self):
-        data_model.create_message_template(submission.MODELE_ADMISSION,
+        data_model.create_message_template(submission.MODEL_ADMISSION,
                                            'a_subject',
-                                           'test',
+                                           'test {{title}}',
                                            'PLAIN',
                                            'fr-be')
         self.assertIsNotNone(submission.get_model_message(application_type.ADMISSION))
@@ -158,22 +161,22 @@ class SubmissionTest(TestCase):
 
         year_plus_one = self.application.offer_year.academic_year.year+1
         academic_year = "{0}-{1}".format(str(self.application.offer_year.academic_year.year), str(year_plus_one))
-        data = {'last_name': LAST_NAME,
-                'first_name': FIRST_NAME,
-                'reference': '',
-                'title': 'Mister',
-                'url_fr': self.basic_url,
-                'url_en': self.english_url,
-                'academic_year': academic_year,
-                'subject_to_quota_txt1': 'subject_to_quota_txt_part1',
-                'subject_to_quota_txt2': 'subject_to_quota_txt_part2',
-                'subject_to_quota_txt3': 'subject_to_quota_txt_part3',
-                'responsible': '',
-                'organization_name': '',
-                'organization_street': '',
-                'organization_city': '',
-                'organization_country': '',
-                'closing_date': ''}
+        data = {submission.VARIABLE_LAST_NAME: LAST_NAME,
+                submission.VARIABLE_FIRST_NAME: FIRST_NAME,
+                submission.VARIABLE_REFERENCE: '',
+                submission.VARIABLE_TITLE: 'Mister',
+                submission.VARIABLE_ADMISSION_URL_FR: self.basic_url,
+                submission.VARIABLE_ADMISSION_URL_EN: self.english_url,
+                submission.VARIABLE_ADMISSION_ACADEMIC_YEAR: academic_year,
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_1: 'subject_to_quota_txt_part1',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_2: 'subject_to_quota_txt_part2',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_3: 'subject_to_quota_txt_part3',
+                submission.VARIABLE_RESPONSIBLE: '',
+                submission.VARIABLE_ORGANIZATION_NAME: '',
+                submission.VARIABLE_ORGANIZATION_STREET: '',
+                submission.VARIABLE_ORGANIZATION_CITY: '',
+                submission.VARIABLE_ORGANIZATION_COUNTRY: '',
+                submission.VARIABLE_CLOSING_DATE: ''}
 
         self.assertTrue(submission.message_template_admission_variables(self.applicant, self.application) == data)
 
@@ -185,26 +188,29 @@ class SubmissionTest(TestCase):
         self.assertTrue(submission.get_message_document(self.applicant, 'UNEMPLOYMENT') == "")
 
     def test_debts_document_needed(self):
+        self.create_data_debts_doc_needed()
+        self.assertTrue(submission.get_debts_document(self.application) != "")
+
+    def create_data_debts_doc_needed(self):
         country_belgium = mdl_ref.country.Country(iso_code='BE')
         country_belgium.save()
         national_institution = data_model.create_education_institution('national_institution', country_belgium)
         curriculum = data_model.create_curriculum(self.applicant, None)
-        curriculum.academic_year = now.year-2
+        curriculum.academic_year = now.year - 2
         curriculum.path_type = 'LOCAL_UNIVERSITY'
         curriculum.national_education = 'FRENCH'
         curriculum.national_institution = national_institution
         curriculum.save()
 
-        self.assertTrue(submission.get_debts_document(self.application) != "")
-
     def test_debts_document_unneeded(self):
         self.assertTrue(submission.get_debts_document(self.application) == "")
 
     def test_other_activity_type_document_needed(self):
-        curriculum = data_model.create_curriculum(self.applicant, 'OTHER')
+        an_activity_type = 'OTHER'
+        curriculum = data_model.create_curriculum(self.applicant, an_activity_type)
         curriculum.academic_year = now.year - 2
         curriculum.save()
-        curriculum = data_model.create_curriculum(self.applicant, 'OTHER')
+        curriculum = data_model.create_curriculum(self.applicant, an_activity_type)
         curriculum.academic_year = now.year - 3
         curriculum.save()
         self.assertTrue(submission.get_other_activity_type_document(self.applicant) != "")
@@ -232,16 +238,26 @@ class SubmissionTest(TestCase):
         offer_admission_exam_type.save()
 
         self.assertTrue(
-            submission.get_message_exam_admission_document(self.applicant, self.application) == "special_exam_admission_doc_needed")
+            submission.
+            get_message_exam_admission_document(self.applicant, self.application) ==
+            _(submission.SPECIAL_EXAM_ADMISSION_NEEDED_TXT))
 
     def test_exam_admission_document_needed(self):
+        self.create_admission_exam_data()
+        self.assertTrue(
+            submission.get_message_exam_admission_document(self.applicant, self.application) ==
+            _(submission.EXAM_ADMISSION_DOC_NEEDED_TXT))
+
+    def create_admission_exam_data(self):
         secondary_education = data_model.create_secondary_education_with_applicant(self.applicant)
+        secondary_education.diploma = True
+        secondary_education.save()
         admission_exam_type = data_model.create_admission_exam_type()
-        secondary_education_exam = data_model.create_secondary_education_exam(secondary_education, 'ADMISSION')
+        secondary_education_exam = data_model. \
+            create_secondary_education_exam(secondary_education,
+                                            'ADMISSION')
         secondary_education_exam.admission_exam_type = admission_exam_type
         secondary_education_exam.save()
-        self.assertTrue(
-            submission.get_message_exam_admission_document(self.applicant, self.application) == "exam_admission_doc_needed")
 
     def test_exam_admission_document_unneeded(self):
         self.assertTrue(submission.get_message_exam_admission_document(self.applicant, self.application) == "")
@@ -259,18 +275,197 @@ class SubmissionTest(TestCase):
         self.assertTrue(submission.get_message_secondary_diploma_document(self.applicant) == "")
 
     def test_capaes_document_needed(self):
-        grade_type = mdl_ref.grade_type.GradeType(institutional_grade_type=enum_institutional_grade_type.CAPAES)
-        grade_type.save()
-        self.application.offer_year.grade_type = grade_type
-        self.application.offer_year.grade_type.save()
-        self.assertTrue(submission.get_message_capaes_document(self.application) != "")
+        self.assertTrue(submission.get_message_capaes_document(enum_institutional_grade_type.CAPAES) == _(submission.CAPAES_DOC_NEEDED_TXT))
 
     def test_capaes_document_unneeded(self):
-        grade_type = mdl_ref.grade_type.GradeType(institutional_grade_type=enum_institutional_grade_type.BACHELOR)
-        grade_type.save()
-        self.application.offer_year.grade_type = grade_type
-        self.application.offer_year.grade_type.save()
-        self.assertTrue(submission.get_message_capaes_document(self.application) == "")
+        self.assertTrue(submission.get_message_capaes_document(enum_institutional_grade_type.BACHELOR) == "")
+
+    def test_capaes_identification_document_needed(self):
+        self.assertTrue(submission.get_message_capaes_identification_document(enum_institutional_grade_type.CAPAES) == _(submission.CAPAES_IDENTIFICATION_DOC_NEEDED_TXT))
+
+    def test_capaes_identification_document_unneeded(self):
+        self.assertTrue(submission.get_message_capaes_identification_document(enum_institutional_grade_type.BACHELOR) == "")
+
+    def test_opes_url_needed(self):
+        self.assertTrue(submission.get_opes_url("OPES2MS/ES") == _(submission.OPES_URL_TXT))
+
+    def test_opes_url_unneeded(self):
+        self.assertTrue(submission.get_opes_url("COMU11BA") == "")
+
+    def test_opes_url_needed_with_empty_acronym(self):
+        self.assertTrue(submission.get_opes_url("") == "")
+
+    def test_opes_url_needed_with_null_acronym(self):
+        self.assertTrue(submission.get_opes_url(None) == "")
+
+    def test_fopa_url_needed(self):
+        self.assertTrue(submission.get_fopa_url("FOPA2MG/G") == _(submission.FOPA_URL_TXT))
+
+    def test_fopa_url_unneeded(self):
+        self.assertTrue(submission.get_fopa_url("COMU11BA") == "")
+
+    def test_capaes_dates_number_information_correct(self):
+        dict_paragraph = submission.get_capaes_dates_paragraph(enum_institutional_grade_type.CAPAES, 2016)
+        self.assertTrue(len(dict_paragraph) == NUMBER_OF_LINES_IN_CAPAES_PARAGRAPH)
+
+    def test_capaes_dates_number_information_ZERO(self):
+        dict_paragraph = submission.get_capaes_dates_paragraph(enum_institutional_grade_type.BACHELOR, 2016)
+        self.assertTrue(len(dict_paragraph) == 0)
+
+    def test_get_variables_for_message_template_for_inscription_capaes(self):
+        self.applicant.gender = mdl.applicant.MALE
+
+        application_capaes = self.create_application_by_institutional_grade_type(enum_institutional_grade_type.CAPAES)
+        self.create_curriculum_list('OTHER', 2, now.year)
+        year_plus_one = application_capaes.offer_year.academic_year.year+1
+        academic_year = "{0}-{1}".format(str(application_capaes.offer_year.academic_year.year), str(year_plus_one))
+        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT')
+
+        self.create_admission_exam_data()
+        self.create_data_debts_doc_needed()
+        data = {submission.VARIABLE_LAST_NAME: LAST_NAME,
+                submission.VARIABLE_FIRST_NAME: FIRST_NAME,
+                submission.VARIABLE_REFERENCE: '',
+                submission.VARIABLE_ENROLLMENT_OFFER_ACRONYM: application_capaes.offer_year.acronym,
+                submission.VARIABLE_TITLE: 'Mister',
+                submission.VARIABLE_ENROLLMENT_YEAR: application_capaes.offer_year.academic_year.year,
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_1: 'subject_to_quota_txt_part1',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_2: 'subject_to_quota_txt_part2',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_3: 'subject_to_quota_txt_part3',
+                submission.VARIABLE_RESPONSIBLE: '',
+                submission.VARIABLE_ORGANIZATION_NAME: '',
+                submission.VARIABLE_ORGANIZATION_STREET: '',
+                submission.VARIABLE_ORGANIZATION_CITY: '',
+                submission.VARIABLE_ORGANIZATION_COUNTRY: '',
+                submission.VARIABLE_CLOSING_DATE: '',
+                submission.VARIABLE_ENROLLMENT_UNEMPLOYMENT_DOC: _(submission.UNEMPLOYMENT_DOC_NEEDED_TXT),
+                submission.VARIABLE_ENROLLMENT_DEBTS_DOC: _(submission.DEBTS_DOC_NEEDED_TXT),
+                submission.VARIABLE_ENROLLMENT_OTHER_ACTIVITIES_DOC: " {0} {1} {2} {3}".format(_(submission.OTHER_DOC_NEEDED_TXT),
+                            submission.get_academic_year(now.year-3),
+                            _(submission.OTHER_DOC_NEEDED_TXT),
+                            submission.get_academic_year(now.year-2)),
+                submission.VARIABLE_ENROLLMENT_SECONDARY_DIPLOMA_DOC:
+                    submission.get_message_secondary_diploma_document(self.applicant),
+                submission.VARIABLE_ENROLLMENT_EXAM_ADMISSION_DOC:
+                    submission.get_message_exam_admission_document(self.applicant, application_capaes),
+                submission.VARIABLE_ENROLLMENT_CAPAES_DOC: _(submission.CAPAES_DOC_NEEDED_TXT),
+                submission.VARIABLE_ENROLLMENT_CAPAES_IDENTIFICATION_DOC:
+                    submission.get_message_capaes_identification_document(application_capaes.offer_year.grade_type.institutional_grade_type),
+                submission.VARIABLE_ENROLLMENT_OPES_DOC: '',
+                submission.VARIABLE_ENROLLMENT_FOPA_DOC: '',
+                submission.VARIABLE_ENROLLMENT_CAPAES_DATES:
+                    submission.get_capaes_dates_paragraph(application_capaes.offer_year.grade_type.institutional_grade_type,
+                                                          application_capaes.offer_year.academic_year.year)
+                }
+
+        self.assertTrue(submission.message_template_inscription_variables(self.applicant, application_capaes) == data)
+
+    def test_get_variables_for_message_template_for_inscription_opes(self):
+        self.applicant.gender = mdl.applicant.MALE
+
+        application_opes = self.create_application_by_acronym('OPES2MS')
+        self.create_curriculum_list('OTHER', 2, now.year)
+        year_plus_one = application_opes.offer_year.academic_year.year+1
+        academic_year = "{0}-{1}".format(str(application_opes.offer_year.academic_year.year), str(year_plus_one))
+        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT')
+
+        self.create_admission_exam_data()
+        self.create_data_debts_doc_needed()
+        data = {submission.VARIABLE_LAST_NAME: LAST_NAME,
+                submission.VARIABLE_FIRST_NAME: FIRST_NAME,
+                submission.VARIABLE_REFERENCE: '',
+                submission.VARIABLE_ENROLLMENT_OFFER_ACRONYM: application_opes.offer_year.acronym,
+                submission.VARIABLE_TITLE: 'Mister',
+                submission.VARIABLE_ENROLLMENT_YEAR: application_opes.offer_year.academic_year.year,
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_1: '',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_2: '',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_3: '',
+                submission.VARIABLE_RESPONSIBLE: '',
+                submission.VARIABLE_ORGANIZATION_NAME: '',
+                submission.VARIABLE_ORGANIZATION_STREET: '',
+                submission.VARIABLE_ORGANIZATION_CITY: '',
+                submission.VARIABLE_ORGANIZATION_COUNTRY: '',
+                submission.VARIABLE_CLOSING_DATE: '',
+                submission.VARIABLE_ENROLLMENT_UNEMPLOYMENT_DOC: _(submission.UNEMPLOYMENT_DOC_NEEDED_TXT),
+                submission.VARIABLE_ENROLLMENT_DEBTS_DOC: _(submission.DEBTS_DOC_NEEDED_TXT),
+                submission.VARIABLE_ENROLLMENT_OTHER_ACTIVITIES_DOC: " {0} {1} {2} {3}"
+                    .format(_(submission.OTHER_DOC_NEEDED_TXT),
+                            submission.get_academic_year(now.year-3),
+                            _(submission.OTHER_DOC_NEEDED_TXT),
+                            submission.get_academic_year(now.year-2)),
+                submission.VARIABLE_ENROLLMENT_SECONDARY_DIPLOMA_DOC: submission.get_message_secondary_diploma_document(self.applicant),
+                submission.VARIABLE_ENROLLMENT_EXAM_ADMISSION_DOC: submission.get_message_exam_admission_document(self.applicant, application_opes),
+                submission.VARIABLE_ENROLLMENT_CAPAES_DOC: '',
+                submission.VARIABLE_ENROLLMENT_CAPAES_IDENTIFICATION_DOC: '',
+                submission.VARIABLE_ENROLLMENT_OPES_DOC: _(submission.OPES_URL_TXT),
+                submission.VARIABLE_ENROLLMENT_FOPA_DOC: '',
+                submission.VARIABLE_ENROLLMENT_CAPAES_DATES: []
+                }
+        self.assertTrue(submission.message_template_inscription_variables(self.applicant, application_opes) == data)
+
+    def test_get_variables_for_message_template_for_inscription_fopa(self):
+        self.applicant.gender = mdl.applicant.MALE
+
+        application_fopa = self.create_application_by_acronym('FOPA2MA')
+
+        data = {submission.VARIABLE_LAST_NAME: LAST_NAME,
+                submission.VARIABLE_FIRST_NAME: FIRST_NAME,
+                submission.VARIABLE_REFERENCE: '',
+                submission.VARIABLE_ENROLLMENT_OFFER_ACRONYM: application_fopa.offer_year.acronym,
+                submission.VARIABLE_TITLE: 'Mister',
+                submission.VARIABLE_ENROLLMENT_YEAR: application_fopa.offer_year.academic_year.year,
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_1: '',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_2: '',
+                submission.VARIABLE_SUBJECT_TO_QUOTA_TXT_3: '',
+                submission.VARIABLE_RESPONSIBLE: '',
+                submission.VARIABLE_ORGANIZATION_NAME: '',
+                submission.VARIABLE_ORGANIZATION_STREET: '',
+                submission.VARIABLE_ORGANIZATION_CITY: '',
+                submission.VARIABLE_ORGANIZATION_COUNTRY: '',
+                submission.VARIABLE_CLOSING_DATE: '',
+                submission.VARIABLE_ENROLLMENT_UNEMPLOYMENT_DOC: '',
+                submission.VARIABLE_ENROLLMENT_DEBTS_DOC: '',
+                submission.VARIABLE_ENROLLMENT_OTHER_ACTIVITIES_DOC: '',
+                submission.VARIABLE_ENROLLMENT_SECONDARY_DIPLOMA_DOC: '',
+                submission.VARIABLE_ENROLLMENT_EXAM_ADMISSION_DOC: '',
+                submission.VARIABLE_ENROLLMENT_CAPAES_DOC: '',
+                submission.VARIABLE_ENROLLMENT_CAPAES_IDENTIFICATION_DOC: '',
+                submission.VARIABLE_ENROLLMENT_OPES_DOC: '',
+                submission.VARIABLE_ENROLLMENT_FOPA_DOC: _(submission.FOPA_URL_TXT),
+                submission.VARIABLE_ENROLLMENT_CAPAES_DATES: []
+                }
+
+        self.assertTrue(submission.message_template_inscription_variables(self.applicant, application_fopa) == data)
+
+    def create_application_by_institutional_grade_type(self, an_institutional_grade_type):
+        application_capaes = data_model.create_application(self.applicant)
+        grade_type_capaes = mdl_ref.grade_type.GradeType(
+            name='Master complémentaire',
+            institutional_grade_type=an_institutional_grade_type)
+        grade_type_capaes.save()
+        application_capaes.offer_year.grade_type = grade_type_capaes
+        application_capaes.offer_year.grade_type.save()
+        application_capaes.offer_year.subject_to_quota = True
+        application_capaes.save()
+        return application_capaes
+
+    def create_curriculum_list(self, an_activity_type, occurence, year):
+        cpt = 1
+        while cpt <= occurence:
+            curriculum = data_model.create_curriculum(self.applicant,an_activity_type)
+            curriculum.academic_year = year - (cpt+1)
+            curriculum.save()
+            cpt = cpt + 1
+
+    def create_application_by_acronym(self, an_acronym):
+        offer_opes = data_model.create_offer_year()
+        offer_opes.acronym = an_acronym
+        offer_opes.grade_type = self.grade_type
+        offer_opes.subject_to_quota = False
+        application_opes = data_model.create_application(self.applicant)
+        application_opes.offer_year = offer_opes
+        application_opes.save()
+        return application_opes
 
     def test_send_submission_email_for_admission(self):
 
@@ -280,3 +475,15 @@ class SubmissionTest(TestCase):
             submission.send_soumission_email()
         except Exception:
             self.fail("{0} raised ExceptionType unexpectedly!".format("test_send_soumission_email_for_admission"))
+
+    def test_model_message_inscription_fill_in(self):
+        data_model.create_message_template(submission.MODEL_INSCRIPTON,
+                                           'a_subject',
+                                           'test {{title}}',
+                                           'PLAIN',
+                                           'fr-be')
+        self.application.application_type = 'INSCRIPTION'
+        application_fopa = self.create_application_by_acronym('FOPA2MA')
+        application_fopa.application_type = 'INSCRIPTION'
+        submission.text_display(self.applicant, application_fopa)
+        print('ici')

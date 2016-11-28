@@ -110,7 +110,7 @@ def find_local_french(a_person, an_academic_year):
 
 
 def search(an_applicant=None, activity_type=None, path_type=None):
-    queryset = Curriculum.objects
+    queryset = Curriculum.objects.order_by('academic_year')
 
     if an_applicant:
         queryset = queryset.filter(person=an_applicant)
