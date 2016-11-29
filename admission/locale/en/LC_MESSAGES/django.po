@@ -1522,3 +1522,18 @@ msgstr "capaes_limit_date_part3_start"
 
 msgid "capaes_limit_date_part3_end"
 msgstr "capaes_limit_date_part3_end"
+
+msgid "glue_id_picture"
+msgstr "glue_id_picture"
+
+msgid "addresses"
+msgstr "Addresses"
+
+msgid "current_studies"
+msgstr "current_studies"
+
+msgid "repetition"
+msgstr "Repetition"
+
+msgid "reorientation"
+msgstr "reorientation"

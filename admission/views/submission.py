@@ -33,6 +33,7 @@ from admission.models.enums import application_type
 from osis_common import models as mdl_common
 from reference.enums import institutional_grade_type as enum_institutional_grade_type
 from osis_common.messaging import send_message
+from django.shortcuts import render
 
 
 VARIABLE_ENROLLMENT_UNEMPLOYMENT_DOC = 'unemployment_doc'
@@ -381,3 +382,6 @@ def format_academic_year(academic_year):
 #     message_content['template_base_data'] = data
 #
 #     return send_message.get_body_content(message_content)
+
+def test(request):
+    return render(request, "test.html")

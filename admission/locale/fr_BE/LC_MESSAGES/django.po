@@ -1559,3 +1559,18 @@ msgstr "- avant le 15 septembre"
 
 msgid "capaes_limit_date_part3_end"
 msgstr "pour les autres."
+
+msgid "glue_id_picture"
+msgstr "Veuillez coller ici une photo en couleur et de format passeport"
+
+msgid "addresses"
+msgstr "Coordonnées"
+
+msgid "current_studies"
+msgstr "En cours d'études"
+
+msgid "repetition"
+msgstr "Redoublement"
+
+msgid "reorientation"
+msgstr "Changement d'orientation"

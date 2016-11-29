@@ -126,3 +126,6 @@ def search(an_applicant=None, activity_type=None, path_type=None):
 def find_by_path_type_list(an_applicant, path_types):
     return Curriculum.objects.filter(person=an_applicant,
                                      path_type__in=path_types)
+
+def find_by_path_type_list_order_by_desc_academic_year(an_applicant, path_types):
+    return find_by_path_type_list(an_applicant, path_types).order_by('-academic_year')

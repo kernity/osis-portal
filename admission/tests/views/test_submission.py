@@ -181,7 +181,7 @@ class SubmissionTest(TestCase):
         self.assertTrue(submission.message_template_admission_variables(self.applicant, self.application) == data)
 
     def test_onem_document_needed(self):
-        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT')
+        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT',None)
         self.assertTrue(submission.get_message_document(self.applicant, 'UNEMPLOYMENT') != "")
 
     def test_onem_document_unneeded(self):
@@ -195,8 +195,7 @@ class SubmissionTest(TestCase):
         country_belgium = mdl_ref.country.Country(iso_code='BE')
         country_belgium.save()
         national_institution = data_model.create_education_institution('national_institution', country_belgium)
-        curriculum = data_model.create_curriculum(self.applicant, None)
-        curriculum.academic_year = now.year - 2
+        curriculum = data_model.create_curriculum(self.applicant, None,now.year - 2 )
         curriculum.path_type = 'LOCAL_UNIVERSITY'
         curriculum.national_education = 'FRENCH'
         curriculum.national_institution = national_institution
@@ -207,11 +206,9 @@ class SubmissionTest(TestCase):
 
     def test_other_activity_type_document_needed(self):
         an_activity_type = 'OTHER'
-        curriculum = data_model.create_curriculum(self.applicant, an_activity_type)
-        curriculum.academic_year = now.year - 2
+        curriculum = data_model.create_curriculum(self.applicant, an_activity_type, now.year - 2)
         curriculum.save()
-        curriculum = data_model.create_curriculum(self.applicant, an_activity_type)
-        curriculum.academic_year = now.year - 3
+        curriculum = data_model.create_curriculum(self.applicant, an_activity_type, now.year - 3)
         curriculum.save()
         self.assertTrue(submission.get_other_activity_type_document(self.applicant) != "")
 
@@ -219,7 +216,7 @@ class SubmissionTest(TestCase):
         self.assertTrue(submission.get_other_activity_type_document(self.applicant) == "")
 
     def test_studies_document_needed(self):
-        curriculum = data_model.create_curriculum(self.applicant, None)
+        curriculum = data_model.create_curriculum(self.applicant, None, None)
         curriculum.path_type = 'LOCAL_UNIVERSITY'
         curriculum.save()
         self.assertTrue(submission.get_message_studies_document(self.applicant) != "")
@@ -319,7 +316,7 @@ class SubmissionTest(TestCase):
         self.create_curriculum_list('OTHER', 2, now.year)
         year_plus_one = application_capaes.offer_year.academic_year.year+1
         academic_year = "{0}-{1}".format(str(application_capaes.offer_year.academic_year.year), str(year_plus_one))
-        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT')
+        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT',None)
 
         self.create_admission_exam_data()
         self.create_data_debts_doc_needed()
@@ -367,7 +364,7 @@ class SubmissionTest(TestCase):
         self.create_curriculum_list('OTHER', 2, now.year)
         year_plus_one = application_opes.offer_year.academic_year.year+1
         academic_year = "{0}-{1}".format(str(application_opes.offer_year.academic_year.year), str(year_plus_one))
-        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT')
+        data_model.create_curriculum(self.applicant, 'UNEMPLOYMENT',None)
 
         self.create_admission_exam_data()
         self.create_data_debts_doc_needed()
@@ -486,4 +483,3 @@ class SubmissionTest(TestCase):
         application_fopa = self.create_application_by_acronym('FOPA2MA')
         application_fopa.application_type = 'INSCRIPTION'
         submission.text_display(self.applicant, application_fopa)
-        print('ici')
