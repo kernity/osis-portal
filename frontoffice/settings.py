@@ -55,6 +55,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'aloe_django',
+    'django_nose',
     'osis_common',
     'reference',
     'base',
@@ -287,6 +289,10 @@ CKEDITOR_CONFIGS = {
         ],
     },
 }
+
+GHERKIN_TEST_CLASS = 'aloe_django.TestCase'
+GHERKIN_TEST_RUNNER = 'aloe_django.runner.GherkinTestRunner'
+SELENIUM_FIREFOX_PROFILE_PATH='/media/Info/UCL/OSIS/osis-portal-project/osis_portal/base/features/firefox_profile'
 
 try:
     from frontoffice.server_settings import *

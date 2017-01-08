@@ -10,6 +10,9 @@ Pillow==3.3.0
 psycopg2==2.6.2
 PyPDF2==1.26.0
 reportlab==3.2.0
-selenium==2.48.0
+selenium==3.0.2
+aloe_django
+django-nose
+aloe_webdriver
 
 -r ./osis_common/requirements.txt

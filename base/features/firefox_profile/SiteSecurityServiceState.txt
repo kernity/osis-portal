@@ -1,0 +1,7 @@
+www.google-analytics.com:HSTS	0	17155	1493132441707,1,1
+cdn.fedoramagazine.org:HSTS	0	17155	1498014041520,1,1
+www.mozilla.org:HSTS	0	17155	1513782041021,1,0
+accounts.firefox.com:HPKP	0	17155	1482332444363,1,1,WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=r/mIkG3eEpVdm+u/ko/cwxzOMo1bk4TyHIlByibiA5E=
+self-repair.mozilla.org:HSTS	0	17155	1498019439856,1,1
+start.fedoraproject.org:HSTS	0	17155	1498019434600,1,1
+accounts.firefox.com:HSTS	0	17155	17034246044363,1,1
