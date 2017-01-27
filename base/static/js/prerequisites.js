@@ -511,6 +511,7 @@ function display_local_secondary(){
 }
 
 function display_foreign_secondary(){
+    alert('kk');
    $('#rdb_foreign').prop( "checked", true);
     $('#pnl_foreign_detail').css('visibility', 'visible').css('display','block');
 //foreign diploma
@@ -582,6 +583,9 @@ function display_foreign_secondary(){
     if( $('#hdn_secondary_education_result').val()=="NO_RESULT"){
         $('#rdb_foreign_no_result').prop( "checked", true);
     }
+    $('chb_other_linguistic_regime').prop('checked', false);
+    $('txt_other_linguistic_regime').prop('disabled', true);
+
 }
 
 function national_community_display(){
@@ -1059,4 +1063,28 @@ $("#bt_load_doc_PROFESSIONAL_EXAM_CERTIFICATE" ).click(function() {
 
 $("button[id^='bt_load_doc_HIGH_SCHOOL_SCORES_TRANSCRIPT_']" ).click(function() {
     $('#high_school_diploma_doc_error').html('');
+});
+
+$("#rdb_foreign").click(function(event) {
+    hide('pnl_local_detail');
+    display('pnl_foreign_detail');
+    $('#chb_other_linguistic_regime').prop('checked', false);
+    $('#txt_other_linguistic_regime').prop('disabled', true);
+    $('#txt_other_linguistic_regime').val('');
+    $('#slt_language_diploma_recognized').prop('disabled', false);
+});
+
+$("#chb_other_linguistic_regime").click(function(event) {
+    if ($('#chb_other_linguistic_regime').prop('checked') ) {
+        $('#txt_other_linguistic_regime').prop('disabled', false);
+        $('#slt_language_diploma').prop('disabled', true);
+        $('#slt_language_diploma').prop("selectedIndex",-1);
+        $('#slt_language_diploma').val("-");
+        enabled_other_language();
+    }else{
+        $('#txt_other_linguistic_regime').prop('disabled', true);
+        $('#txt_other_linguistic_regime').val('');
+        $('#slt_language_diploma').prop('disabled', false);
+        disabled_other_language();
+    }
 });

@@ -313,8 +313,7 @@
                           <input type="radio"
                                  name="rdb_local_foreign"
                                  id="rdb_foreign"
-                                 value="false"
-                                 onclick="hide('pnl_local_detail');display('pnl_foreign_detail');">&nbsp;{% trans 'not_in_belgium'%}
+                                 value="false">&nbsp;{% trans 'not_in_belgium'%}
                         </label>
                         {%if validation_messages and validation_messages|get_item:'rdb_local_foreign'%}
                             <br>
