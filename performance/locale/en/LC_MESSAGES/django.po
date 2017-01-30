@@ -62,6 +62,9 @@ msgstr "Y - Second inscription"
 msgid "first_name"
 msgstr "First Name"
 
+msgid "generated"
+msgstr "Generated on"
+
 msgid "inscr"
 msgstr "Inscr."
 
@@ -124,3 +127,18 @@ msgstr "Total ECTS / Enrollment"
 
 msgid "year"
 msgstr "Year"
+
+msgid "success_mean"
+msgstr "Success mean"
+
+msgid "general_mean"
+msgstr "General mean"
+
+msgid "credited"
+msgstr "Credited"
+
+msgid "next_update"
+msgstr "Date of the next document regeneration"
+
+msgid "performance_result_fetch_timed_out"
+msgstr "The server is actually overloaded. Please excuse us and try again later."

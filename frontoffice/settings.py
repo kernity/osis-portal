@@ -55,18 +55,20 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'analytical',
     'osis_common',
+    'rest_framework',
+    'localflavor',
+    'statici18n',
+    'ckeditor',
     'reference',
     'base',
     'admission',
     'enrollments',
     'dashboard',
-    'rest_framework',
-    'localflavor',
     'performance',
+    'attribution',
     'dissertation',
-    'statici18n',
-    'ckeditor',
 )
 
 # check if we are testing right now
@@ -168,9 +170,6 @@ LOGGING = {
 
 DEFAULT_LOGGER = 'default'
 
-COUCHBASE_CONNECTION_STRING='couchbase://localhost/'
-COUCHBASE_PASSWORD=''
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -199,7 +198,7 @@ LANGUAGES = [
     ('en', _('English')),
 ]
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Brussels'
 
 USE_I18N = True
 
@@ -230,19 +229,24 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Queues Definition
 # Uncomment the configuration if you want to use the queue system
 # The queue system uses RabbitMq queues to communicate with other application (ex : osis)
-# QUEUES = {
-#    'QUEUE_URL': 'localhost',
-#    'QUEUE_USER': 'guest',
-#    'QUEUE_PASSWORD': 'guest',
-#    'QUEUE_PORT': 5672,
-#    'QUEUE_CONTEXT_ROOT': '/',
-#    'QUEUES_NAME': {
-#        'MIGRATIONS_TO_PRODUCE': 'osis',
-#        'MIGRATIONS_TO_CONSUME': 'osis_portal',
-#        'PAPER_SHEET': 'paper_sheet',
-#        'PERFORMANCE': 'performance'
-#    }
-# }
+QUEUES = {
+    'QUEUE_URL': 'localhost',
+    'QUEUE_USER': 'guest',
+    'QUEUE_PASSWORD': 'guest',
+    'QUEUE_PORT': 5672,
+    'QUEUE_CONTEXT_ROOT': '/',
+    'QUEUES_NAME': {
+        'MIGRATIONS_TO_PRODUCE': 'osis',
+        'MIGRATIONS_TO_CONSUME': 'osis_portal',
+        'PAPER_SHEET': 'paper_sheet',
+        'PERFORMANCE': 'performance_to_client',
+        'STUDENT_PERFORMANCE': 'rpc_performance_from_client',
+        'STUDENT_POINTS': 'rpc_performance_to_client',
+        'PERFORMANCE_UPDATE_EXP_DATE': 'performance_exp_date',
+        'ATTRIBUTION' : 'attribution'
+    }
+}
+
 
 LOGIN_URL=reverse_lazy('login')
 OVERRIDED_LOGOUT_URL=''
@@ -284,8 +288,22 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+
+TIME_TABLE_URL= ""
+TIME_TABLE_NUMBER = ""
+CATALOG_URL = ""
+
+PERFORMANCE_CONFIG = {
+    'UPDATE_DELTA_HOURS_CURRENT_ACADEMIC_YEAR': 12,
+    'UPDATE_DELTA_HOURS_NON_CURRENT_ACADEMIC_YEAR': 24
+}
+
 try:
     from frontoffice.server_settings import *
+    try:
+        LOCALE_PATHS = LOCALE_PATHS + SERVER_LOCALE_PATHS
+    except NameError:
+        pass
 except ImportError:
     pass
 

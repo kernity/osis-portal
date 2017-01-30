@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#    OSIS stands for Open Student Information System. It's an application
+# OSIS stands for Open Student Information System. It's an application
 #    designed to manage the core business of higher education institutions,
 #    such as universities, faculties, institutes and professional schools.
 #    The core business involves the administration of students, teachers,
@@ -15,7 +15,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #    GNU General Public License for more details.
 #
 #    A copy of this license - GNU General Public License - is available
@@ -23,6 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.test import TestCase
+from base import models as mdl_base
 
-# Create your tests here.
+
+def create_learning_unit_component(data):
+    learning_unit_component = mdl_base.learning_unit_component.LearningUnitComponent()
+    if 'learning_unit_year' in data:
+        learning_unit_component.learning_unit_year = data['learning_unit_year']
+    if 'type' in data:
+        learning_unit_component.type = data['type']
+    if 'duration' in data:
+        learning_unit_component.duration = data['duration']
+    learning_unit_component.save()
+    return learning_unit_component
