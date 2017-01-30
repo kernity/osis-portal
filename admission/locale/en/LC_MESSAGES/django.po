@@ -1692,3 +1692,33 @@ msgstr "Repetition"
 
 msgid "reorientation"
 msgstr "reorientation"
+
+msgid "enrollment_application"
+msgstr "Enrollment application"
+
+msgid "enrollment_application_explanation"
+msgstr "Veuillez transmettre ce formulaire d'inscription dûment complété et signé comme précisé dans le mail qui l'accompagne."
+
+msgid "no_recto_verso"
+msgstr "- N'IMPRIMEZ PAS CE FORMULAIRE RECTO /  VERSO"
+
+msgid "not_incomplete"
+msgstr "- NE TRANSMETTEZ JAMAIS UN DOSSIER INCOMPLET"
+
+msgid "attention"
+msgstr "Attention"
+
+msgid "high_school"
+msgstr "High school"
+
+msgid "teaching_type"
+msgstr "Teaching type"
+
+msgid "diploma_national_community"
+msgstr "Community diploma"
+
+msgid "high_school_result"
+msgstr "High school result"
+
+msgid "high_school_institute"
+msgstr "Institute where the diploma has been delivered"

@@ -203,7 +203,7 @@ msgid "checkbox"
 msgstr "Case à cocher"
 
 msgid "children"
-msgstr "Nombre d'enfants"
+msgstr "Nombre d'enfant(s)"
 
 msgid "choose_file"
 msgstr "Choisir un fichier"
@@ -1726,3 +1726,36 @@ msgstr "Redoublement"
 
 msgid "reorientation"
 msgstr "Changement d'orientation"
+
+msgid "enrollment_application"
+msgstr "Enrollment application"
+
+msgid "enrollment_application_explanation"
+msgstr ""
+"Veuillez transmettre ce formulaire d'inscription dûment complété et signé comme précisé dans le mail qui l'accompagne."
+
+msgid "no_recto_verso"
+msgstr "- N'IMPRIMEZ PAS CE FORMULAIRE RECTO /  VERSO"
+
+msgid "not_incomplete"
+msgstr "- NE TRANSMETTEZ JAMAIS UN DOSSIER INCOMPLET"
+
+msgid "attention"
+msgstr "Attention"
+
+msgid "high_school"
+msgstr "Etudes secondaires"
+
+msgid "teaching_type"
+msgstr "Type d'enseignement secondaire"
+
+msgid "diploma_national_community"
+msgstr "Communauté dans laquelle le diplôme a été obtenu"
+
+msgid "high_school_result"
+msgstr "Tranche de résultat obtenu à l'issue des études secondaires"
+
+msgid "high_school_institute"
+msgstr "Etablissement d'enseignement qui a délivré le certificat de fin d'études secondaires"
+
+

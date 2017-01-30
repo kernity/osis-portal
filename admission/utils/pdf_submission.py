@@ -28,7 +28,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_RIGHT, TA_CENTER, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, Table, TableStyle,Flowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
@@ -57,16 +57,38 @@ COLS_WIDTH_CURRICULUM_STUDIES = [35*mm, 140*mm]
 LAST_NAME = 'last_name'
 FIRST_NAME = 'first_name'
 MIDDLE_NAME = 'middle_name'
-BIRTH_DATE = 'birth_date'
+BIRTH_DAY = 'birth_day'
 BIRTH_PLACE = 'birth_place'
 BIRTH_COUNTRY = 'birth_country'
 CIVIL_STATUS = 'civil_status'
 SPOUSE_NAME = 'spouse_name'
-NUMBER_CHILDREN = 'number_children'
+CHILDREN = 'children'
 
 MOBILE = 'mobile'
 ADDITIONAL_EMAIL = 'additional_email'
 
+class MCLine(Flowable):
+    """
+    Line flowable --- draws a line in a flowable
+    http://two.pairlist.net/pipermail/reportlab-users/2005-February/003695.html
+    """
+
+    #----------------------------------------------------------------------
+    def __init__(self, width, height=0):
+        Flowable.__init__(self)
+        self.width = width
+        self.height = height
+
+    #----------------------------------------------------------------------
+    def __repr__(self):
+        return "Line(w=%s)" % self.width
+
+    #----------------------------------------------------------------------
+    def draw(self):
+        """
+        draw the line
+        """
+        self.canv.line(0, self.height, self.width, self.height)
 
 def add_header_footer(canvas, doc):
     """
@@ -137,7 +159,12 @@ def build_pdf(data):
                               ))
 
     styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
+    styles.add(ParagraphStyle(name='red',
+                              textColor=colors.red,
+                              parent=styles['Normal'],))
     content = []
+    write_pdf_title(content, styles)
+    write_explanation_block(content, styles)
     write_identification_block(content, styles, applicant)
     add_space_between_lines(content, styles)
     write_contact_block(content, styles, applicant)
@@ -177,6 +204,8 @@ def write_contact_block(content, styles, applicant):
     contact_data = set_contact_data(applicant, styles)
     _write_table_contact(content, contact_data)
 
+def get_academic_year(an_academic_year):
+    return "{0}-{1}".format(an_academic_year , an_academic_year+1)
 
 def write_secondary_education_block(content, styles, secondary_education):
     add_space_between_lines(content, styles)
@@ -184,7 +213,7 @@ def write_secondary_education_block(content, styles, secondary_education):
         Paragraph(_('secondary_education'), styles['Heading2']))
     data = []
     data.append(["{0}:".format(_('academic_year')),
-                 format_number_for_display(secondary_education.academic_year)])
+                 get_academic_year(secondary_education.academic_year)])
     write_secondary_education_year_block(content, data)
     add_space_between_lines(content, styles)
     if secondary_education.national is True:
@@ -194,9 +223,15 @@ def write_secondary_education_block(content, styles, secondary_education):
         foreign_data = get_foreign_secondary_data(secondary_education, styles)
         write_secondary_education_foreign_block(content, foreign_data)
     add_space_between_lines(content, styles)
-    write_secondary_education_result_block(content, [['Tranche de résultat obtenu à l\'issue des études secondaires',
-                                                      secondary_education.result]])
+
+    result = ''
+    if secondary_education.result:
+        result=  _("{0}_result".format(secondary_education.result.lower()))
+        result = result.lower()
+    write_secondary_education_result_block(content, [[_('high_school_result'),
+                                                      result]])
     if secondary_education.national is True:
+        add_space_between_lines(content, styles)
         institution_data = set_institution_data(secondary_education.national_institution, styles)
         _write_table_institution(content, institution_data)
 
@@ -223,23 +258,26 @@ def write_addresses_block(content, styles, contact_address, legal_address):
 def set_identification_data(applicant, styles):
     data = []
     set_block_header(data, styles, _('identification'))
-    data.append(["{0}:".format(_('lastname')), format_string_for_display(applicant.user.last_name)],)
-    data.append(["{0}:".format(_('firstname')), format_string_for_display(applicant.user.first_name)],)
-    data.append(["{0}:".format(_('middle_name')), format_string_for_display(applicant.middle_name)],)
-    data.append(["{0}:".format(_('birth_date')), format_string_for_display(applicant.birth_date)],)
-    data.append(["{0}:".format(_('birth_place')), format_string_for_display(applicant.birth_place)],)
-    data.append(["{0}:".format(_('birth_country')), format_string_for_display(applicant.birth_country)],)
-    data.append(["{0}:".format(_('civil_status')), format_string_for_display_trans(applicant.civil_status)],)
-    data.append(["{0}:".format(_('spouse_name')), format_string_for_display(applicant.spouse_name)],)
-    data.append(["{0}:".format(_('number_children')), format_string_for_display(applicant.number_children)],)
+    data.append(["{0} :".format(_('lastname')), format_string_for_display(applicant.user.last_name)],)
+    data.append(["{0} :".format(_('firstname')), format_string_for_display(applicant.user.first_name)],)
+    data.append(["{0} :".format(_('middle_name')), format_string_for_display(applicant.middle_name)],)
+    data.append(["{0} :".format(_('birth_day')), format_date_for_display(applicant.birth_date)],)
+    data.append(["{0} :".format(_('birth_place')), format_string_for_display(applicant.birth_place)],)
+    if applicant.birth_country:
+        data.append(["{0} :".format(_('birth_country')), format_string_for_display(applicant.birth_country.name)],)
+    print(applicant.civil_status)
+    print(_(applicant.civil_status))
+    data.append(["{0} :".format(_('civil_status')), format_string_for_display_trans(applicant.civil_status)],)
+    data.append(["{0} :".format(_('spouse_name')), format_string_for_display(applicant.spouse_name)],)
+    data.append(["{0} :".format(_('children')), format_string_for_display(str(applicant.number_children))],)
     return data
 
 
 def set_contact_data(applicant, styles):
     data = []
     set_block_header(data, styles, _('contact'))
-    data.append(["{0}:".format(_('gsm')), format_string_for_display(applicant.phone_mobile)],)
-    data.append(["{0}:".format(_('mail')), format_string_for_display(applicant.additional_email)],)
+    data.append(["{0} :".format(_('mobile')), format_string_for_display(applicant.phone_mobile)],)
+    data.append(["{0} :".format(_('mail')), format_string_for_display(applicant.additional_email)],)
     return data
 
 
@@ -274,10 +312,10 @@ def set_address_data(address, styles, data):
             country = address.country.name
     if type != '':
         data.append([Paragraph(address_type, styles['Heading3']), ],)
-    data.append(["{0}:".format(_('street')), street],)
-    data.append(["{0}:".format(_('postal_code')), postal_code],)
-    data.append(["{0}:".format(_('city')), city],)
-    data.append(["{0}:".format(_('country')), country],)
+    data.append(["{0} :".format(_('street')), street],)
+    data.append(["{0} :".format(_('postal_code')), postal_code],)
+    data.append(["{0} :".format(_('city')), city],)
+    data.append(["{0} :".format(_('country')), country],)
     return data
 
 
@@ -295,12 +333,12 @@ def get_identification_data(an_applicant):
     data = {LAST_NAME:       an_applicant.user.last_name,
             FIRST_NAME:      an_applicant.user.first_name,
             MIDDLE_NAME:     format_string_for_display(an_applicant.middle_name),
-            BIRTH_DATE:      an_applicant.birth_date,
+            BIRTH_DAY:      an_applicant.birth_date,
             BIRTH_PLACE:     an_applicant.birth_place,
             BIRTH_COUNTRY:   an_applicant.birth_country.name,
             CIVIL_STATUS:    format_string_for_display(_(an_applicant.civil_status)),
             SPOUSE_NAME:     format_string_for_display(an_applicant.spouse_name),
-            NUMBER_CHILDREN: format_number_for_display(an_applicant.number_children)}
+            CHILDREN: format_number_for_display(an_applicant.number_children)}
     return data
 
 
@@ -318,7 +356,7 @@ def format_string_for_display(string):
 
 
 def format_string_for_display_trans(string):
-    return format_string_for_display(string.lower())
+    return _(format_string_for_display(string.lower()))
 
 
 def format_number_for_display(number):
@@ -364,11 +402,11 @@ def test(request):
 def header_building(canvas, doc, styles):
     a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
 
-    p = Paragraph('''<para align=center>
+    enrollment_application_title = Paragraph('''<para align=center>
                         <font size=16>%s</font>
-                    </para>''' % (_('scores_transcript')), styles["BodyText"])
+                    </para>''' % (_('enrollment_application')), styles["BodyText"])
 
-    data_header = [[a, '%s' % _('ucl_denom_location'), p], ]
+    data_header = [[a, '%s' % _('ucl_denom_location'), enrollment_application_title], ]
 
     t_header = Table(data_header, [30*mm, 100*mm, 50*mm])
 
@@ -460,7 +498,7 @@ def _write_table_address(content, data):
 
 def get_national_secondary_data(secondary_education, styles):
     data = []
-    set_block_header(data, styles, _('national_secondary_education'))
+    set_block_header(data, styles, _('high_school'))
     national_community_str = ''
     if secondary_education.national_community:
         national_community_str = secondary_education.national_community
@@ -468,13 +506,13 @@ def get_national_secondary_data(secondary_education, styles):
     if secondary_education.education_type:
         education_type_str = secondary_education.education_type.name
 
-    data.append(["{0}:".format(_('diploma_national_comunity')), Paragraph(national_community_str, styles['bold'])],)
-    data.append(["{0}:".format(_('teaching_type')), Paragraph(education_type_str, styles['bold'])],)
+    data.append(["{0} :".format(_('diploma_national_community')), Paragraph(national_community_str, styles['bold'])],)
+    data.append(["{0} :".format(_('teaching_type')), Paragraph(education_type_str, styles['bold'])],)
 
     data_current_studies = []
-    data_current_studies.append([Paragraph("{0}:".format(_('current_studies')), styles['bold'])],)
-    data_current_studies.append(["  {0}:".format(_('repetition')), format_yes_no(secondary_education.path_repetition)],)
-    data_current_studies.append(["  {0}:".format(_('reorientation')),
+    data_current_studies.append([Paragraph("{0} :".format(_('current_studies')), styles['bold'])],)
+    data_current_studies.append(["  {0} :".format(_('repetition')), format_yes_no(secondary_education.path_repetition)],)
+    data_current_studies.append(["  {0} :".format(_('reorientation')),
                                  format_yes_no(secondary_education.path_reorientation)],)
 
     data.append([_write_table_current_studies(data_current_studies), ''],)
@@ -522,11 +560,11 @@ def get_foreign_secondary_data(secondary_education, styles):
     equivalence_str = ''
     if secondary_education.international_equivalence:
         equivalence_str = secondary_education.international_equivalence
-    data.append(["{0}:".format('Intitulé du diplôme obtenu'),
+    data.append(["{0} :".format('Intitulé du diplôme obtenu'),
                  Paragraph(international_diploma_title, styles['bold'])],)
-    data.append(["{0}:".format('Régime linguistique dans lequel le diplôme a été obtenu'),
+    data.append(["{0} :".format('Régime linguistique dans lequel le diplôme a été obtenu'),
                  Paragraph(international_diploma_language_str, styles['bold'])],)
-    data.append(["{0}:".format('Equivalence reconnue par la Communauté française de Belgique'),
+    data.append(["{0} :".format('Equivalence reconnue par la Communauté française de Belgique'),
                  Paragraph(equivalence_str, styles['bold'])],)
     return data
 
@@ -542,6 +580,8 @@ def write_secondary_education_foreign_block(content, data):
 
 
 def write_secondary_education_result_block(content, data):
+    print(data)
+
     t = Table(data, COLS_WIDTH_NATIONAL_EDUCATION, repeatRows=1)
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -555,7 +595,7 @@ def set_institution_data(education_institution, styles):
     data = []
     if education_institution:
         set_block_header_style(data, styles,
-                               'Etablissement d\'enseignement qui a délivré le certificat de fin d\'études secondaires', 'Italic')
+                               "{0} :".format(_('high_school_institute')), 'Italic')
         data.append([format_string_for_display(education_institution.name)],)
         locality = ''
         if education_institution.postal_code:
@@ -612,12 +652,12 @@ def get_curriculum_data(curriculum, styles):
         national_institution_postal_code = curriculum.national_institution.postal_code
         national_institution_city = curriculum.national_institution.city
 
-    data.append(["{0}:".format('Communauté'),
+    data.append(["{0} :".format('Communauté'),
                  Paragraph(national_education, styles['bold'])],)
-    data.append(["{0}:".format('Domaine'), Paragraph(domain, styles['bold'])],)
+    data.append(["{0} :".format('Domaine'), Paragraph(domain, styles['bold'])],)
     data.append(["",
                  Paragraph('', styles['Normal'])],)
-    data.append(["{0}:".format('Etablissement'),
+    data.append(["{0} :".format('Etablissement'),
                  Paragraph(national_institution_name, styles['bold'])],)
     data.append(["",
                  Paragraph("{0} {1}".format(national_institution_postal_code, national_institution_city), styles['bold'])],)
@@ -663,17 +703,54 @@ def write_curriculum_others_block(content, styles, curriculum):
 def get_curriculum_other_data(curriculum, styles):
     data = []
     data.append([
-        Paragraph("{0}:".format(submission.get_academic_year(curriculum.academic_year)), styles['Heading2']),
+        Paragraph("{0} :".format(submission.get_academic_year(curriculum.academic_year)), styles['Heading2']),
         Paragraph("{0}".format(curriculum.path_type), styles['Heading2'])], )
     activity_type = ''
 
     if curriculum.activity_type:
         activity_type = curriculum.activity_type
 
-    data.append(["{0}:".format('Activité'),
+    data.append(["{0} :".format('Activité'),
                  Paragraph(activity_type, styles['bold'])],)
     if curriculum.activity_place:
-        data.append(["{0}:".format('Endroit'),
+        data.append(["{0} :".format('Endroit'),
                      Paragraph(curriculum.activity_place, styles['bold'])],)
 
     return data
+
+def write_pdf_title(content, styles):
+    line = MCLine(500)
+    content.append(line)
+    enrollment_application_explanation = Paragraph('''<para>
+                        <font size=16>%s</font>
+                    </para>''' % (_('enrollment_application')), styles["BodyText"])
+    content.append(enrollment_application_explanation)
+
+
+def write_explanation_block(content, styles):
+    add_space_between_lines(content, styles)
+    enrollment_application_explanation = Paragraph('''<para>
+                        <font size=12>%s</font>
+                    </para>''' % (_('enrollment_application_explanation')), styles["BodyText"])
+    content.append(enrollment_application_explanation)
+    attention = Paragraph('''<para>
+                            <font size=12>%s :</font>
+                        </para>''' % (_('attention')), styles["BodyText"])
+    content.append(attention)
+    enrollment_application_no_recto_verso = Paragraph('''<para>
+                        <font size=12>%s</font>
+                    </para>''' % (_('no_recto_verso')), styles["red"])
+    content.append(enrollment_application_no_recto_verso)
+    enrollment_application_not_incomplete = Paragraph('''<para>
+                        <font size=12>%s</font>
+                    </para>''' % (_('not_incomplete')), styles["red"])
+    content.append(enrollment_application_not_incomplete)
+    add_space_between_lines(content, styles)
+
+
+def format_date_for_display(a_date):
+    if a_date is None:
+        return ''
+    else:
+        return a_date.strftime('%d/%m/%Y')
+
