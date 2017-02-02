@@ -1758,4 +1758,20 @@ msgstr "Tranche de résultat obtenu à l'issue des études secondaires"
 msgid "high_school_institute"
 msgstr "Etablissement d'enseignement qui a délivré le certificat de fin d'études secondaires"
 
+msgid "sociological_search"
+msgstr "Recherche sociologique"
 
+
+msgid "sociological_survey_explanation"
+msgstr ""
+"Cette enquête est destinée à mieux connaitre l'origine des étudiants qui s'inscrivent à l'UCL.  Son usage est "
+"strictement confidentiel et les informations ne sont utilisées qu'à des fins statistiques."
+
+msgid "brotherhood"
+msgstr "Frères et soeurs"
+
+msgid "studies"
+msgstr "Etudes"
+
+msgid "family_situation"
+msgstr "Composition et situation de votre famille"

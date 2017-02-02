@@ -48,6 +48,7 @@
     </form>
     <div class="row">
         <div class="col-md-2">
+            {{ application.id }}
             {% if applications %}<a href="{%url 'home'%}" onclick="return confirm(gettext('question_need_to_save'))">{% trans 'back_demandes_list'%}</a>{%endif%}
             <br>
             <br>
@@ -88,7 +89,7 @@
                         &nbsp;&nbsp;{%trans 'prerequisites'%}</a>
                 </li>
                 <li class="{%if tab_active == '3' %}active{%endif%}" id="mn_curriculum">
-                    <a href="{%if tab_curriculum and application.id %}{% url 'curriculum_update' application.id%}{%else%}{% url 'curriculum_update' %}{%endif%}"
+                    <a href="{%if tab_curriculum and application.id %}{% url 'curriculum_update' application.id %}{%else%}{% url 'curriculum_update' %}{%endif%}"
                        id="lnk_curriculum_tab">
                         {% if validated_curriculum %}
                             <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color:green;"></span>

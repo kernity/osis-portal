@@ -42,6 +42,7 @@ from admission.views import submission
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm
+COL_MAX = [175*mm]
 COLS_WIDTH = [20*mm, 55*mm, 45*mm, 15*mm, 40*mm]
 COLS_WIDTH_IDENTIFICATION = [45*mm, 90*mm]
 COLS_WIDTH_CONTACT = [45*mm, 130*mm]
@@ -52,7 +53,7 @@ STUDENTS_PER_PAGE = 24
 COLS_WIDTH_INSTITUTION = [175*mm]
 COLS_WIDTH_CURRICULUM = [45*mm, 45*mm, 45*mm, 25*mm]
 COLS_WIDTH_CURRICULUM_STUDIES = [35*mm, 140*mm]
-
+COLS_WIDTH_SURVEY = [35*mm, 140*mm]
 
 LAST_NAME = 'last_name'
 FIRST_NAME = 'first_name'
@@ -129,7 +130,8 @@ def build_pdf(data):
     curriculum_others = []
     if 'curriculum_others' in data:
         curriculum_others = data['curriculum_others']
-
+    if 'sociological_survey' in data:
+        sociological_survey = data['sociological_survey']
     filename = "%s.pdf" % _('submission')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
@@ -149,7 +151,7 @@ def build_pdf(data):
                               borderColor=colors.black,
                               borderPadding=5,))
     styles.add(ParagraphStyle(name='bold',
-                              parent=styles['Normal'],
+                              parent=styles['BodyText'],
                               fontName='Times-Bold'
                               ))
     styles.add(ParagraphStyle(name='italic-underline',
@@ -162,6 +164,16 @@ def build_pdf(data):
     styles.add(ParagraphStyle(name='red',
                               textColor=colors.red,
                               parent=styles['Normal'],))
+    styles.add(ParagraphStyle(name='paragraph_bordered',
+                              parent=styles['BodyText'],
+                              borderWidth=0.5,
+                              borderColor=colors.black,
+                              borderPadding=3,
+                              ))
+    styles.add(ParagraphStyle(name='italic',
+                              parent=styles['Normal'],
+                              fontName='Times-Italic'
+                              ))
     content = []
     write_pdf_title(content, styles)
     write_explanation_block(content, styles)
@@ -177,6 +189,11 @@ def build_pdf(data):
         write_curriculum_studies_block(content, styles, curriculum_studies)
     if len(curriculum_others) > 0:
         write_curriculum_others_block(content, styles, curriculum_others)
+    if secondary_education:
+        secondary_education_exam_language = mdl.secondary_education_exam.find_by_type(secondary_education, 'LANGUAGE')
+        write_secondary_education_exam_block(content, styles, secondary_education_exam_language)
+    if sociological_survey:
+        write_sociological_survey_block(content, styles, sociological_survey)
     doc.build(content, onFirstPage=add_header_footer, onLaterPages=add_header_footer)
     pdf = buffer.getvalue()
     buffer.close()
@@ -396,7 +413,8 @@ def test(request):
                                                                                         'FOREIGN_UNIVERSITY',
                                                                                         'LOCAL_HIGH_EDUCATION',
                                                                                         'FOREIGN_HIGH_EDUCATION']),
-                      'curriculum_others': get_curriculum_list(application.applicant, ['ANOTHER_ACTIVITY'])})
+                      'curriculum_others': get_curriculum_list(application.applicant, ['ANOTHER_ACTIVITY']),
+                      'sociological_survey': get_sociological_survey(application.applicant)})
 
 
 def header_building(canvas, doc, styles):
@@ -580,8 +598,6 @@ def write_secondary_education_foreign_block(content, data):
 
 
 def write_secondary_education_result_block(content, data):
-    print(data)
-
     t = Table(data, COLS_WIDTH_NATIONAL_EDUCATION, repeatRows=1)
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -754,3 +770,101 @@ def format_date_for_display(a_date):
     else:
         return a_date.strftime('%d/%m/%Y')
 
+def write_secondary_education_exam_block(content, styles, secondary_education_exam):
+
+    add_space_between_lines(content, styles)
+    content.append(
+        Paragraph(_('local_language_exam'), styles['Heading2']))
+    data = []
+
+    add_space_between_lines(content, styles)
+
+    result = ''
+    if secondary_education_exam.result:
+        result=  _("{0}".format(secondary_education_exam.result.lower()))
+        result = result.lower()
+    write_secondary_education_result_block(content, [["{0}: ".format(_('result')),
+                                                      result]])
+
+
+def write_sociological_survey_block(content, styles, sociological_survey):
+    add_space_between_lines(content, styles)
+    content.append(
+        Paragraph(_('sociological_search'), styles['Heading2']))
+    data = []
+
+    add_space_between_lines(content, styles)
+    build_explanation(content, _('sociological_survey_explanation'), styles)
+
+    add_space_between_lines(content, styles)
+    data.append([Paragraph(_('family_situation'), styles['italic'])],)
+
+    add_space_between_lines(content, styles)
+    data.append(["{0} :".format(_('brotherhood')),
+                 Paragraph(str(sociological_survey.number_brothers_sisters), styles['BodyText'])],)
+    parent_data(_('father'), sociological_survey.father_is_deceased, sociological_survey.father_education,sociological_survey.father_profession, styles, data, _('deceased_male'))
+    parent_data(_('mother'), sociological_survey.mother_is_deceased, sociological_survey.mother_education,sociological_survey.mother_profession, styles, data,  _('deceased_female'))
+    family_data(_('student'), sociological_survey.student_professional_activity, sociological_survey.student_profession,styles, data)
+    family_data(_('conjoint'), sociological_survey.conjoint_professional_activity, sociological_survey.conjoint_profession,styles, data)
+    build_2_columns_block(content, data, COLS_WIDTH_SURVEY)
+
+
+def build_explanation(content, data, styles):
+    content.append(Paragraph('''<para><font size=10>%s</font></para>''' % (data),
+                             styles["paragraph_bordered"]))
+
+
+
+def build_2_columns_block(content, data, cols_width):
+    t = Table(data, cols_width, repeatRows=1)
+    t.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+    content.append(t)
+
+def define_deceased(deceased):
+    if deceased:
+        return _('deceased_male')
+
+def parent_data(title, deceased_status, education, profession,  styles, data, deceased_string):
+    if deceased_status:
+        data.append([Paragraph("{0} :".format(title),styles['bold']),
+                         Paragraph(deceased_string, styles['BodyText'])],)
+        data.append(["",
+                     Paragraph('''<para>%s :
+                        <strong>%s</strong>
+                    </para>''' %(_('studies'), _(education)), styles['BodyText'])],)
+    else:
+        data.append([Paragraph("{0} :".format(title),styles['bold']),
+                     Paragraph('''<para>%s :
+                        <strong>%s</strong>
+                    </para>''' % (_('studies'), _(education)), styles['BodyText'])],)
+
+    data.append([" ",
+                 Paragraph('''<para>%s :
+                        <strong>%s</strong>
+                    </para>''' % (_('profession'),profession), styles["BodyText"])
+                 ],)
+
+    return data
+
+def family_data(title, professional_activity, profession,styles, data):
+    col1=""
+    if professional_activity is None:
+        col1 = Paragraph("{0} :".format(title), styles['bold'])
+        col2 = ""
+    else:
+        col2 = Paragraph("{0} :".format(title), styles['bold'])
+    data.append([col1,
+                 Paragraph('''<para>%s :
+                        <strong>%s</strong>
+                    </para>''' % (_('professional_activity'),_(professional_activity)), styles["BodyText"])],)
+    data.append([col2,
+                 Paragraph('''<para>%s :
+                        <strong>%s</strong>
+                    </para>''' % (_('profession'),profession), styles["BodyText"])],)
+
+
+    return data

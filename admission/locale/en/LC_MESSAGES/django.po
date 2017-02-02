@@ -1700,13 +1700,13 @@ msgid "enrollment_application_explanation"
 msgstr "Veuillez transmettre ce formulaire d'inscription dûment complété et signé comme précisé dans le mail qui l'accompagne."
 
 msgid "no_recto_verso"
-msgstr "- N'IMPRIMEZ PAS CE FORMULAIRE RECTO /  VERSO"
+msgstr "- DON'T PRINT A TWO-SIDED DOCUMENT"
 
 msgid "not_incomplete"
-msgstr "- NE TRANSMETTEZ JAMAIS UN DOSSIER INCOMPLET"
+msgstr "- NEVER SEND AN INCOMPLETE DOSSIER"
 
 msgid "attention"
-msgstr "Attention"
+msgstr "Pay attention"
 
 msgid "high_school"
 msgstr "High school"
@@ -1722,3 +1722,20 @@ msgstr "High school result"
 
 msgid "high_school_institute"
 msgstr "Institute where the diploma has been delivered"
+
+msgid "sociological_search"
+msgstr "Sociological survey"
+
+msgid "sociological_survey_explanation"
+msgstr ""
+"This survey is intended to know better the origin of the students enrolled at UCL.  This survey is completely "
+"confidential, information provided by the survey is used for statistical purposes only."
+
+msgid "brotherhood"
+msgstr "Brotherhood"
+
+msgid "studies"
+msgstr "Studies"
+
+msgid "family_situation"
+msgstr "Family composition"
