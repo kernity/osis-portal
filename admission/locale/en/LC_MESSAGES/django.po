@@ -1742,3 +1742,112 @@ msgstr "Family composition"
 
 msgid "modification"
 msgstr "Modification"
+
+msgid "not_abroad"
+msgstr "in Belgium"
+
+msgid "abroad"
+msgstr "abroad"
+
+msgid "session"
+msgstr "Session"
+
+msgid "to_this_exam"
+msgstr "to this exam"
+
+msgid "no_enrollment"
+msgstr "Not enrollment"
+
+msgid "admission_exam_studies"
+msgstr "Admission exam to the high belgian studies"
+
+msgid "LOCAL_UNIVERSITY"
+msgstr "Belgian university"
+
+msgid "FOREIGN_UNIVERSITY"
+msgstr "Foreign university"
+
+msgid "LOCAL_HIGH_EDUCATION"
+msgstr "Belgian high education"
+
+msgid "FOREIGN_HIGH_EDUCATION"
+msgstr "Foreign high education"
+
+msgid "ANOTHER_ACTIVITY"
+msgstr "Another activity"
+
+msgid "FRENCH"
+msgstr "French-speaking Community of Belgium"
+
+msgid "GERMAN"
+msgstr "German-speaking Community of Belgium"
+
+msgid "DUTCH"
+msgstr "Dutch-speaking Community of Belgium"
+
+msgid "studies_grade"
+msgstr "Studie's grade"
+
+msgid "community"
+msgstr "Community"
+
+msgid "JOB_ACTIVITY"
+msgstr "Job"
+
+msgid "INTERNSHIP_ACTIVITY"
+msgstr "Internship"
+
+msgid "VOLUNTEERING_ACTIVITY"
+msgstr "Volunteering"
+
+msgid "UNEMPLOYMENT_ACTIVITY"
+msgstr "Unemployment"
+
+msgid "ILLNESS_ACTIVITY"
+msgstr "Illness"
+
+msgid "OTHER_ACTIVITY"
+msgstr "Other activity"
+
+msgid "SUCCEED"
+msgstr "Succeed"
+
+msgid "FAILED"
+msgstr "Failed"
+
+msgid "signature_text_part1"
+msgstr ""
+"Je déclare sur l'honneur que les renseignements que j'ai fournis dans le cadre de la présente demande d'inscription "
+"sont exacts et complets. Je fournis par ailleurs la copie de tous les documents attestant de ma situation. Je m'engage "
+", enfin, à transmettre au Service des inscriptions de l'UCL toutes les modifications des données reprises dans ce "
+"document."
+
+msgid "signature_text_part2"
+msgstr ""
+"Toute fausse déclaration ou omission entraîne l'exclusion de études universitaires en Belgique en application de "
+"l'article 98 du décret du 7 novembre 2013."
+
+msgid "preliminary_file"
+msgstr "Preliminary file"
+
+msgid "access_card_order"
+msgstr "UCL access card order"
+
+msgid "no_writing_here"
+msgstr "DON'T WRITE BELOW"
+
+msgid "university_rules_privacy"
+msgstr "University's rules and privacy protection"
+
+msgid "undersigned"
+msgstr "The undersigned"
+
+msgid "university_rules"
+msgstr "University's rules"
+
+msgid "privacy_protection"
+msgstr "Privacy protection"
+
+msgid "read_approved"
+msgstr "Read and approved by the student while online application"
+

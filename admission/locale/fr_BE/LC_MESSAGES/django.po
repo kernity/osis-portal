@@ -566,7 +566,7 @@ msgid "info_password_changed"
 msgstr "Bonjour, votre compte mot de passe a bien été modifié!"
 
 msgid "inscription"
-msgstr "Enrollment"
+msgstr "Inscription"
 
 msgid "institution"
 msgstr "Etablissement"
@@ -1779,3 +1779,113 @@ msgstr "Composition et situation de votre famille"
 
 msgid "modification"
 msgstr "Modification"
+
+msgid "not_abroad"
+msgstr "en Belgique"
+
+msgid "abroad"
+msgstr "à l'étranger"
+
+msgid "session"
+msgstr "Session"
+
+msgid "to_this_exam"
+msgstr "à cet examen"
+
+msgid "no_enrollment"
+msgstr "Pas d'inscription"
+
+msgid "admission_exam_studies"
+msgstr "Examen d'admission aux études supérieures belges"
+
+msgid "LOCAL_UNIVERSITY"
+msgstr "Université belge"
+
+msgid "FOREIGN_UNIVERSITY"
+msgstr "Université étrangère"
+
+msgid "LOCAL_HIGH_EDUCATION"
+msgstr "Supérieur Non Universitaire belge"
+
+msgid "FOREIGN_HIGH_EDUCATION"
+msgstr "Supérieur Non Universitaire étranger"
+
+msgid "ANOTHER_ACTIVITY"
+msgstr "Autre"
+
+
+msgid "FRENCH"
+msgstr "Communauté française de Belgique"
+
+msgid "GERMAN"
+msgstr "Communauté germanophone de Belgique"
+
+msgid "DUTCH"
+msgstr "Communauté flamande de Belgique"
+
+msgid "studies_grade"
+msgstr "Niveau d'études"
+
+msgid "community"
+msgstr "Communauté"
+
+msgid "JOB_ACTIVITY"
+msgstr "Travail"
+
+msgid "INTERNSHIP_ACTIVITY"
+msgstr "Stage"
+
+msgid "VOLUNTEERING_ACTIVITY"
+msgstr "Bénévolat"
+
+msgid "UNEMPLOYMENT_ACTIVITY"
+msgstr "Chômage"
+
+msgid "ILLNESS_ACTIVITY"
+msgstr "Maladie"
+
+msgid "OTHER_ACTIVITY"
+msgstr "Autre activité"
+
+msgid "SUCCEED"
+msgstr "Réussite"
+
+msgid "FAILED"
+msgstr "Echec"
+
+msgid "signature_text_part1"
+msgstr ""
+"Je déclare sur l'honneur que les renseignements que j'ai fournis dans le cadre de la présente demande d'inscription "
+"sont exacts et complets. Je fournis par ailleurs la copie de tous les documents attestant de ma situation. Je m'engage "
+", enfin, à transmettre au Service des inscriptions de l'UCL toutes les modifications des données reprises dans ce "
+"document."
+
+msgid "signature_text_part2"
+msgstr ""
+"Toute fausse déclaration ou omission entraîne l'exclusion de études universitaires en Belgique en application de "
+"l'article 98 du décret du 7 novembre 2013."
+
+msgid "preliminary_file"
+msgstr "Dossier préliminaire"
+
+msgid "access_card_order"
+msgstr "Commande d'une carte d'accès UCL"
+
+msgid "no_writing_here"
+msgstr "NE RIEN INSCRIRE CI-DESSOUS"
+
+msgid "university_rules_privacy"
+msgstr "Règlement de l'université et Protection de la vie privée"
+
+msgid "undersigned"
+msgstr "Je soussigné(e)"
+
+msgid "university_rules"
+msgstr "Règlement de l'université"
+
+msgid "privacy_protection"
+msgstr "Protection de la vie privée"
+
+msgid "read_approved"
+msgstr "Lu et approuvé par l'étudiantt(e) lors de sa demande d'inscription en ligne."
+
