@@ -525,17 +525,11 @@ msgstr "Account number (IBAN)"
 msgid "id_add"
 msgstr "Click here to add a id documents"
 
-msgid "id_card"
-msgstr "Identity card"
-
 msgid "id_document"
 msgstr "Id document"
 
 msgid "id_documents"
 msgstr "Id documents"
-
-msgid "id_picture"
-msgstr "Identity picture"
 
 msgid "id_picture_add"
 msgstr "Click here to add a picture"
@@ -1312,9 +1306,6 @@ msgstr "Scholarship CFWB"
 msgid "scholarship_development_cooperation"
 msgstr "Scholarship Development Cooperation"
 
-msgid "criteria"
-msgstr "Criteria"
-
 msgid "help_pnl_selectedfiles"
 msgstr "Please select a file"
 
@@ -1515,6 +1506,15 @@ msgstr "Before going to the next step you have to select at least one offer and 
 msgid "msg_next_profil"
 msgstr ""
 "Before going to the next step you have to mention you nationality and the country where you live"
+
+msgid "criteria"
+msgstr "Criteria"
+
+msgid "id_picture"
+msgstr "Identity picture"
+
+msgid "id_card"
+msgstr "Identity card"
 
 msgid "paycheck"
 msgstr "Paycheck"
@@ -1739,3 +1739,6 @@ msgstr "Studies"
 
 msgid "family_situation"
 msgstr "Family composition"
+
+msgid "modification"
+msgstr "Modification"

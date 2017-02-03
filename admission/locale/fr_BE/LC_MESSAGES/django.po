@@ -1333,9 +1333,6 @@ msgstr "Attestation de bourse délivrée par la CFWB ou la Coopération au déve
 msgid "scholarship_development_cooperation"
 msgstr "scholarship_development_cooperation"
 
-msgid "criteria"
-msgstr "Critère"
-
 msgid "help_pnl_selectedfiles"
 msgstr "Veuillez sélectionner un fichier"
 
@@ -1542,6 +1539,9 @@ msgid "msg_next_profil"
 msgstr ""
 "Avant de pouvoir accéder à l'étape suivante vous devez encoder au minimum, votre nationalité et votre pays de domicile"
 
+msgid "criteria"
+msgstr "Critère"
+
 msgid "concerned_person"
 msgstr "Pour la personne concernée"
 
@@ -1632,6 +1632,7 @@ msgstr "téléphonez au"
 
 msgid "technical_failure"
 msgstr "En cas de problème technique,"
+
 msgid "ms"
 msgstr "Mademoiselle"
 
@@ -1775,3 +1776,6 @@ msgstr "Etudes"
 
 msgid "family_situation"
 msgstr "Composition et situation de votre famille"
+
+msgid "modification"
+msgstr "Modification"
