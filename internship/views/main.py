@@ -34,3 +34,11 @@ def view_internship_home(request):
 
     return layout.render(request, "internship_home.html")
 
+
+@login_required
+@permission_required('base.is_student', raise_exception=True)
+def display_internships_selection(request):
+
+    return layout.render(request, "internship_home.html")
+
+

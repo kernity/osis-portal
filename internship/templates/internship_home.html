@@ -33,11 +33,20 @@
 
 {% block content %}
 <div class="page-header">
-    <h2>{% trans 'internship' %}</h2>
+    <h2>{% trans 'my_internships' %}</h2>
 </div>
 
 
 <div class="panel panel-default">
-    INTERNSHIP HOME
+    <div class="panel-heading">My applications</div>
+    <div class="panel-body">
+        <a href="#"
+           id="lnk_tutor_application_create"
+           class="btn btn-primary pull-right"
+           role="button" title="{% trans 'modify_applications'%}">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            {% trans 'modify_applications'%}
+        </a>
+    </div>
 </div>
 {% endblock %}
