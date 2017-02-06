@@ -41,17 +41,21 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <form id="form_offers" method="get" action="{% url 'internship_offers' %}">
+            <form id="form_search_offers" method="get" action="{% url 'internship_offers' %}">
                 <div class="col-md-4 form-group">
                       <label for="internship_type" >{% trans 'internship'%}</label>
                       <select class="form-control" id="slt_internship_type"  name="internship_type">
-                        <option>TEST</option>
+                          {% for internship_type in internship_types %}
+                            <option>{{ internship_type }}</option>
+                          {% endfor %}
                       </select>
                 </div>
                 <div class="col-md-4 form-group">
                       <label for="speciality" >{% trans 'speciality'%}</label>
                       <select class="form-control" id="slt_speciality"  name="speciality">
-                        <option>TEST</option>
+                            {% for speciality in specialities %}
+                                <option>{{ speciality }}</option>
+                            {% endfor %}
                       </select>
                 </div>
                 <div class="col-md-4">
@@ -61,6 +65,39 @@
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                 </button>
               </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <form id="form_select_offers" method="post" action="{% url 'internship_offers' %}">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <th>{% trans 'organization'%}</th>
+                    <th>{% trans 'city'%}</th>
+                    <th>{% trans 'master'%}</th>
+                    <th>{% trans 'choice'%}</th>
+                  </thead>
+                  {% for internship_offer in internship_offers %}
+                    <tr>
+                      <td>{{ internship_offer.0 }}</td>
+                      <td>{{ internship_offer.1 }}</td>
+                      <td>{{ internship_offer.2 }}</td>
+                      <td><select class="form-control">
+                              <option>--</option>
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                            </select>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </table>
+                <button type="submit" id="bt_submit_select_offers" class="btn btn-success" role="button"
+                    title="{% trans 'internship_validate_offers' %}">
+                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                    Validate
+                </button>
             </form>
         </div>
     </div>

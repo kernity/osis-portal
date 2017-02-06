@@ -39,5 +39,16 @@ def view_internship_home(request):
 @login_required
 @permission_required('base.is_student', raise_exception=True)
 def view_internship_offers(request):
-
-    return layout.render(request, "internship_offers.html")
+    internship_types = ["Stage médecine interne", "Stage urgence", "Stage chirurgie", "Stage pédiatrie",
+                        "Stage aux choix 1", "Stage aux choix 2", "Stage aux choix 3", "Stage aux choix 4",
+                        "Stage aux choix 5", "Stage aux choix 6"]
+    specialities = ["médecine interne", "urgence", "chirurgie", "chirurgie", "pédiatrie", "pédopsychiatrie",
+                    "radiologie", "chirurgie plastique", "dermatologie"]
+    internship_offers = [("Cliniques Universitaires Saint Luc", "Bruxelles", "Dr Ries"),
+                         ("Clinique Saint Jean", "Bruxelles", "Dr Brands"),
+                         ("Clinique Sainte Elisabeth", "Namur", "Dr Dooms"),
+                         (" Clinique Saint Joseph", "Mons", "Dr Lemaire"),
+                         ("Hôpital Sint Nikolaus", "Eupen", "Pr Harag")]
+    return layout.render(request, "internship_offers.html", {"internship_types": internship_types,
+                                                             "specialities": specialities,
+                                                             "internship_offers": internship_offers})
