@@ -26,6 +26,7 @@
 ############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
 from base.views import layout
+from internship import models as internship_mdl
 
 
 @login_required

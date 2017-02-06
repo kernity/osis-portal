@@ -39,6 +39,30 @@
 
 
 <div class="panel panel-default">
-    INTERNSHIP OFFERS
+    <div class="panel-body">
+        <div class="row">
+            <form id="form_offers" method="get" action="{% url 'internship_offers' %}">
+                <div class="col-md-4 form-group">
+                      <label for="internship_type" >{% trans 'internship'%}</label>
+                      <select class="form-control" id="slt_internship_type"  name="internship_type">
+                        <option>TEST</option>
+                      </select>
+                </div>
+                <div class="col-md-4 form-group">
+                      <label for="speciality" >{% trans 'speciality'%}</label>
+                      <select class="form-control" id="slt_speciality"  name="speciality">
+                        <option>TEST</option>
+                      </select>
+                </div>
+                <div class="col-md-4">
+                <br>
+                <button type="submit" id="bt_submit_internship_offers_search" class="btn btn-primary" role="button"
+                        title="{% trans 'internship_offers_search' %}">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+              </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
