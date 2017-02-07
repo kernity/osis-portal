@@ -32,8 +32,35 @@ from internship import models as internship_mdl
 @login_required
 @permission_required('base.is_student', raise_exception=True)
 def view_internship_home(request):
+    student_internship_first_choices = [
+        ("Stage médecine interne", "Cliniques Universitaires Saint Luc", "Bruxelles"),
+        ("Stage urgence", "Clinique Saint Jean", "Bruxelles"),
+        ("Stage chirurgie", "Cliniques Universitaires Saint Luc", "Bruxelles"),
+        ("Stage aux choix 1", "Clinique Saint Joseph", "Mons"),
+        ("Stage aux choix 2", "Hôpital Sint Nikolaus", "Eupen"),
+        ("Stage aux choix 3", "-", "-")
+    ]
 
-    return layout.render(request, "internship_home.html")
+    student_internship_second_choices = [
+        ("Stage médecine interne", "Hôpital Sint Nikolaus", "Eupen"),
+        ("Stage urgence", "Clinique Saint Jean", "Bruxelles"),
+        ("Stage chirurgie", "Hôpital Sint Nikolaus", "Eupen"),
+        ("Stage aux choix 1", "Clinique Saint Joseph", "Mons"),
+        ("Stage aux choix 2", "Clinique Sainte Elisabeth", "Namur"),
+        ("Stage aux choix 3", "-", "-")
+    ]
+
+    other_representation = [
+        ("Stage médecine interne", "Cliniques Universitaires Saint Luc -Bruxelles", "Clinique Saint Jean - Bruxelles" ),
+        ("Stage urgence", "Clinique Saint Jean - Bruxelles", "Cliniques Universitaires Saint Luc - Bruxelles"),
+        ("Stage chirurgie", "Cliniques Universitaires Saint Luc - Bruxelles", "Clinique Saint Joseph - Mons"),
+        ("Stage aux choix 1", "Clinique Saint Joseph - Mons", "Hôpital Sint Nikolaus - Eupen"),
+        ("Stage aux choix 2", "Hôpital Sint Nikolaus - Eupen", "Hôpital Sint Nikolaus - Eupen"),
+        ("Stage aux choix 3", "-", "-")
+    ]
+    return layout.render(request, "internship_home.html", {"first_choices": student_internship_first_choices,
+                                                           "second_choices": student_internship_second_choices,
+                                                           "other": other_representation})
 
 
 @login_required
@@ -47,7 +74,7 @@ def view_internship_offers(request):
     internship_offers = [("Cliniques Universitaires Saint Luc", "Bruxelles", "Dr Ries"),
                          ("Clinique Saint Jean", "Bruxelles", "Dr Brands"),
                          ("Clinique Sainte Elisabeth", "Namur", "Dr Dooms"),
-                         (" Clinique Saint Joseph", "Mons", "Dr Lemaire"),
+                         ("Clinique Saint Joseph", "Mons", "Dr Lemaire"),
                          ("Hôpital Sint Nikolaus", "Eupen", "Pr Harag")]
     return layout.render(request, "internship_offers.html", {"internship_types": internship_types,
                                                              "specialities": specialities,
