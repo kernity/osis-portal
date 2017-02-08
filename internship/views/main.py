@@ -82,4 +82,4 @@ def view_internship_offers(request):
 @login_required
 @permission_required('base.is_student', raise_exception=True)
 def view_internship_offer_details(request):
-
+    pass
