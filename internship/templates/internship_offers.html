@@ -84,7 +84,7 @@
                   </thead>
                   {% for internship_offer in internship_offers %}
                     <tr>
-                      <td>{{ internship_offer.0 }}</td>
+                      <td><a href="{% url 'internship_offer_detail' %}">{{ internship_offer.0 }}</a> </td>
                       <td>{{ internship_offer.1 }}</td>
                       <td>{{ internship_offer.2 }}</td>
                       <td><select class="form-control">

@@ -1,0 +1,98 @@
+{% extends "dashboard_layout.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% comment "License" %}
+* OSIS stands for Open Student Information System. It's an application
+* designed to manage the core business of higher education institutions,
+* such as universities, faculties, institutes and professional schools.
+* The core business involves the administration of students, teachers,
+* courses, programs and so on.
+*
+* Copyright (C) 2015-2016 Université catholique de Louvain (http://www.uclouvain.be)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* A copy of this license - GNU General Public License - is available
+* at the root of the source code of this program.  If not,
+* see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+{% block breadcrumb %}
+        <li class="active">{% trans 'internship' %}</li>
+{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+    <h2>{% trans 'internship_offer_details' %}</h2>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label>organization_name</label><br>
+                Cliniques Universitaires Saint Luc
+            </div>
+            <div class="col-md-4">
+                <label>address</label><br>
+                avenue Hippocrate 10, 1200 Bruxelles, Belgique
+            </div>
+
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-3">
+                <label>speciality</label><br>
+                médecine interne
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+                <label>periods</label><br>
+                <table class="table table-bordered">
+                    <thead>
+                        <td>P1</td>
+                        <td>P2</td>
+                        <td>P3</td>
+                        <td>P4</td>
+                        <td>P5</td>
+                        <td>P6</td>
+                        <td>P7</td>
+                        <td>P8</td>
+                        <td>P9</td>
+                        <td>P10</td>
+                        <td>P11</td>
+                        <td>P12</td>
+                    </thead>
+                    <tr>
+                        <th class="success"><span class="glyphicon glyphicon-ok"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="success"><span class="glyphicon glyphicon-ok"></span> </th>
+                        <th class="success"><span class="glyphicon glyphicon-ok"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="success"><span class="glyphicon glyphicon-ok"></span> </th>
+                        <th class="success"><span class="glyphicon glyphicon-ok"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                        <th class="danger"><span class="glyphicon glyphicon-remove"></span> </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
