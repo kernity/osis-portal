@@ -26,7 +26,6 @@
 ############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
 from base.views import layout
-from internship import models as internship_mdl
 
 
 @login_required
@@ -79,3 +78,8 @@ def view_internship_offers(request):
     return layout.render(request, "internship_offers.html", {"internship_types": internship_types,
                                                              "specialities": specialities,
                                                              "internship_offers": internship_offers})
+
+@login_required
+@permission_required('base.is_student', raise_exception=True)
+def view_internship_offer_details(request):
+
