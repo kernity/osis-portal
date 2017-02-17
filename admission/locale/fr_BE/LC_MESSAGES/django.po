@@ -1729,7 +1729,7 @@ msgid "reorientation"
 msgstr "Changement d'orientation"
 
 msgid "enrollment_application"
-msgstr "Enrollment application"
+msgstr "DEMANDE D'INSCRIPTION"
 
 msgid "enrollment_application_explanation"
 msgstr ""
@@ -1889,3 +1889,45 @@ msgstr "Protection de la vie privée"
 msgid "read_approved"
 msgstr "Lu et approuvé par l'étudiantt(e) lors de sa demande d'inscription en ligne."
 
+msgid "of_admission"
+msgstr "d'admission"
+
+msgid "to_attention"
+msgstr "A l'attention de"
+
+msgid "application_of"
+msgstr "Demande de"
+
+msgid "enrollment_apllied"
+msgstr "Inscription sollicitée pour"
+
+msgid "study_year"
+msgstr "Année d'études"
+
+msgid "scholarship"
+msgstr "Bourse"
+
+msgid "dubble_degree"
+msgstr "Double Degree"
+
+msgid "erasmus"
+msgstr "Erasmus Mundus"
+
+msgid "national_diploma_boolean"
+msgstr ""
+"Vous êtes/serez titulaire d'un diplôme belge ou vous avez/aurez réussi un examen d'accès aux études supérieures belges"
+
+msgid "national_nationality_boolean"
+msgstr "Vous avez la nationalité belge ou la nationalité d'une pays de l'Union Européenne"
+
+msgid "diploma_year"
+msgstr "d'obtention du diplôme"
+
+msgid "in_belgium_title"
+msgstr "en BELGIQUE"
+
+msgid "high_school_result_part1"
+msgstr "Tranche de résultat"
+
+msgid "high_school_result_part2"
+msgstr "obtenu à l'issue des études secondaires"

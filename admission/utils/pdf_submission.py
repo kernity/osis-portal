@@ -43,6 +43,7 @@ from base import models as mdl_base
 from admission.views import submission
 from reportlab.lib import *
 from functools import partial
+from admission.models.enums import application_type
 
 
 PAGE_SIZE = A4
@@ -53,7 +54,7 @@ COLS_WIDTH_IDENTIFICATION = [45*mm, 90*mm]
 COLS_WIDTH_CONTACT = [45*mm, 130*mm]
 COLS_WIDTH_NATIONAL_EDUCATION = [95*mm, 80*mm]
 COLS_WIDTH_SECONDARY_RESULT = [100*mm, 75*mm]
-COLS_WIDTH_IDENTIFICATION_MAIN = [140*mm, 35*mm]
+COLS_WIDTH_IDENTIFICATION_MAIN = [130*mm, 35*mm,10*mm]
 STUDENTS_PER_PAGE = 24
 COLS_WIDTH_INSTITUTION = [175*mm]
 COLS_WIDTH_CURRICULUM = [45*mm, 45*mm, 45*mm, 25*mm]
@@ -62,6 +63,11 @@ COLS_WIDTH_SURVEY = [35*mm, 140*mm]
 COLS_WIDTH_SIGNATURE = [175*mm]
 COLS_WIDTH_SIGNATURE_ATTENTION = [50*mm, 75*mm, 50*mm]
 COLS_WIDTH_ACCESS_PICTURE = [70*mm, 75*mm]
+COLS_WIDTH_CURRICULUM_RESULTS = [43.75*mm, 43.75*mm, 43.75*mm, 43.75*mm]
+COLS_WIDTH_SECONDARY_YEAR = [55*mm, 120*mm]
+COLS_WIDTH_CURRENT_STUDIES = [55*mm, 80*mm]
+
+
 
 LAST_NAME = 'last_name'
 FIRST_NAME = 'first_name'
@@ -79,6 +85,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ATTENTION_ICON_URL = os.path.join(BASE_DIR, "static/img/attention_icon.png")
 ACCESS_PICTURE_PLACEMENT_URL = os.path.join(BASE_DIR, "static/img/access_picture_placement.png")
 
+NORMAL_FONT_NAME = 'Times'
+ITALIC_FONT_NAME = 'Times-Italic'
+BOLD_FONT_NAME = 'Times-Bold'
+
+TABLE_STYLE_INNER_BLOCK = TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0),
+                                      ('TOPPADDING', (0, 0), (-1, -1), 0.25),
+                                      ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+                                      ('VALIGN', (0, 0), (-1, -1), 'TOP')])
 
 class MCLine(Flowable):
     """
@@ -145,6 +159,8 @@ def build_pdf(data):
         curriculum_others = data['curriculum_others']
     if 'sociological_survey' in data:
         sociological_survey = data['sociological_survey']
+    if 'student' in data:
+        student = data['student']
     filename = "%s.pdf" % _('submission')
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
@@ -154,7 +170,7 @@ def build_pdf(data):
                             pagesize=PAGE_SIZE,
                             rightMargin=MARGIN_SIZE,
                             leftMargin=MARGIN_SIZE,
-                            topMargin=85,
+                            topMargin=125,
                             bottomMargin=18)
 
     styles = getSampleStyleSheet()
@@ -165,11 +181,11 @@ def build_pdf(data):
                               borderPadding=5,))
     styles.add(ParagraphStyle(name='bold',
                               parent=styles['BodyText'],
-                              fontName='Times-Bold'
+                              fontName=ITALIC_FONT_NAME
                               ))
     styles.add(ParagraphStyle(name='italic-underline',
                               parent=styles['Normal'],
-                              fontName='Times-Italic',
+                              fontName=ITALIC_FONT_NAME,
                               underlineProportion=3
                               ))
 
@@ -183,17 +199,44 @@ def build_pdf(data):
                               borderColor=colors.black,
                               borderPadding=3,
                               ))
+    styles.add(ParagraphStyle(name='default_font',
+                              parent=styles['Normal'],
+                              fontName=NORMAL_FONT_NAME,
+                              fontSize=10
+                              ))
     styles.add(ParagraphStyle(name='italic',
                               parent=styles['Normal'],
-                              fontName='Times-Italic'
+                              fontName=ITALIC_FONT_NAME
                               ))
 
+    styles.add(ParagraphStyle(name='block_title',
+                              parent=styles['Normal'],
+                              fontName=ITALIC_FONT_NAME,
+                              fontSize=12
+                              ))
+    styles.add(ParagraphStyle(name='block_sub_title',
+                              parent=styles['Normal'],
+                              fontName=NORMAL_FONT_NAME,
+                              fontSize=12
+                              ))
+    styles.add(ParagraphStyle(name='header_text',
+                              parent=styles['Normal'],
+                              fontSize=8
+                              ))
+
+    styles.add(ParagraphStyle(name='block_header',
+                              parent=styles['Heading2']
+                              ))
+
+
+
     content = []
-    write_pdf_title(content, styles)
+    write_pdf_title(content, styles, application.application_type)
     write_explanation_block(content, styles)
     write_identification_block(content, styles, applicant)
     add_space_between_lines(content, styles)
     write_contact_block(content, styles, applicant)
+    write_application(content, styles, application, applicant.nationality)
     add_space_between_lines(content, styles)
     write_addresses_block(content, styles, contact_address, legal_address)
     if secondary_education and secondary_education.diploma:
@@ -225,7 +268,7 @@ def build_pdf(data):
     write_signature_block(content, styles)
     write_card_block(content, styles)
     write_rules_block(content, styles, applicant)
-    header_data = ['Gestionnaire', 'adresse',application.offer_year.academic_year, applicant.user.last_name, applicant.user.first_name]
+    header_data = set_header_data(application, applicant, student)
     doc.build(content, onFirstPage=partial(add_header_footer, custom_data=header_data),
               onLaterPages=partial(add_header_footer, custom_data=header_data))
     pdf = buffer.getvalue()
@@ -235,23 +278,31 @@ def build_pdf(data):
 
 
 def add_space_between_lines(content, styles):
-    content.append(Paragraph('''
-                            <para>
+    content.append(Paragraph('''<para>
                                 &nbsp;
                             </para>
-                            ''', styles['Normal']))
+                            ''', styles['default_font']))
 
 
 def write_identification_block(content, styles, applicant):
-    identification_data = set_identification_data(applicant, styles)
+    identification_data = set_identification_data(content, applicant, styles)
+    t = Table([[Paragraph("{0}".format(_('glue_id_picture')), styles['default_font'])]], [35*mm], rowHeights=(45*mm))
+    t.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+
     identification_data_and_picture = \
         [[_write_table_identification(identification_data),
-          Paragraph(_('glue_id_picture'), styles['picture'])]]
+          t,
+          Paragraph('''<para>&nbsp;</para>''', styles['default_font'])]
+         ]
     _write_table_identification_main(content, identification_data_and_picture)
 
 
 def write_contact_block(content, styles, applicant):
-    contact_data = set_contact_data(applicant, styles)
+    contact_data = set_contact_data(content, applicant, styles)
     _write_table_contact(content, contact_data)
 
 
@@ -264,15 +315,15 @@ def write_secondary_education_block(content, styles, secondary_education):
     content.append(
         Paragraph(_('secondary_education'), styles['Heading2']))
     data = []
-    data.append(["{0}:".format(_('academic_year')),
+    data.append([Paragraph('''<para><u>%s</u> %s: </para>''' % (_('academic_year'),_('diploma_year')),styles['default_font']),
                  get_academic_year(secondary_education.academic_year)])
     write_secondary_education_year_block(content, data)
     add_space_between_lines(content, styles)
     if secondary_education.national is True:
-        national_data = get_national_secondary_data(secondary_education, styles)
+        national_data = get_national_secondary_data(content, secondary_education, styles)
         write_secondary_education_national_block(content, national_data)
     else:
-        foreign_data = get_foreign_secondary_data(secondary_education, styles)
+        foreign_data = get_foreign_secondary_data(content, secondary_education, styles)
         write_secondary_education_foreign_block(content, foreign_data)
     add_space_between_lines(content, styles)
 
@@ -280,16 +331,23 @@ def write_secondary_education_block(content, styles, secondary_education):
     if secondary_education.result:
         result = _("{0}_result".format(secondary_education.result.lower()))
         result = result.lower()
-    write_secondary_education_result_block(content, [[_('high_school_result'),
-                                                      result]])
+    label = Paragraph('''<para><u>%s</u> %s:</para>''' % (_('high_school_result_part1'),_('high_school_result_part2')), styles['default_font'])
+    result_label = Paragraph('''<para><strong>%s</strong></para>''' % (result), styles['default_font'])
+    write_secondary_education_result_block(content, [[label,
+                                                      result_label]])
     if secondary_education.national is True:
         add_space_between_lines(content, styles)
         institution_data = set_institution_data(secondary_education.national_institution, styles)
         _write_table_institution(content, institution_data)
 
+        add_space_between_lines(content, styles)
+        schedule_data = set_schedule_data(secondary_education.national_institution, styles)
+        if schedule_data:
+            _write_table_schedule(content, schedule_data)
+
 
 def write_secondary_education_year_block(content, data):
-    t = Table(data, COLS_WIDTH_CONTACT, repeatRows=1)
+    t = Table(data, COLS_WIDTH_SECONDARY_YEAR, repeatRows=1)
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -300,36 +358,39 @@ def write_secondary_education_year_block(content, data):
 
 def write_addresses_block(content, styles, contact_address, legal_address):
     address_data = []
-    set_block_header(address_data, styles, _('addresses'))
+    set_block_addresses_header(address_data, styles, _('addresses'))
     set_address_data(contact_address, styles, address_data)
     address_data.append(["{0}".format(''), ],)
     set_address_data(legal_address, styles, address_data)
+    address_data.append(["{0}".format(''), ],)
     _write_table_address(content, address_data)
 
 
-def set_identification_data(applicant, styles):
+def set_identification_data(content, applicant, styles):
     data = []
-    set_block_header(data, styles, _('identification'))
+    set_block_title(content, data, styles, _('identification'))
     data.append(["{0} :".format(_('lastname')), format_string_for_display(applicant.user.last_name)],)
     data.append(["{0} :".format(_('firstname')), format_string_for_display(applicant.user.first_name)],)
     data.append(["{0} :".format(_('middle_name')), format_string_for_display(applicant.middle_name)],)
+    data.append([' ',' '],)
     data.append(["{0} :".format(_('birth_day')), format_date_for_display(applicant.birth_date)],)
     data.append(["{0} :".format(_('birth_place')), format_string_for_display(applicant.birth_place)],)
     if applicant.birth_country:
         data.append(["{0} :".format(_('birth_country')), format_string_for_display(applicant.birth_country.name)],)
-    print(applicant.civil_status)
-    print(_(applicant.civil_status))
+    data.append([' ',' '],)
     data.append(["{0} :".format(_('civil_status')), format_string_for_display_trans(applicant.civil_status)],)
     data.append(["{0} :".format(_('spouse_name')), format_string_for_display(applicant.spouse_name)],)
     data.append(["{0} :".format(_('children')), format_string_for_display(str(applicant.number_children))],)
+    data.append([" ", " "],)
     return data
 
 
-def set_contact_data(applicant, styles):
+def set_contact_data(content, applicant, styles):
     data = []
-    set_block_header(data, styles, _('contact'))
+    set_block_title(content, data, styles, _('contact'))
     data.append(["{0} :".format(_('mobile')), format_string_for_display(applicant.phone_mobile)],)
     data.append(["{0} :".format(_('mail')), format_string_for_display(applicant.additional_email)],)
+    data.append([" ", " "],)
     return data
 
 
@@ -363,17 +424,32 @@ def set_address_data(address, styles, data):
         if address.country:
             country = address.country.name
     if type != '':
-        data.append([Paragraph(address_type, styles['Heading3']), ],)
+        data.append([Paragraph('<u>{0}</u>'.format(_(address_type.lower())), styles['block_sub_title']), ],)
+    data.append([" ", " "],)
     data.append(["{0} :".format(_('street')), street],)
     data.append(["{0} :".format(_('postal_code')), postal_code],)
     data.append(["{0} :".format(_('city')), city],)
     data.append(["{0} :".format(_('country')), country],)
     return data
 
-
-def set_block_header(data, styles, title):
+def set_block_title(content, data, styles, title):
     data.append([
-        Paragraph(title, styles['Heading2'])], )
+        Paragraph('<u>{0}</u>'.format(title), styles['block_title'])], )
+    data.append([
+        Paragraph('', styles['default_font'])], )
+
+def set_block_header(content, styles, title):
+    content.append(
+        Paragraph('<u>{0}</u>'.format(title), styles['block_header']) )
+    content.append(
+        Paragraph('', styles['default_font']))
+
+def set_block_addresses_header(data, styles, title):
+    data.append([
+        Paragraph('<u>{0}</u>'.format(title), styles['block_title']),] )
+    data.append([
+        Paragraph(' ', styles['default_font']),] )
+
 
 
 def set_block_header_style(data, styles, title, style):
@@ -438,33 +514,32 @@ def get_person_address(an_applicant, a_type):
 
 
 def test(request):
-    application = mdl.application.find_first_by_user(request.user)
-
-    return build_pdf({'application': application,
-                      'contact_address': get_person_address(application.applicant, 'CONTACT'),
-                      'legal_address': get_person_address(application.applicant, 'LEGAL'),
-                      'secondary_education': get_secondary_education(application.applicant),
-                      'curriculum_studies': get_curriculum_list(application.applicant, ['LOCAL_UNIVERSITY',
+    an_application = mdl.application.find_first_by_user(request.user)
+    a_student = mdl_base.student.find_by_user(request.user)
+    return build_pdf({'application': an_application,
+                      'contact_address': get_person_address(an_application.applicant, 'CONTACT'),
+                      'legal_address': get_person_address(an_application.applicant, 'LEGAL'),
+                      'secondary_education': get_secondary_education(an_application.applicant),
+                      'curriculum_studies': get_curriculum_list(an_application.applicant, ['LOCAL_UNIVERSITY',
                                                                                         'FOREIGN_UNIVERSITY',
                                                                                         'LOCAL_HIGH_EDUCATION',
                                                                                         'FOREIGN_HIGH_EDUCATION']),
-                      'curriculum_others': get_curriculum_list(application.applicant, ['ANOTHER_ACTIVITY']),
-                      'sociological_survey': get_sociological_survey(application.applicant)})
+                      'curriculum_others': get_curriculum_list(an_application.applicant, ['ANOTHER_ACTIVITY']),
+                      'sociological_survey': get_sociological_survey(an_application.applicant),
+                      'student': a_student })
 
 
 def header_building(canvas, doc, styles, custom_data):
-
-    a = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
-
-    enrollment_application_title = Paragraph('''<para align=center>
-                        <font size=16>%s</font>
-                    </para>''' % (_('enrollment_application')), styles["BodyText"])
+    logo_institution = Image(settings.LOGO_INSTITUTION_URL, width=15*mm, height=20*mm)
     table_university = table_university_data(styles, custom_data)
-    data_header = [[a, table_university, enrollment_application_title], ]
+    table_applicant = table_applicant_data(styles, custom_data)
+    data_header = [[logo_institution, table_university, table_applicant], ]
 
-    t_header = Table(data_header, [30*mm, 100*mm, 50*mm])
+    t_header = Table(data_header, [30*mm, 75*mm, 75*mm])
 
-    t_header.setStyle(TableStyle([]))
+    t_header.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ]))
 
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
@@ -489,7 +564,7 @@ def end_page_infos_building(content, end_date):
                             <para spaceb=5>
                                 &nbsp;
                             </para>
-                            ''', ParagraphStyle('normal')))
+                            ''', ParagraphStyle('default_font')))
     p_signature = ParagraphStyle('info')
     p_signature.fontSize = 10
     paragraph_signature = Paragraph('''
@@ -502,16 +577,13 @@ def end_page_infos_building(content, end_date):
         <para spaceb=2>
             &nbsp;
         </para>
-        ''', ParagraphStyle('normal')))
+        ''', ParagraphStyle('default_font')))
 
 
 def _write_table_identification(data):
     cc = []
     t = Table(data, COLS_WIDTH_IDENTIFICATION, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+    t.setStyle(TABLE_STYLE_INNER_BLOCK)
     cc.append(t)
     return cc
 
@@ -519,6 +591,7 @@ def _write_table_identification(data):
 def _write_table_identification_main(content, data):
     t = Table(data, COLS_WIDTH_IDENTIFICATION_MAIN, repeatRows=1)
     t.setStyle(TableStyle([
+        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -527,10 +600,10 @@ def _write_table_identification_main(content, data):
 
 
 def _write_table_contact(content, data):
-
     t = Table(data, COLS_WIDTH_CONTACT, repeatRows=1)
     t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('TOPPADDING', (0, 0), (-1, -1), 0.25),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
@@ -541,16 +614,17 @@ def _write_table_address(content, data):
 
     t = Table(data, COLS_WIDTH_CONTACT, repeatRows=1)
     t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('TOPPADDING', (0, 0), (-1, -1), 0.25),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
     content.append(t)
 
 
-def get_national_secondary_data(secondary_education, styles):
+def get_national_secondary_data(content, secondary_education, styles):
     data = []
-    set_block_header(data, styles, "{0} {1}".format(_('high_school'), _('in_belgium')))
+    set_block_title(content, data, styles, "{0} {1}".format(_('high_school'), _('in_belgium_title')))
+
     national_community_str = ''
     if secondary_education.national_community:
         national_community_str = secondary_education.national_community
@@ -558,16 +632,25 @@ def get_national_secondary_data(secondary_education, styles):
     if secondary_education.education_type:
         education_type_str = secondary_education.education_type.name
 
-    data.append(["{0} :".format(_('diploma_national_community')), Paragraph(national_community_str, styles['bold'])],)
-    data.append(["{0} :".format(_('teaching_type')), Paragraph(education_type_str, styles['bold'])],)
+    data.append(["{0} :".format(_('diploma_national_community')),
+                 Paragraph('''<para><strong>%s</strong></para>''' % (national_community_str), styles['default_font'])],)
+    data.append(["{0} :".format(_('teaching_type')),
+                 Paragraph('''<para><strong>%s</strong></para>''' % (education_type_str), styles['default_font'])],)
 
-    data_current_studies = []
-    data_current_studies.append([Paragraph("{0} :".format(_('current_studies')), styles['bold'])],)
-    data_current_studies.append(["  {0} :".format(_('repetition')), format_yes_no(secondary_education.path_repetition)],)
-    data_current_studies.append(["  {0} :".format(_('reorientation')),
-                                 format_yes_no(secondary_education.path_reorientation)],)
 
-    data.append([_write_table_current_studies(data_current_studies), ''],)
+    data.append([Paragraph('''<para><u>%s.</u></para>''' % (_('current_studies')), styles['default_font']),])
+    data_current_studies=[]
+    data_current_studies.append([Paragraph('''<para>%s:</para>''' % (_('repetition')), styles['default_font']),
+                             Paragraph('''<para><strong>%s</strong></para>''' % (format_yes_no(secondary_education.path_repetition)), styles['default_font'])
+                             ],)
+
+    data_current_studies.append([Paragraph('''<para>%s:</para>''' % (_('reorientation')), styles['default_font']),
+                             Paragraph('''<para><strong>%s</strong></para>''' % (format_yes_no(secondary_education.path_reorientation)), styles['default_font'])
+                             ]
+                                )
+
+
+    data.append(_write_table_current_studies(data_current_studies))
     return data
 
 
@@ -593,6 +676,7 @@ def _write_table_current_studies(data):
     cc = []
     t = Table(data, COLS_WIDTH_IDENTIFICATION, repeatRows=1)
     t.setStyle(TableStyle([
+        ('LEFTPADDING', (0, 0), (-1, -1), 15),
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
@@ -602,7 +686,7 @@ def _write_table_current_studies(data):
 
 def get_foreign_secondary_data(secondary_education, styles):
     data = []
-    set_block_header(data, styles, "{0} {1}".format(_('national_secondary_education'), _('abroad')))
+    set_block_title(content, data, styles, "{0} {1}".format(_('national_secondary_education'), _('abroad')))
     international_diploma_title = ''
     if secondary_education.international_diploma:
         international_diploma_title = secondary_education.international_diploma
@@ -632,7 +716,7 @@ def write_secondary_education_foreign_block(content, data):
 
 
 def write_secondary_education_result_block(content, data):
-    t = Table(data, COLS_WIDTH_CONTACT, repeatRows=1)
+    t = Table(data, COLS_WIDTH_SECONDARY_RESULT, repeatRows=1)
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -660,7 +744,7 @@ def set_institution_data(education_institution, styles):
 
 
 def _write_table_institution(content, data):
-    t = Table(data, COLS_WIDTH_INSTITUTION, repeatRows=1)
+    t = Table(data, COL_MAX, repeatRows=1)
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
@@ -671,9 +755,7 @@ def _write_table_institution(content, data):
 
 def write_curriculum_studies_block(content, styles, curriculum):
     add_space_between_lines(content, styles)
-    content.append(
-        Paragraph(_('curriculum'), styles['Heading2']))
-    add_space_between_lines(content, styles)
+    set_block_header(content, styles, _('curriculum'))
     for cv in curriculum:
         data = get_curriculum_data(cv, styles)
         write_curriculum_study_block(content, data)
@@ -685,6 +767,9 @@ def get_curriculum_data(curriculum, styles):
     data.append([
         Paragraph("{0}:".format(submission.get_academic_year(curriculum.academic_year)), styles['Heading2']),
         Paragraph("{0}".format(_(curriculum.path_type)), styles['Heading2'])], )
+    data.append([
+        " "
+        " "], )
     national_education = ''
     domain = ''
     grade_type = ''
@@ -707,7 +792,7 @@ def get_curriculum_data(curriculum, styles):
                  Paragraph(_(national_education), styles['bold'])],)
     data.append(["{0} :".format(_('domain')), Paragraph(domain, styles['bold'])],)
     data.append(["{0} :".format(_('studies_grade')),
-                 Paragraph(grade_type, styles['Normal'])],)
+                 Paragraph(grade_type, styles['default_font'])],)
     data.append(["{0} :".format(_('institution')),
                  Paragraph(national_institution_name, styles['bold'])],)
     data.append(["",
@@ -721,18 +806,18 @@ def get_curriculum_data(curriculum, styles):
     data_curriculum_detail.append(["{0}:".format(_('result')), curriculum_result, "{0}:".format('Crédits inscrits'), curriculum.credits_enrolled],)
     data_curriculum_detail.append(["{0}:".format(_('diploma')), format_yes_no(curriculum.diploma), "{0}:".format('Crédits acquis'), curriculum.credits_obtained],)
 
-    data.append([_write_table_curriculum_detail(data_curriculum_detail), ''],)
+    data.append([_write_table_curriculum_detail(data_curriculum_detail),],)
 
     return data
 
 
 def _write_table_curriculum_detail(data):
     cc = []
-    t = Table(data, COLS_WIDTH_CURRICULUM_STUDIES, repeatRows=1)
+    t = Table(data, COLS_WIDTH_CURRICULUM_RESULTS, repeatRows=1)
     t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+        ('TOPPADDING', (0, 0), (-1, -1),0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1),0),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
     cc.append(t)
     return cc
 
@@ -740,6 +825,8 @@ def _write_table_curriculum_detail(data):
 def write_curriculum_study_block(content, data):
     t = Table(data, COLS_WIDTH_CURRICULUM_STUDIES, repeatRows=1)
     t.setStyle(TableStyle([
+        ('TOPPADDING', (0, 0), (-1, -1),0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1),0),
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -759,6 +846,9 @@ def get_curriculum_other_data(curriculum, styles):
     data.append([
         Paragraph("{0} :".format(submission.get_academic_year(curriculum.academic_year)), styles['Heading2']),
         Paragraph("{0}".format(_(curriculum.path_type)), styles['Heading2'])], )
+    data.append([
+        " "
+        " "], )
     activity_type = ''
 
     if curriculum.activity_type:
@@ -772,32 +862,31 @@ def get_curriculum_other_data(curriculum, styles):
 
     return data
 
-def write_pdf_title(content, styles):
+def write_pdf_title(content, styles, an_application_type):
     line = MCLine(500)
+
+    text_admission=''
+    if an_application_type == application_type.ADMISSION:
+        text_admission = " / {0} {1}".format(_('preliminary_file'),_('of_admission'))
+
+    enrollment_application_title = Paragraph('''<para>
+                        <font size=16>%s</font>%s
+                    </para>''' % (_('enrollment_application'),text_admission), styles["Normal"])
+    content.append(enrollment_application_title)
+    add_space_between_lines(content, styles)
     content.append(line)
-    enrollment_application_explanation = Paragraph('''<para>
-                        <font size=16>%s</font>
-                    </para>''' % (_('enrollment_application')), styles["BodyText"])
-    content.append(enrollment_application_explanation)
 
 
 def write_explanation_block(content, styles):
     add_space_between_lines(content, styles)
-    enrollment_application_explanation = Paragraph('''<para>
-                        <font size=12>%s</font>
-                    </para>''' % (_('enrollment_application_explanation')), styles["BodyText"])
+    enrollment_application_explanation = Paragraph('''<para>%s</para>''' % (_('enrollment_application_explanation')),
+                                                   styles["Normal"])
     content.append(enrollment_application_explanation)
-    attention = Paragraph('''<para>
-                            <font size=12>%s :</font>
-                        </para>''' % (_('attention')), styles["BodyText"])
+    attention = Paragraph('''<para>%s :</para>''' % (_('attention')), styles["Normal"])
     content.append(attention)
-    enrollment_application_no_recto_verso = Paragraph('''<para>
-                        <font size=12>%s</font>
-                    </para>''' % (_('no_recto_verso')), styles["red"])
+    enrollment_application_no_recto_verso = Paragraph('''<para>%s</para>''' % (_('no_recto_verso')), styles["red"])
     content.append(enrollment_application_no_recto_verso)
-    enrollment_application_not_incomplete = Paragraph('''<para>
-                        <font size=12>%s</font>
-                    </para>''' % (_('not_incomplete')), styles["red"])
+    enrollment_application_not_incomplete = Paragraph('''<para>%s</para>''' % (_('not_incomplete')), styles["red"])
     content.append(enrollment_application_not_incomplete)
     add_space_between_lines(content, styles)
 
@@ -812,8 +901,7 @@ def format_date_for_display(a_date):
 def write_secondary_education_exam_block(content, styles, secondary_education_exam, title):
 
     add_space_between_lines(content, styles)
-    content.append(
-        Paragraph(_(title), styles['Heading2']))
+    set_block_header(content, styles, _(title))
     data = []
 
     add_space_between_lines(content, styles)
@@ -836,9 +924,9 @@ def write_secondary_education_exam_block(content, styles, secondary_education_ex
 
 def write_secondary_no_education_exam_block(content, styles, title):
     add_space_between_lines(content, styles)
-    content.append(
-        Paragraph(title, styles['Heading2']))
-    add_space_between_lines(content, styles)
+
+    set_block_header(content, styles, _(title))
+
     content.append(Paragraph('''<para><u>%s</u> %s</para>'''
                              % (_('no_enrollment'), _('to_this_exam')), styles["paragraph_bordered"]))
 
@@ -846,8 +934,8 @@ def write_secondary_no_education_exam_block(content, styles, title):
 def write_sociological_survey_block(content, styles, sociological_survey):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
-    content.append(
-        Paragraph(_('sociological_search'), styles['Heading2']))
+
+    set_block_header(content, styles, _('sociological_search'))
     data = []
 
     add_space_between_lines(content, styles)
@@ -931,9 +1019,9 @@ def write_signature_block(content, styles):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
     a = Image(ATTENTION_ICON_URL, width=15*mm, height=20*mm)
-    content.append(
-        Paragraph('Signature', styles['Heading2']))
-    add_space_between_lines(content, styles)
+
+    set_block_header(content, styles, _('signature'))
+
     data1=[[a, Paragraph('Date :', styles['BodyText']), Paragraph('Signature :', styles['BodyText'])]]
     t1 = Table(data1, COLS_WIDTH_SIGNATURE_ATTENTION, repeatRows=1)
     data = [[Paragraph('''<para>%s <br/>%s<br/></para>''' % (_('signature_text_part1'), _('signature_text_part2')), styles["BodyText"])],
@@ -952,8 +1040,7 @@ def write_card_block(content, styles):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
 
-    content.append(
-        Paragraph(_('access_card_order'), styles['Heading2']))
+    set_block_header(content, styles, _('access_card_order'))
 
     table_no_writing_here = data_no_writing_here(styles)
     table_picture_access = data_picture_access(styles)
@@ -999,9 +1086,7 @@ def write_rules_block(content, styles, applicant):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
 
-    content.append(
-        Paragraph(_('university_rules_privacy'), styles['Heading2']))
-
+    set_block_header(content, styles, _('university_rules_privacy'))
     content.append(Paragraph('''
                             <para>
                                 %s<br/>%s : %s                           %s : %s
@@ -1024,13 +1109,232 @@ def write_rules_block(content, styles, applicant):
 
 
 def table_university_data(styles, custom_data):
+    style_header_text = get_style_header_text()
+    style_header_text_bold = get_style_header_text_bold()
+    data_university = [[Paragraph('Services des inscriptions', style_header_text_bold)],
+                       [Paragraph('{0} {1}'.format(_('to_attention'),
+                                                   custom_data['manager']), style_header_text)],
+                       [Paragraph('{0}'.format(custom_data['address_street']), style_header_text)],
+                       [Paragraph('{0}'.format(custom_data['address_city']), style_header_text)],
+                       [Paragraph('{0}'.format(custom_data['address_country']), style_header_text)],
+                       ]
+    data_academic_year = [[Paragraph('{0} {1}'.format(_('academic_year'),
+                                                      custom_data['academic_year']), style_header_text_bold)]
+                          ]
+    data_applicant = [[Paragraph('{0} {1} {2}'.format(_('application_of'),
+                                                      custom_data['first_name'],
+                                                      custom_data['last_name']), style_header_text_bold)],
+                      ]
+    table_university = Table(data_university, 75*mm, repeatRows=1)
+    table_university.setStyle(TableStyle([
+        ('RIGHTTPADDING', (0, 0), (-1, -1), 0),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'CENTER')]))
+    table_academic = Table(data_academic_year, 75*mm, repeatRows=1)
+    table_academic.setStyle(TableStyle([
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'CENTER')]))
+    table_applicant= Table(data_applicant, 75*mm, repeatRows=1)
+    table_applicant.setStyle(TableStyle([
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'CENTER')]))
+    col2 = [[table_university],
+            [table_academic],
+            [table_applicant]]
+    table_col2 = Table(col2, 75*mm, repeatRows=1)
+    table_col2.setStyle(TableStyle([
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTTPADDING', (0, 0), (-1, -1), 0.25),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('INNERGRID', (0, 0), (-1, -1), 0, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'CENTER')]))
+    return table_col2
 
-    # ici utiliser les donnéeds du custom
-    data_picture_access = [[Paragraph('Services de inscriptions', styles['BodyText'])],
-                           [Paragraph('dddd', styles['BodyText'])]]
-    table_picture_acccess = Table(data_picture_access, 45*mm, repeatRows=1)
+
+def table_applicant_data(styles, custom_data):
+    style_header_text = get_style_header_text()
+    style_header_text_bold = get_style_header_text_bold()
+    table_noma = construct_grid_table_8_characters(custom_data['registration_id'],_('registration_number'),style_header_text_bold)
+    table_global = construct_grid_table_8_characters(custom_data['global_id'],_('fgs'),style_header_text_bold)
+
+    data_applicant = [[Paragraph('Cadre réservé à l UCL', style_header_text_bold)],
+                       [table_noma],
+                      [Paragraph('''
+                            <para>
+                                &nbsp;
+                            </para>
+                            ''', style_header_text)],
+                       [table_global],
+                       [Paragraph('''
+                            <para>
+                                &nbsp;
+                            </para>
+                            ''', style_header_text)],
+                       [Paragraph('{0}: {1}'.format(_('manager'),custom_data['manager']), style_header_text)],
+                       [Paragraph('{0}: {1}'.format(_('reference_number'), custom_data['file_number']), style_header_text)],
+                       [Paragraph('{0}: {1}'.format("Date limite d'envoi", custom_data['limit_date']),style_header_text)],
+                       ]
+
+    table_picture_acccess = Table(data_applicant, 75*mm, repeatRows=1)
     table_picture_acccess.setStyle(TableStyle([
+
+        ('RIGHTTPADDING', (0, 0), (-1, -1), 0.25),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, colors.white),
         ('VALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
     return table_picture_acccess
+
+
+def set_header_data(application, applicant, a_student):
+    registration_id = ""
+    global_id = ""
+    if a_student:
+        registration_id = a_student.registration_id
+        global_id = a_student.person.global_id
+    return {"manager": "manager",
+            "address_street": "adresse rue",
+            "address_city": "adresse ville",
+            "address_country": "adresse pays",
+            "academic_year": get_academic_year(application.offer_year.academic_year.year),
+            "last_name": applicant.user.last_name,
+            "first_name": applicant.user.first_name,
+            "registration_id": registration_id,
+            "global_id": global_id,
+            "file_number": "?",
+            "limit_date":"?"}
+
+
+def get_style_header_text():
+    return ParagraphStyle(name='header_text', fontName=NORMAL_FONT_NAME, fontSize=8)
+
+def get_style_header_text_bold():
+    return ParagraphStyle(name='header_text_bold', fontName=BOLD_FONT_NAME, fontSize=8)
+
+def construct_8_characters_data_table(a_label, noma_list,a_style):
+    row_data = []
+    row_data.append(Paragraph('{0}:'.format(a_label), a_style))
+    for a_character in noma_list:
+        row_data.append((Paragraph('{0}'.format(a_character), a_style)))
+        row_data.append((                 Paragraph('''
+                            <para>
+                                &nbsp;
+                            </para>
+                            ''', a_style)))
+    data_noma=[]
+    return [row_data]
+
+def construct_grid_table_8_characters(a_value , a_label,a_style):
+    if a_value:
+        noma_list = list(a_value)
+    else:
+        noma_list = list("        ")
+    data_noma = construct_8_characters_data_table(a_label, noma_list,a_style)
+
+    table_noma = Table(data_noma,[13*mm,5*mm,1*mm,5*mm,1*mm,5*mm,1*mm,5*mm,1*mm,5*mm,1*mm,5*mm,1*mm,5*mm,1*mm,5*mm],rowHeights=(5*mm))
+    table_noma.setStyle(TableStyle([
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('LEFTPADDING', (1, 0), (-1, -1),5),
+        ('RIGHTTPADDING', (0, 0), (-1,-1), 0),
+        ('RIGHTTPADDING', (1, 0), (-1, -1),5),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+        ('GRID', (1, 0), (1, 0), 1, colors.black),
+        ('GRID', (3, 0), (3, 0), 1, colors.black),
+        ('GRID', (5, 0), (5, 0), 1, colors.black),
+        ('GRID', (7, 0), (7, 0), 1, colors.black),
+        ('GRID', (9, 0), (9, 0), 1, colors.black),
+        ('GRID', (11, 0), (11, 0), 1, colors.black),
+        ('GRID', (13, 0), (13, 0), 1, colors.black),
+        ('GRID', (15, 0), (15, 0), 1, colors.black),
+    ]))
+    return table_noma
+
+
+def write_application(content, styles, application, nationality):
+    scholarship = "-"
+    if application.scholarship:
+        scholarship = application.scholarship_organization
+    dubble_degree = "-"
+    erasmus = "-"
+    data=[]
+    set_block_header(content, styles, "{0}".format(_('enrollment_apllied'),
+                                                   _('for'),
+                                                   get_academic_year(application.offer_year.academic_year.year)))
+    data.append([Paragraph('''<para>%s: <strong>%s</strong></para>''' % (_('study_year'),
+                                                                           application.offer_year.acronym),
+                             styles['default_font'])])
+    data.append([Paragraph('''<para>
+                                    <blocktable>
+                                        <tr>
+                                            <td>&nbsp;&nbsp;&nbsp;</td>
+                                            <td><strong>%s</strong></td>
+                                        </tr>
+                                    </blocktable>
+                                </para>''' % (application.offer_year.title),
+                             styles['default_font'])])
+    data.append([Paragraph('''<para>%s: <strong>%s</strong></para>''' % (_('orientation'),
+                                                                           '?'),
+                             styles['default_font'])])
+    data.append([Paragraph('''<para>%s: <strong>%s</strong></para>''' % (_('site'),
+                                                                           application.offer_year.campus.name),
+                             styles['default_font'])])
+    data_offer = [["{0}".format(_('scholarship')),"{0}".format(_('dubble_degree')),"{0}".format(_('erasmus'))],
+                  ["{0}".format(scholarship),"{0}".format(dubble_degree),"{0}".format(erasmus)]
+                  ]
+    table_offer = Table(data_offer, [40*mm,40*mm,40*mm])
+    table_offer.setStyle(TableStyle([
+        ('LEFTPADDING', (0, 0), (-1, -1), 15),
+
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    data.append([table_offer])
+
+    data.append([Paragraph('''<para><strong>%s</strong></para>''' % (_('national_diploma_boolean')),
+                             styles['default_font'])])
+    national_diploma_boolean=_('no')
+    if application.valuation_possible:
+        national_diploma_boolean=_('yes')
+    data.append([Paragraph('''<para>%s</para>''' % (national_diploma_boolean),
+                             styles['default_font'])])
+    national_nationality_boolean=_('no')
+    if is_european(nationality):
+        national_nationality_boolean=_('yes')
+    data.append([Paragraph('''<para><strong>%s</strong></para>''' % (_('national_nationality_boolean')),
+                             styles['default_font'])])
+    data.append([Paragraph('''<para>%s</para>''' % (national_nationality_boolean),
+                             styles['default_font'])])
+
+
+    t = Table(data, COL_MAX, repeatRows=1)
+    t.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+    content.append(t)
+
+def is_european(country):
+    if country:
+        return country.european_union
+    return False
+
+def set_schedule_data(education_institution, styles):
+    data = []
+
+    return data
+
+def _write_table_schedule(content, data):
+    t = Table(data, COL_MAX, repeatRows=1)
+    t.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.white)]))
+    content.append(t)

@@ -1851,3 +1851,45 @@ msgstr "Privacy protection"
 msgid "read_approved"
 msgstr "Read and approved by the student while online application"
 
+msgid "of_admission"
+msgstr "of admission"
+
+msgid "to_attention"
+msgstr "To the attention of"
+
+msgid "application_of"
+msgstr "Application of"
+
+msgid "enrollment_apllied"
+msgstr "Enrollment for"
+
+msgid "study_year"
+msgstr "Study"
+
+msgid "scholarship"
+msgstr "Scholarship"
+
+msgid "dubble_degree"
+msgstr "dubble_degree"
+
+msgid "erasmus"
+msgstr "Erasmus Mundus"
+
+msgid "national_diploma_boolean"
+msgstr ""
+"Vous êtes/serez titulaire d'un diplôme belge ou vous avez/aurez réussi un examen d'accès aux études supérieures belges"
+
+msgid "national_nationality_boolean"
+msgstr "Vous avez la nationalité belge ou la nationalité d'une pays de l'Union Européenne"
+
+msgid "diploma_year"
+msgstr "of the diploma"
+
+msgid "in_belgium_title"
+msgstr "in BELGIUM"
+
+msgid "high_school_result_part1"
+msgstr "High school result"
+
+msgid "high_school_result_part2"
+msgstr "at the and of high school"
