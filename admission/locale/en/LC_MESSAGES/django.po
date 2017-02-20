@@ -1893,3 +1893,168 @@ msgstr "High school result"
 
 msgid "high_school_result_part2"
 msgstr "at the and of high school"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "orientation"
+msgstr "Orientation"
+
+msgid "site"
+msgstr "Site"
+
+msgid "postal_address_explanation"
+msgstr "Mail will be sent to the contact address"
+
+msgid "activity_place"
+msgstr "Place"
+
+msgid "paternal_grandfather"
+msgstr "Grandfather (paternal)"
+
+msgid "maternal_grandfather"
+msgstr "Grandfather (maternal)"
+
+msgid "university_rules_txt_part1"
+msgstr ""
+"Ayant sollicité ce jour mon inscription au rôle et aux cours de l'UCL, reconnais avoir pris connaissance des "
+"dispositions du Règlement de l'Université, lesquelles sont reprises à l'adresse : "
+"http://www.uclouvain.be/enseignement-reglements, et en particulier:"
+
+msgid "university_rules_txt_item1"
+msgstr "- celles relatives aux conditions d'admission aux grades académiques*,"
+
+msgid "university_rules_txt_item2"
+msgstr ""
+"- celles relatives au paiement des droits d'inscription et à la procédure administrative prévue pour l'annulation"
+"éventuelle de mon inscription au programme,"
+
+msgid "university_rules_txt_item3"
+msgstr "- celles relatives à l'accès aux ressources informatiques et au bon usage des bibliothèques de l'UCL,"
+
+msgid "university_rules_txt_item4"
+msgstr ""
+"- et pour les étudiants inscrits à un programme organisé conjointement avec une autre institution, celles relatives"
+"au règlement spécifique à se procurer auprès du responsable de ce programme,"
+
+msgid "university_rules_txt_item5"
+msgstr "- lorsqu'elles existent, les dispositions particulières de facultés."
+
+msgid "university_rules_txt_part2"
+msgstr ""
+"Je reconnais également à l'Université le droit d'annuler cette inscription s'il apparaît que je ne remplis pas"
+"toutes les conditions requises pour pouvoir accéder aux études universitaires pour lesquelles je sollicite"
+"aujourd'hui mon inscription."
+
+msgid "university_rules_txt_part3"
+msgstr ""
+"* Cfr, notamment, les restrictions imposées par la Communauté française de Belgique aux porteurs de certains diplômes "
+"étrangers"
+
+msgid "privacy_rules_txt_part1"
+msgstr ""
+"Je déclare être conscient(e) du fait que les données communiquées lors de ma demande d'inscription et celles "
+"collectées pendant mon cursus seront reprises dans différents traitements automatisés de données de l'UCL,"
+"de manière conforme aux dispositions de la loi du 8 décembre 1992 relative à la protection de la vie privée"
+"à l'égard de traitements de données à caractère personnel et en accepte les termes."
+
+msgid "privacy_rules_txt_part2"
+msgstr ""
+"Ces données sont indispensables à la gestion administrative de vos études à l'UCL; elles sont, par là-même, "
+"reservées à un usage interne à l'Université."
+
+msgid "privacy_rules_txt_part3"
+msgstr ""
+"Elles pourront toutefois être transmises à des tiers (Administrations, éditeurs, autres universités, employeurs "
+"potentiels, etc) dans la mesure où l'UCL y est légalement tenue, ou dans la mesure où cette transmission est "
+"jugée utile au bon déroulement de vos études ou de votre carrière professionnelle (auquel cas les autorités "
+"académiques de l'UCL devront l'avoir autorisée)."
+"Les données récoltées pourront être utilisées par toute personne effectuant des recherches scientifiques à "
+"l’UCL dans le cadre d’un traitement à des fins scientifiques ou statistiques, dans le respect de la loi du 8 "
+"décembre 1992 et ses arrêtés d'exécution."
+"L'UCL conservera vos données dans un but d'information de l'actualité UCL, de promotion et prestation de "
+"l'ensemble des services offerts aux étudiants et Alumni et de réalisations statistiques."
+
+msgid "privacy_rules_txt_part4"
+msgstr ""
+"Conformément aux articles 4, 9, 10, et 12 de la loi du 8 décembre 1992, vous pourrez notamment, après "
+"justification de votre identité, avoir accès aux données reprises dans les traitements de données UCL et, le cas "
+"échéant, les faire modifier par demande écrite adressée au Service des inscriptions, Place de l'Université, 1 "
+"bte L0.01.10 à 1348 Louvain-la-Neuve ou par demande formulée à l’adresse : info.vieprivee@uclouvain.be"
+
+msgid "access_card_txt_part1"
+msgstr "Madame, Mademoiselle, Monsieur,"
+
+msgid "access_card_txt_part2"
+msgstr ""
+"L’Université catholique de Louvain fournit à ses étudiants une carte d’accès aux fonctionnalités progressivement "
+"enrichies (accès à différentes ressources. Voir le site www.uclouvain.be/smartcard)."
+
+msgid "access_card_txt_part3"
+msgstr "Pour en disposer, veuillez coller ci-dessous une photo répondant aux spécifications suivantes :"
+
+msgid "access_card_txt_part4"
+msgstr ""
+"– Photo couleurs réalisée par un photographe professionnel (les photocopies, les impressions par ordinateur, ... "
+"ne sont pas acceptées)"
+
+msgid "access_card_txt_part5"
+msgstr "– Photo de format passeport 35 sur 45 mm"
+
+msgid "access_card_txt_part6"
+msgstr "– Photo sur fond blanc (les photos ayant un fond coloré ne sont pas acceptées)"
+
+msgid "access_card_txt_part7"
+msgstr "– Photo récente et d’excellente qualité"
+
+msgid "access_card_txt_part8"
+msgstr "– Photo collée avec soin (les photos collées avec du papier collant, agrafées, ... ne sont pas acceptées)."
+
+msgid "access_card_txt_part9"
+msgstr "Toute photo fournie qui ne répondrait pas à ces critères spécifiques ne sera pas acceptée (voir modèle sur "
+"www.uclouvain.be/smartcard )."
+
+msgid "access_card_txt_part10"
+msgstr "Aucune carte d’accès ne pourra, de ce fait, être commandée, ce qui peut vous gêner dans les différentes "
+"démarches à accomplir au sein de l’Université. Conscients des désagréments qu’engendrerait une telle situation, nous "
+"vous invitons :"
+
+msgid "access_card_txt_part11"
+msgstr "– à apposer ci-dessous une photo conforme dans le cadre prévu à cet effet (la photo de bonne dimension doit "
+"pouvoir cacher le rectangle gris)"
+
+msgid "access_card_txt_part12"
+msgstr "– à joindre le présent document dûment complété à votre demande d’inscription. "
+
+msgid "access_card_txt_part13"
+msgstr "Aucun rappel ne sera envoyé."
+
+
+msgid "access_card_txt_part14"
+msgstr ""
+"La  carte  d’accès  sera  envoyée  à  l’une  des  adresses  communiquées  au  Service  des  inscriptions  lors  de  "
+"votre  inscription,  soit  au  domicile  en  Belgique,  soit,  à  défaut,  à  la  résidence  en  Belgique.  Si "
+" aucune adresse  en  Belgique  n’a  été  communiquée  lors  de  l’inscription,  la  carte  devra  être  retirée  au "
+"Service  des  inscriptions  (à  partir  de  la  rentrée  académique)  dans  les  dix  jours  qui  suivent la "
+"réception de l’avis d’enregistrement de l’inscription."
+
+msgid "access_card_txt_part15"
+msgstr "D’avance, nous vous en remercions."
+
+msgid "access_card_txt_part16"
+msgstr "Anne Van Laethem"
+
+msgid "access_card_txt_part17"
+msgstr "Directrice du Service des inscriptions"
+
+msgid "sending_limit_date"
+msgstr "Sending limit date"
+
+msgid "YES"
+msgstr "Yes"
+
+msgid "NO"
+msgstr "No"
+
+msgid "DEMANDED"
+msgstr "Demanded"

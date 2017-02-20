@@ -55,7 +55,7 @@
             {% for application in applications%}
             <tr>
                 <td></td>
-                <td>{{ application.creation_date | default_if_none:''|date:"j/m/Y" }}</td>
+                <td>{{ application.modification_date | default_if_none:''|date:"j/m/Y" }}</td>
                 <td><a href="{% url 'profile' application.id %}" title="{{application.offer_year.acronym}}">{{ application.offer_year.title }}</a></td>
                 <td>
                     {% if application.application_status == 'TO_SUBMIT'%}

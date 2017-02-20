@@ -33,16 +33,16 @@ from admission.models.enums import application_type, coverage_access_degree
 
 
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('applicant', 'offer_year', 'creation_date', 'application_type')
+    list_display = ('applicant', 'offer_year', 'modification_date', 'application_type')
     fieldsets = ((None, {'fields': ('applicant', 'offer_year', 'application_type', 'applied_to_sameprogram',
-                                    'coverage_access_degree', 'valuation_possible')}),)
+                                    'coverage_access_degree', 'valuation_possible', 'submission_date')}),)
 
 
 class Application(models.Model):
 
     applicant = models.ForeignKey('Applicant')
     offer_year = models.ForeignKey('base.OfferYear')
-    creation_date = models.DateTimeField(auto_now=True)
+    modification_date = models.DateTimeField(auto_now=True)
     application_type = models.CharField(max_length=20, choices=application_type.APPLICATION_TYPE_CHOICES)
     coverage_access_degree = models.CharField(max_length=30, blank=True, null=True,
                                               choices=coverage_access_degree.COVERAGE_ACCESS_DEGREE_CHOICES)
@@ -63,6 +63,7 @@ class Application(models.Model):
     bank_account_iban = IBANField(include_countries=IBAN_SEPA_COUNTRIES, blank=True, null=True)
     bank_account_bic = BICField(blank=True, null=True)
     bank_account_name = models.CharField(max_length=255, blank=True, null=True)
+    submission_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return u"%s %s" % (self.applicant, self.offer_year)
@@ -73,7 +74,7 @@ def find_by_user(user):
         an_applicant = applicant.Applicant.objects.get(user=user)
 
         if an_applicant:
-            return Application.objects.filter(applicant=an_applicant).order_by('-creation_date')
+            return Application.objects.filter(applicant=an_applicant).order_by('-modification_date')
         else:
             return None
     except ObjectDoesNotExist:
