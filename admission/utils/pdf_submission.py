@@ -30,7 +30,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, PageBreak, Table, TableStyle, Flowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import mm
+from reportlab.lib.units import mm, inch
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing, Line
 from django.utils.translation import ugettext_lazy as _
@@ -42,31 +42,37 @@ from admission.views import submission
 from reportlab.lib import *
 from functools import partial
 from admission.models.enums import application_type
+from reportlab.lib.fonts import addMapping
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen import canvas
 
+
+BOX_BORDER_SIZE = 0.25
 DEFAULT_FONT = 'default_font'
 
 PAGE_SIZE = A4
 MARGIN_SIZE = 15 * mm
-COL_MAX = [175*mm]
+COL_MAX = [180*mm]
 COLS_WIDTH = [20*mm, 55*mm, 45*mm, 15*mm, 40*mm]
-COLS_WIDTH_IDENTIFICATION = [45*mm, 90*mm]
-COLS_WIDTH_CONTACT = [45*mm, 130*mm]
-COLS_WIDTH_NATIONAL_EDUCATION = [95*mm, 80*mm]
-COLS_WIDTH_INTERNATIONAL_EDUCATION = [105*mm, 70*mm]
-COLS_WIDTH_SECONDARY_RESULT = [100*mm, 75*mm]
-COLS_WIDTH_IDENTIFICATION_MAIN = [130*mm, 35*mm, 10*mm]
+COLS_WIDTH_IDENTIFICATION = [45*mm, 100*mm]
+COLS_WIDTH_CONTACT = [45*mm, 135*mm]
+COLS_WIDTH_NATIONAL_EDUCATION = [95*mm, 85*mm]
+COLS_WIDTH_INTERNATIONAL_EDUCATION = [105*mm, 75*mm]
+COLS_WIDTH_SECONDARY_RESULT = [100*mm, 80*mm]
+COLS_WIDTH_IDENTIFICATION_MAIN = [130*mm, 40*mm, 10*mm]
 STUDENTS_PER_PAGE = 24
 COLS_WIDTH_INSTITUTION = [175*mm]
 COLS_WIDTH_CURRICULUM = [45*mm, 45*mm, 45*mm, 25*mm]
-COLS_WIDTH_CURRICULUM_STUDIES = [35*mm, 140*mm]
-COLS_WIDTH_SURVEY = [35*mm, 140*mm]
+COLS_WIDTH_CURRICULUM_STUDIES = [35*mm, 145*mm]
+COLS_WIDTH_SURVEY = [40*mm, 140*mm]
 COLS_WIDTH_SIGNATURE = [175*mm]
 COLS_WIDTH_SIGNATURE_ATTENTION = [50*mm, 75*mm, 50*mm]
 COLS_WIDTH_ACCESS_PICTURE = [70*mm, 75*mm]
 COLS_WIDTH_CURRICULUM_RESULTS = [35*mm, 43.75*mm, 43.75*mm, 43.75*mm]
-COLS_WIDTH_SECONDARY_YEAR = [55*mm, 120*mm]
+COLS_WIDTH_SECONDARY_YEAR = [55*mm, 125*mm]
 COLS_WIDTH_CURRENT_STUDIES = [55*mm, 80*mm]
-COLS_WIDTH_SECONDARY_EXAM = [45*mm, 130*mm]
+COLS_WIDTH_SECONDARY_EXAM = [45*mm, 135*mm]
 
 
 LAST_NAME = 'last_name'
@@ -84,7 +90,15 @@ ADDITIONAL_EMAIL = 'additional_email'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ATTENTION_ICON_URL = os.path.join(BASE_DIR, "static/img/attention_icon.png")
 ACCESS_PICTURE_PLACEMENT_URL = os.path.join(BASE_DIR, "static/img/access_picture_placement.png")
+# Register Fonts
 
+# pdfmetrics.registerFont(TTFont('Arial', os.path.join(BASE_DIR, "static/fonts/arial.ttf")))
+#
+# pdfmetrics.registerFont(TTFont('Arial-Italic', os.path.join(BASE_DIR, "static/fonts/ariali.ttf")))
+#
+# pdfmetrics.registerFont(TTFont('Arial-Bold', os.path.join(BASE_DIR, "static/fonts/arialbd.ttf")))
+#
+# pdfmetrics.registerFont(TTFont('Arial-bi', os.path.join(BASE_DIR, "static/fonts/arialbi.ttf")))
 NORMAL_FONT_NAME = 'Times'
 ITALIC_FONT_NAME = 'Times-Italic'
 BOLD_FONT_NAME = 'Times-Bold'
@@ -219,7 +233,7 @@ def build_pdf(data):
     write_rules_block(content, styles, applicant)
     header_data = set_header_data(application, applicant, student)
     doc.build(content, onFirstPage=partial(add_header_footer, custom_data=header_data),
-              onLaterPages=partial(add_header_footer, custom_data=header_data))
+              onLaterPages=partial(add_header_footer, custom_data=header_data), canvasmaker=NumberedCanvas)
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
@@ -228,11 +242,11 @@ def build_pdf(data):
 
 def custom_styles():
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='picture',
-                              parent=styles['Normal'],
-                              borderWidth=1,
-                              borderColor=colors.black,
-                              borderPadding=5, ))
+    # styles.add(ParagraphStyle(name='picture',
+    #                           parent=styles['Normal'],
+    #                           borderWidth=1,
+    #                           borderColor=colors.black,
+    #                           borderPadding=5, ))
     styles.add(ParagraphStyle(name='bold',
                               parent=styles['Normal'],
                               fontName=ITALIC_FONT_NAME
@@ -248,9 +262,9 @@ def custom_styles():
                               parent=styles['Normal'], ))
     styles.add(ParagraphStyle(name='paragraph_bordered',
                               parent=styles['Normal'],
-                              borderWidth=0.5,
+                              borderWidth=0.25,
                               borderColor=colors.black,
-                              borderPadding=3,
+                              borderPadding=5,
                               ))
     styles.add(ParagraphStyle(name=DEFAULT_FONT,
                               parent=styles['Normal'],
@@ -278,12 +292,15 @@ def custom_styles():
     styles.add(ParagraphStyle(name='block_header',
                               parent=styles['Heading2']
                               ))
-    styles.add(ParagraphStyle(name='paragraph_bordered2',
-                              parent=styles['Normal'],
-                              borderWidth=0.5,
+    styles.add(ParagraphStyle(name='paragraph_bordered_left_indent',
+                              parent=styles['paragraph_bordered'],
+                              borderWidth=0.25,
                               borderColor=colors.black,
-                              borderPadding=0,
+                              borderPadding=5,
+                              leftIndent=5,
                               ))
+
+
     return styles
 
 
@@ -296,15 +313,14 @@ def add_space_between_lines(content, styles):
 
 def write_identification_block(content, styles, applicant):
     identification_data = set_identification_data(applicant, styles)
-    t = Table([[Paragraph("{0}".format(_('glue_id_picture')), styles[DEFAULT_FONT])]], [35*mm], rowHeights=(45*mm))
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
+    table_picture_place = Table([[Paragraph("{0}".format(_('glue_id_picture')), styles[DEFAULT_FONT])]], [35*mm], rowHeights=(45*mm))
+    table_picture_place.setStyle(TableStyle([
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'CENTER')]))
 
     identification_data_and_picture = \
         [[_write_table_identification(identification_data),
-          t,
+          table_picture_place,
           Paragraph('''<para>&nbsp;</para>''', styles[DEFAULT_FONT])]
          ]
     _write_table_identification_main(content, identification_data_and_picture)
@@ -321,7 +337,8 @@ def get_academic_year(an_academic_year):
 
 def write_secondary_education_block(content, styles, secondary_education):
     add_space_between_lines(content, styles)
-    content.append(Paragraph(_('secondary_education'), styles['Heading2']))
+    #content.append(Paragraph(_('secondary_education'), styles['Heading2']))
+    content.append(Paragraph('<u>{0}</u>'.format(_('secondary_education')), styles['Heading2']))
     content.append(Paragraph('''<para><i><u>%s</u></i> %s : <strong>%s</strong> </para>'''
                              % (_('academic_year'),
                                 _('diploma_year'),
@@ -616,9 +633,7 @@ def _write_table_identification(data):
 def _write_table_identification_main(content, data):
     t = Table(data, COLS_WIDTH_IDENTIFICATION_MAIN, repeatRows=1)
     t.setStyle(TableStyle([
-        ('RIGHTPADDING', (0, 0), (-1, -1), 5),
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), BOX_BORDER_SIZE, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE')]))
     content.append(t)
 
@@ -628,7 +643,7 @@ def _write_table_contact(content, data):
     t.setStyle(TableStyle([
         ('TOPPADDING', (0, 0), (-1, -1), 0.25),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), BOX_BORDER_SIZE, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
     content.append(t)
 
@@ -677,7 +692,6 @@ def get_national_secondary_data(secondary_education, styles):
 def write_secondary_education_national_block(content, data):
     t = Table(data, COLS_WIDTH_NATIONAL_EDUCATION, repeatRows=1)
     t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
     content.append(t)
@@ -851,7 +865,6 @@ def build_curriculum_study_block(content, data):
     t.setStyle(TableStyle([
         ('TOPPADDING', (0, 0), (-1, -1), 0),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
         ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
     content.append(t)
@@ -1050,7 +1063,7 @@ def family_data(title, professional_activity, profession, styles, data):
 def write_signature_block(content, styles):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
-    a = Image(ATTENTION_ICON_URL, width=15*mm, height=20*mm)
+    a = Image(ATTENTION_ICON_URL, width=20*mm, height=20*mm)
 
     set_block_header(content, styles, _('signature'))
 
@@ -1059,7 +1072,7 @@ def write_signature_block(content, styles):
     data = [[Paragraph('''<para>%s <br/>%s<br/></para>''' % (_('signature_text_part1'),
                                                              _('signature_text_part2')), styles[DEFAULT_FONT])],
             [table_signature_attention]]
-    t = Table(data, COLS_WIDTH_SIGNATURE, repeatRows=1)
+    t = Table(data, COL_MAX, repeatRows=1)
 
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -1114,7 +1127,7 @@ def write_card_block(content, styles):
                                             _('access_card_txt_part17'),), styles[DEFAULT_FONT])],
             [table_no_writing_here], [table_picture_access]]
 
-    t = Table(data, COLS_WIDTH_SIGNATURE, repeatRows=1)
+    t = Table(data, COL_MAX, repeatRows=1)
 
     t.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -1177,8 +1190,8 @@ def write_rules_block(content, styles, applicant):
                                    _('university_rules_txt_item4'),
                                    _('university_rules_txt_item5'),
                                    _('university_rules_txt_part2'),
-                                   _('university_rules_txt_part3')), styles['paragraph_bordered2']))
-
+                                   _('university_rules_txt_part3')), styles['paragraph_bordered']))
+    add_space_between_lines(content, styles)
     content.append(Paragraph('''
                             <para>
                                 <strong>%s</strong><br/><br/>
@@ -1191,7 +1204,7 @@ def write_rules_block(content, styles, applicant):
                                    _('privacy_rules_txt_part1'),
                                    _('privacy_rules_txt_part2'),
                                    _('privacy_rules_txt_part3'),
-                                   _('privacy_rules_txt_part4')), styles['paragraph_bordered2']))
+                                   _('privacy_rules_txt_part4')), styles['paragraph_bordered']))
 
     add_space_between_lines(content, styles)
     content.append(Paragraph('''<para>
@@ -1453,3 +1466,27 @@ def family_grandfather_data(title, profession, styles, data):
                         <strong>%s</strong>
                     </para>''' % (_('profession'), profession), styles[DEFAULT_FONT])],)
     return data
+
+
+class NumberedCanvas(canvas.Canvas):
+    def __init__(self, *args, **kwargs):
+        canvas.Canvas.__init__(self, *args, **kwargs)
+        self._saved_page_states = []
+
+    def showPage(self):
+        self._saved_page_states.append(dict(self.__dict__))
+        self._startPage()
+
+    def save(self):
+        """add page info to each page (page x of y)"""
+        num_pages = len(self._saved_page_states)
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_number(num_pages)
+            canvas.Canvas.showPage(self)
+        canvas.Canvas.save(self)
+
+    def draw_page_number(self, page_count):
+        # Change the position of this to wherever you want the page number to be
+        self.drawRightString(211 * mm, 15 * mm + (0.2 * inch),
+                             "Page %d / %d - %s" % (self._pageNumber, page_count, _('preliminary_file')))
