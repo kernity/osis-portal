@@ -98,6 +98,10 @@ TABLE_STYLE_INNER_BLOCK = TableStyle([('LEFTPADDING', (0, 0), (-1, -1), 0),
                                       ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
                                       ('VALIGN', (0, 0), (-1, -1), 'TOP')])
 
+TABLE_STYLE_BORDER = TableStyle([
+    ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+    ('VALIGN', (0, 0), (-1, -1), 'TOP')])
+
 
 class MCLine(Flowable):
     """
@@ -127,15 +131,10 @@ def add_header_footer(canvas, doc, custom_data=None):
     """
     Add the page number
     """
-    styles = getSampleStyleSheet()
-    # Save the state of our canvas so we can draw on it
     canvas.saveState()
 
     # Header
     header_building(canvas, doc, custom_data)
-
-    # Footer
-    # footer_building(canvas, doc, styles)
 
     # Release the canvas
     canvas.restoreState()
@@ -372,10 +371,7 @@ def write_secondary_education_block(content, styles, secondary_education):
 
 def write_secondary_education_year_block(content, data):
     t = Table(data, COLS_WIDTH_SECONDARY_YEAR, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -420,6 +416,7 @@ def set_identification_data(applicant, styles):
 def set_contact_data(applicant, styles):
     data = []
     set_block_title_plus_line(data, styles, _('contact'))
+    data.append(["{0} :".format(_('phone')), format_string_for_display(applicant.phone)],)
     data.append(["{0} :".format(_('mobile')), format_string_for_display(applicant.phone_mobile)],)
     data.append(["{0} :".format(_('mail')), format_string_for_display(applicant.additional_email)],)
     data.append([" ", " "],)
@@ -648,10 +645,7 @@ def _write_table_contact(content, data):
 def _write_table_addresses(content, data):
 
     t = Table(data, COL_MAX, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]),
-    )
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -688,9 +682,7 @@ def get_national_secondary_data(secondary_education, styles):
 
 def write_secondary_education_national_block(content, data):
     t = Table(data, COLS_WIDTH_NATIONAL_EDUCATION, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -735,17 +727,13 @@ def get_foreign_secondary_data(secondary_education, styles):
 
 def write_secondary_education_foreign_block(content, data):
     t = Table(data, COLS_WIDTH_INTERNATIONAL_EDUCATION, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
 def write_secondary_education_result_block(content, data):
     t = Table(data, COLS_WIDTH_SECONDARY_RESULT, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'), ]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -978,9 +966,7 @@ def write_sociological_survey_block(content, styles, sociological_survey):
     build_explanation(content, _('sociological_survey_explanation'), styles)
 
     add_space_between_lines(content, styles)
-    data.append([Paragraph(_('family_situation'), styles['italic'])],)
 
-    add_space_between_lines(content, styles)
     data.append(["{0} :".format(_('brotherhood')),
                  Paragraph(str(sociological_survey.number_brothers_sisters), styles['BodyText'])],)
     parent_data(_('father'), sociological_survey.father_is_deceased, sociological_survey.father_education,
@@ -993,7 +979,12 @@ def write_sociological_survey_block(content, styles, sociological_survey):
                 sociological_survey.conjoint_profession, styles, data)
     family_grandfather_data(_('paternal_grandfather'), sociological_survey.paternal_grandfather_profession, styles, data)
     family_grandfather_data(_('maternal_grandfather'), sociological_survey.maternal_grandfather_profession, styles, data)
-    build_2_columns_block(content, data, COLS_WIDTH_SURVEY)
+
+    table_sociological = Table(data, COLS_WIDTH_SURVEY, repeatRows=1)
+    table_sociological_plus_title = Table([[Paragraph(_('family_situation'), styles['italic'])],
+                                           [table_sociological]], COL_MAX, repeatRows=1)
+    table_sociological_plus_title.setStyle(TABLE_STYLE_BORDER)
+    content.append(table_sociological_plus_title)
     add_space_between_lines(content, styles)
     read_approved_paragraph(content, styles)
 
@@ -1001,15 +992,6 @@ def write_sociological_survey_block(content, styles, sociological_survey):
 def build_explanation(content, data, styles):
     content.append(Paragraph('''<para><font size=10>%s</font></para>''' % data,
                              styles["paragraph_bordered"]))
-
-
-def build_2_columns_block(content, data, cols_width):
-    t = Table(data, cols_width, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
-    content.append(t)
 
 
 def define_deceased(deceased):
@@ -1073,10 +1055,7 @@ def write_signature_block(content, styles):
             [table_signature_attention]]
     t = Table(data, COL_MAX, repeatRows=1)
 
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -1128,10 +1107,7 @@ def write_card_block(content, styles):
 
     t = Table(data, COL_MAX, repeatRows=1)
 
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -1431,10 +1407,7 @@ def write_application(content, styles, application, nationality):
                            styles[DEFAULT_FONT])])
 
     t = Table(data, COL_MAX, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
@@ -1451,10 +1424,7 @@ def set_schedule_data(education_institution, styles):
 
 def _write_table_schedule(content, data):
     t = Table(data, COL_MAX, repeatRows=1)
-    t.setStyle(TableStyle([
-        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
-        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP')]))
+    t.setStyle(TABLE_STYLE_BORDER)
     content.append(t)
 
 
