@@ -924,18 +924,21 @@ def write_secondary_education_exam_block(content, styles, secondary_education_ex
 
     add_space_between_lines(content, styles)
     set_block_header(content, styles, _(title))
-    data = []
-
     add_space_between_lines(content, styles)
+    write_secondary_education_exam_detail_block(content, get_secondary_education_exam_table_data(secondary_education_exam,
+                                                                                                 styles))
 
+
+def get_secondary_education_exam_table_data(secondary_education_exam, styles):
     result = ''
     if secondary_education_exam.result:
         result = _("{0}".format(secondary_education_exam.result.lower()))
         result = result.lower()
 
+    data = []
     data.append([Paragraph('''<para><u>%s</u> %s</para>'''
                            % (_('inscription'),
-                              _('to_this_exam')), styles["BodyText"])],)
+                              _('to_this_exam')), styles[DEFAULT_FONT])], )
     data.append([" ", ])
     data.append(["{0}: ".format(_('session')), format_date_for_display(secondary_education_exam.exam_date)])
     data.append(["{0}: ".format(_('result')), result])
@@ -943,14 +946,12 @@ def write_secondary_education_exam_block(content, styles, secondary_education_ex
     if secondary_education_exam.admission_exam_type:
         data.append(["{0}: ".format(_('title')), secondary_education_exam.admission_exam_type])
     data.append([" ", ])
-    write_secondary_education_exam_detail_block(content, data)
+    return data
 
 
 def write_secondary_no_education_exam_block(content, styles, title):
     add_space_between_lines(content, styles)
-
     set_block_header(content, styles, _(title))
-
     content.append(Paragraph('''<para><u>%s</u> %s</para>'''
                              % (_('no_enrollment'), _('to_this_exam')), styles["paragraph_bordered"]))
 
@@ -968,7 +969,7 @@ def write_sociological_survey_block(content, styles, sociological_survey):
     add_space_between_lines(content, styles)
 
     data.append(["{0} :".format(_('brotherhood')),
-                 Paragraph(str(sociological_survey.number_brothers_sisters), styles['BodyText'])],)
+                 Paragraph(str(sociological_survey.number_brothers_sisters), styles[DEFAULT_FONT])],)
     parent_data(_('father'), sociological_survey.father_is_deceased, sociological_survey.father_education,
                 sociological_survey.father_profession, styles, data, _('deceased_male'))
     parent_data(_('mother'), sociological_survey.mother_is_deceased, sociological_survey.mother_education,
@@ -1018,7 +1019,6 @@ def parent_data(title, deceased_status, education, profession,  styles, data, de
                         <strong>%s</strong>
                     </para>''' % (_('profession'), profession), styles[DEFAULT_FONT])
                  ],)
-
     return data
 
 
@@ -1044,12 +1044,10 @@ def family_data(title, professional_activity, profession, styles, data):
 def write_signature_block(content, styles):
     content.append(PageBreak())
     add_space_between_lines(content, styles)
-    a = Image(ATTENTION_ICON_URL, width=20*mm, height=20*mm)
-
     set_block_header(content, styles, _('signature'))
 
-    data1 = [[a, Paragraph('Date :', styles['BodyText']), Paragraph('Signature :', styles[DEFAULT_FONT])]]
-    table_signature_attention = Table(data1, COLS_WIDTH_SIGNATURE_ATTENTION, repeatRows=1)
+    data_signature = [[Image(ATTENTION_ICON_URL, width=20*mm, height=20*mm), Paragraph('Date :', styles[DEFAULT_FONT]), Paragraph('Signature :', styles[DEFAULT_FONT])]]
+    table_signature_attention = Table(data_signature, COLS_WIDTH_SIGNATURE_ATTENTION, repeatRows=1)
     data = [[Paragraph('''<para>%s <br/>%s<br/></para>''' % (_('signature_text_part1'),
                                                              _('signature_text_part2')), styles[DEFAULT_FONT])],
             [table_signature_attention]]
@@ -1114,7 +1112,7 @@ def write_card_block(content, styles):
 def data_no_writing_here(styles):
     d = Drawing(125, 1)
     d.add(Line(0, 0, 125, 0))
-    data_no_writing = [[d, Paragraph(_('no_writing_here'), styles['BodyText']), d]]
+    data_no_writing = [[d, Paragraph(_('no_writing_here'), styles[DEFAULT_FONT]), d]]
     table_no_writing_here = Table(data_no_writing, COLS_WIDTH_SIGNATURE_ATTENTION, repeatRows=1)
     table_no_writing_here.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
@@ -1124,7 +1122,7 @@ def data_no_writing_here(styles):
 
 def data_picture_access(styles):
     a = Image(ACCESS_PICTURE_PLACEMENT_URL, width=35*mm, height=45*mm)
-    data_picture_access = [[a, Paragraph('NOMA', styles['BodyText'])]]
+    data_picture_access = [[a, Paragraph('NOMA', styles[DEFAULT_FONT])]]
     table_picture_acccess = Table(data_picture_access, COLS_WIDTH_ACCESS_PICTURE, repeatRows=1)
     table_picture_acccess.setStyle(TableStyle([
         ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.white),
