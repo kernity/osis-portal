@@ -33,6 +33,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from reportlab.graphics.shapes import Drawing, Line
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from admission import models as mdl
@@ -102,6 +104,9 @@ TABLE_STYLE_BORDER = TableStyle([
     ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
     ('VALIGN', (0, 0), (-1, -1), 'TOP')])
 
+pdfmetrics.registerFont(TTFont('Times', os.path.join(BASE_DIR, "static/fonts/times.ttf")))
+pdfmetrics.registerFont(TTFont('Times-Bold', os.path.join(BASE_DIR, "static/fonts/timesbd.ttf")))
+pdfmetrics.registerFont(TTFont(ITALIC_FONT_NAME, os.path.join(BASE_DIR, "static/fonts/timesi.ttf")))
 
 class MCLine(Flowable):
     """
@@ -551,7 +556,6 @@ def get_person_address(an_applicant, a_type):
 
 def test(request):
     an_application = mdl.application.find_first_by_user(request.user)
-    a_student = mdl_base.student.find_by_user(request.user)
     return build_pdf({'application': an_application,
                       'contact_address': get_person_address(an_application.applicant, 'CONTACT'),
                       'legal_address': get_person_address(an_application.applicant, 'LEGAL'),
@@ -562,7 +566,7 @@ def test(request):
                                                                                            'FOREIGN_HIGH_EDUCATION']),
                       'curriculum_others': get_curriculum_list(an_application.applicant, ['ANOTHER_ACTIVITY']),
                       'sociological_survey': get_sociological_survey(an_application.applicant),
-                      'student': a_student})
+                      'student': mdl_base.student.find_by_user(request.user)})
 
 
 def header_building(canvas, doc, custom_data):
@@ -573,9 +577,7 @@ def header_building(canvas, doc, custom_data):
 
     t_header = Table(data_header, [30*mm, 75*mm, 75*mm])
 
-    t_header.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ]))
+    t_header.setStyle(TABLE_STYLE_BORDER)
 
     w, h = t_header.wrap(doc.width, doc.topMargin)
     t_header.drawOn(canvas, doc.leftMargin, doc.height + doc.topMargin - h)
