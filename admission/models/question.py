@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from admission.models import form
+from osis_common.models.serializable_model import SerializableModel
 
 QUESTION_TYPES = (
     ('LABEL', _('label')),
@@ -44,13 +45,15 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('label', 'type', 'form', 'order')
     fieldsets = ((None, {'fields': ('label', 'description', 'type', 'order', 'required', 'form')}),)
     list_filter = ('form',)
+    raw_id_fields = ('form',)
+    search_fields = ['form']
 
 
-class Question(models.Model):
+class Question(SerializableModel):
     label = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     type = models.CharField(max_length=20, choices=QUESTION_TYPES)
-    order = models.IntegerField()
+    order = models.IntegerField(blank=True, null=True)
     required = models.BooleanField(default=False)
     form = models.ForeignKey('Form')
 

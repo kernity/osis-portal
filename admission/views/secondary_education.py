@@ -96,7 +96,7 @@ def diploma_save(request):
         secondary_education_exam_update(secondary_education, PROFESSIONAL_TYPE, professional_exam)
         admission_exam = get_admission_exam(request, secondary_education)
         secondary_education_exam_update(secondary_education, ADMISSION_EXAM_TYPE, admission_exam)
-        local_language_exam = get_local_language_exam(request, secondary_education)
+        local_language_exam = get_local_language_exam(request, secondary_education, application)
         secondary_education_exam_update(secondary_education, LANGUAGE_EXAM_TYPE, local_language_exam)
 
         message_success = _('msg_info_saved')
@@ -238,7 +238,7 @@ def get_other_education_institution(request):
         .find_by_name_city_postal_code(request.POST.get('CESS_other_school_name'),
                                        request.POST.get('CESS_other_school_city'),
                                        request.POST.get('CESS_other_school_postal_code'),
-                                       request.POST.get('school_local_community'))
+                                       request.POST.get('local_community'))
 
     if existing_institution:
         return existing_institution
@@ -251,13 +251,14 @@ def get_other_education_institution(request):
             return None
 
 
-def secondary_education_exam_update(secondary_education, type, secondary_education_exam):
+def secondary_education_exam_update(secondary_education, secondary_education_exam_type, secondary_education_exam):
     if secondary_education_exam:
         secondary_education_exam.save()
     else:
         # Delete if it exists
         if secondary_education:
-            secondary_education_exam = mdl.secondary_education_exam.find_by_type(secondary_education, type)
+            secondary_education_exam = mdl.secondary_education_exam.find_by_type(secondary_education,
+                                                                                 secondary_education_exam_type)
             if secondary_education_exam:
                 secondary_education_exam.delete()
 
@@ -270,7 +271,7 @@ def documents_update(request, secondary_education, application, professional_exa
         list_unwanted_files.append(document_type.NATIONAL_DIPLOMA_VERSO)
         list_unwanted_files.append(document_type.HIGH_SCHOOL_SCORES_TRANSCRIPT_RECTO)
         list_unwanted_files.append(document_type.HIGH_SCHOOL_SCORES_TRANSCRIPT_VERSO)
-    if not secondary_education.international_diploma:
+    if secondary_education.diploma and secondary_education.national:
         list_unwanted_files.append(document_type.INTERNATIONAL_DIPLOMA_RECTO)
         list_unwanted_files.append(document_type.INTERNATIONAL_DIPLOMA_VERSO)
     if secondary_education.international_diploma is None \
@@ -292,12 +293,12 @@ def documents_update(request, secondary_education, application, professional_exa
 def delete_documents(request, application, list_unwanted_files):
     applicant = mdl.applicant.find_by_user(request.user)
     for file_description in list_unwanted_files:
-        documents = mdl.applicant_document_file.find_document_by_applicant_and_description(applicant, file_description)
-        for document in documents:
+        applicant_doc_files = mdl.applicant_document_file.find_by_applicant_and_description(applicant, file_description)
+        for applicant_doc_file in applicant_doc_files:
             documents_application = mdl.application_document_file.search(application, file_description)
             for doc_application in documents_application:
                 doc_application.delete()
-            document.document_file.delete()
+            applicant_doc_file.document_file.delete()
 
 
 def get_secondary_education_files(application):
@@ -376,7 +377,7 @@ def get_prerequis_data(request, saved, application_id):
             "education_type_transition":    education_type_transition,
             "education_type_qualification": education_type_qualification,
             "current_academic_year":        current_year,
-            "local_language_exam_needed":   common.is_local_language_exam_needed(request.user),
+            "local_language_exam_needed":   common.is_local_language_exam_needed(application),
             'tab_active':                   navigation.PREREQUISITES_TAB,
             'applications':                 mdl.application.find_by_user(request.user),
             'message_info':                 message_info}
@@ -420,7 +421,7 @@ def create_new_education_instit(request):
     new_education_institution.city = request.POST.get('CESS_other_school_city')
     new_education_institution.postal_code = request.POST.get('CESS_other_school_postal_code')
     new_education_institution.institution_type = "SECONDARY"
-    new_education_institution.national_community = request.POST.get('school_local_community')
+    new_education_institution.national_community = request.POST.get('local_community')
     new_education_institution.adhoc = True
     new_education_institution.country = mdl_reference.country.find_by_iso_code('BE')
     new_education_institution.save()
@@ -527,9 +528,9 @@ def get_admission_exam(request, secondary_education):
     return admission_exam
 
 
-def get_local_language_exam(request, secondary_education):
+def get_local_language_exam(request, secondary_education, application):
     local_language_exam = None
-    if not(common.is_local_language_exam_needed(request.user) and request.POST.get('local_language_exam') is None):
+    if not(common.is_local_language_exam_needed(application) and request.POST.get('local_language_exam') is None):
         if request.POST.get('local_language_exam') == FIELD_TRUE_STATUS:
             local_language_exam = mdl.secondary_education_exam.find_by_type(secondary_education, LANGUAGE_EXAM_TYPE)
             if local_language_exam is None:

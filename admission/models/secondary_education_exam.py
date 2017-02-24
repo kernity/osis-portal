@@ -26,16 +26,18 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from osis_common.models.serializable_model import SerializableModel
 
 
 class SecondaryEducationExamAdmin(admin.ModelAdmin):
     list_display = ('type', 'result', 'exam_date', 'institution')
 
 
-class SecondaryEducationExam(models.Model):
+class SecondaryEducationExam(SerializableModel):
     RESULT_TYPE = (('LOW', 'Moins de 65%'),
                    ('MIDDLE', 'entre 65% et 75%'),
-                   ('HIGH', 'plus de 75%'))
+                   ('HIGH', 'plus de 75%'),
+                   ('NO_RESULT', 'pas encore de résultat'))
 
     LOCAL_LANGUAGE_EXAM_RESULT_TYPE = (('SUCCEED', _('succeeded')),
                                        ('FAILED', _('failed')),

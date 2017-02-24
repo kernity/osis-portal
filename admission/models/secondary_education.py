@@ -27,6 +27,7 @@ from django.db import models
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 from reference.enums.education_institution_national_comunity import NATIONAL_COMMUNITY_TYPES
+from osis_common.models.serializable_model import SerializableModel
 
 NATIONAL = 'NATIONAL'
 EUROPEAN = 'EUROPEAN'
@@ -37,10 +38,11 @@ class SecondaryEducationAdmin(admin.ModelAdmin):
     list_display = ('person', 'national')
 
 
-class SecondaryEducation(models.Model):
+class SecondaryEducation(SerializableModel):
     RESULT_TYPE = (('LOW', _('low_result')),
                    ('MIDDLE', _('middle_result')),
-                   ('HIGH', _('high_result')))
+                   ('HIGH', _('high_result')),
+                   ('NO_RESULT', _('pas encore de résultat')))
 
     INTERNATIONAL_DIPLOMA_TYPE = ((NATIONAL, _('baccalaureat_national')),
                                   (EUROPEAN, _('baccalaureat_european')),

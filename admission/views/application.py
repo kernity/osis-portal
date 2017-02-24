@@ -26,15 +26,14 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-
 from admission import models as mdl
-from admission.models.enums import coverage_access_degree as coverage_access_degree_choices, application_state
+from admission.models.enums import coverage_access_degree as coverage_access_degree_choices
 from admission.views import common, demande_validation, navigation
-from admission.views.common import extra_information
 from admission.views.common import get_picture_id, get_id_document
 from base import models as mdl_base
 from reference import models as mdl_reference
 from reference.enums import institutional_grade_type as enum_institutional_grade_type
+from admission.models.enums import document_type
 
 
 def application_update(request, application_id):
@@ -113,6 +112,8 @@ def save_application_offer(request):
                                                                                request.user)
         if offer_year_id:
             application.save()
+            if not common.is_local_language_exam_needed(application):
+                delete_language_exam_data(application)
         delete_application_assimilation_criteria(application)
 
         if application.id:
@@ -164,7 +165,7 @@ def applications(request, application_id=None):
         "domains": mdl_reference.domain.find_current_domains(),
         'tab_active': navigation.DEMAND_TAB,
         "application": application,
-        "local_language_exam_needed": common.is_local_language_exam_needed(request.user),
+        "local_language_exam_needed": common.is_local_language_exam_needed(application),
         "applicant": applicant,
         "person_legal_address": person_legal_address,
         "countries": countries,
@@ -176,10 +177,12 @@ def applications(request, application_id=None):
 
 
 def submission(request, application_id=None):
-    application = get_application(application_id, request)
+    if application_id:
+        application = mdl.application.find_by_id(application_id)
+    else:
+        application = mdl.application.init_application(request.user)
     data = {
         'application': application,
-        'display_admission_exam': extra_information(application),
         'tab_active': navigation.SUBMISSION_TAB,
         'applications': mdl.application.find_by_user(request.user)
     }
@@ -222,18 +225,6 @@ def change_application_offer(request, application_id=None):
     }
     data.update(demande_validation.get_validation_status(application, applicant))
     return render(request, "admission_home.html", data)
-
-
-def is_local_language_exam_needed(user):
-    local_language_exam_needed = False
-    applications_list = mdl.application.find_by_user(user)
-    for application in applications_list:
-        if application.offer_year.grade_type == 'BACHELOR' or \
-                        application.offer_year.grade_type.startswith('MASTER') or \
-                        application.offer_year.grade_type == 'TRAINING_CERTIFICATE':
-            local_language_exam_needed = True
-            break
-    return local_language_exam_needed
 
 
 def create_application_assimilation_criteria(application):
@@ -292,12 +283,13 @@ def create_answers(application, request):
                 answer.value = option.value
                 answer.save()
         if "slt_question_" in key:
-            answer = mdl.answer.Answer()
-            answer.application = application
-            option = mdl.option.find_by_id(value)
-            answer.option = option
-            answer.value = option.value
-            answer.save()
+            if value != "0":
+                answer = mdl.answer.Answer()
+                answer.application = application
+                option = mdl.option.find_by_id(value)
+                answer.option = option
+                answer.value = option.value
+                answer.save()
 
 
 def delete_application_assimilation_criteria(application):
@@ -306,6 +298,25 @@ def delete_application_assimilation_criteria(application):
         for a in mdl.application_assimilation_criteria.find_by_application(application):
             a.delete()
 
+
+def delete_language_exam_data(application):
+    unneeded_secondary_education_exam = find_sec_educ_exam_language(application)
+    if unneeded_secondary_education_exam:
+        unneeded_secondary_education_exam.delete()
+        delete_file(application)
+
+
+def find_sec_educ_exam_language(application):
+    applicant = application.applicant
+    secondary_education = mdl.secondary_education.find_by_person(applicant)
+    unneeded_secondary_education_exam = mdl.secondary_education_exam.find_by_type(secondary_education, 'LANGUAGE')
+    return unneeded_secondary_education_exam
+
+
+def delete_file(application):
+    doc = mdl.application_document_file.search(application, document_type.LANGUAGE_EXAM_CERTIFICATE)
+    if doc:
+        doc[0].delete()
 
 def get_application(application_id, request):
     if application_id:

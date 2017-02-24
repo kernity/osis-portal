@@ -29,6 +29,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from admission.models import applicant
 from localflavor.generic.models import IBANField, BICField
 from localflavor.generic.countries.sepa import IBAN_SEPA_COUNTRIES
+from osis_common.models.serializable_model import SerializableModel
 from admission.models.enums import application_type, coverage_access_degree, application_state
 
 
@@ -38,7 +39,7 @@ class ApplicationAdmin(admin.ModelAdmin):
                                     'coverage_access_degree', 'valuation_possible')}),)
 
 
-class Application(models.Model):
+class Application(SerializableModel):
 
     applicant = models.ForeignKey('Applicant')
     offer_year = models.ForeignKey('base.OfferYear')
@@ -74,7 +75,7 @@ def find_by_user(user):
         an_applicant = applicant.Applicant.objects.get(user=user)
 
         if an_applicant:
-            return Application.objects.filter(applicant=an_applicant)
+            return Application.objects.filter(applicant=an_applicant).order_by('-creation_date')
         else:
             return None
     except ObjectDoesNotExist:
@@ -106,6 +107,10 @@ def init_application(user):
 
 def define_application_type(a_coverage_access_degree, user):
     an_applicant = applicant.Applicant.objects.get(user=user)
-    if an_applicant.nationality.european_union and a_coverage_access_degree == coverage_access_degree.NATIONAL:
+
+    if an_applicant.nationality and \
+            an_applicant.nationality.european_union and \
+                    a_coverage_access_degree == coverage_access_degree.NATIONAL:
         return application_type.INSCRIPTION
     return application_type.ADMISSION
+
