@@ -27,7 +27,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from admission import models as mdl
-from admission.models.enums import coverage_access_degree as coverage_access_degree_choices
+from admission.models.enums import coverage_access_degree as coverage_access_degree_choices, application_state
 from admission.views import common, demande_validation, navigation
 from admission.views.common import get_picture_id, get_id_document
 from base import models as mdl_base

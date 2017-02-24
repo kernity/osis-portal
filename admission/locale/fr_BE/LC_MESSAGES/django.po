@@ -1637,7 +1637,7 @@ msgid "technical_failure"
 msgstr "En cas de problème technique,"
 
 msgid "modification"
-msgstr "Modification"msgstr "Non union européenne"
+msgstr "Modification"
 
 msgid "submission_confirmation_part1"
 msgstr "Vous voici arrivé(e) sur l'onglet de confirmation de votre demande d'inscription."
