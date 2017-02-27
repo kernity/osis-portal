@@ -111,3 +111,17 @@ def find_local_french(a_person, an_academic_year):
                                      academic_year=an_academic_year,
                                      national_education='FRENCH',
                                      national_institution__country__iso_code='BE')
+
+
+def search(an_applicant=None, activity_type=None, path_type=None):
+    queryset = Curriculum.objects.order_by('academic_year')
+
+    if an_applicant:
+        queryset = queryset.filter(person=an_applicant)
+
+    if activity_type:
+        queryset = queryset.filter(activity_type=activity_type)
+
+    if path_type:
+        queryset = queryset.filter(path_type=path_type)
+    return queryset

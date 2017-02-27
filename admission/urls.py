@@ -96,7 +96,7 @@ urlpatterns = [
     url(r'^attachments/(?:([0-9]+)/)?$', attachments.update, name='attachments'),
     url(r'^attachments/remove_attachment/(?:([0-9]+)/)?$', attachments.remove_attachment, name='remove_attachment'),
     url(r'^attachments/save_attachments/(?:([0-9]+)/)?$', attachments.save_attachments, name='save_attachments'),
-    url(r'^admission/application/submission/(?:([0-9]+)/)?$', application.submission, name='submission'),
+    url(r'^admission/application/submission/(?:([0-9]+)/)?$', application.application_submission, name='submission'),
     url(r'^admission/application/delete/([0-9]+)/$', application.application_delete, name='application_delete'),
     url(r'^admission/offer_change/([0-9]+)/$', application.change_application_offer, name='change_application_offer'),
 

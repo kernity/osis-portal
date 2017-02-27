@@ -1686,3 +1686,81 @@ msgstr ""
 
 msgid "study_domain"
 msgstr "Domaine d'études"
+
+msgid "subject_to_quota_txt_part1"
+msgstr "PARTICULARITE PROPRE A VOTRE DEMANDE :"
+
+msgid "subject_to_quota_txt_part2"
+msgstr ""
+"La formation que vous avez choisie fait partie des études dites 'contingentées' soumises à des modalités "
+"administratives complémentaires."
+
+msgid "subject_to_quota_txt_part3"
+msgstr "Vous en trouverez les informations utiles y relatives à la page http://www.uclouvain.be/22310.html"
+
+msgid "unemployment_doc_needed"
+msgstr ""
+"l’attestation de l'ONEM indiquant que vous n'avez jamais eu de dérogation de leur service pour entreprendre des "
+"études supérieures ;"
+
+msgid "other_doc_needed"
+msgstr ""
+"une photocopie de l'attestation justifiant votre/vos activité(s) (avec les dates de début et de fin de ces "
+"activités) pour toute l'année académique "
+
+msgid "studies_doc_needed"
+msgstr ""
+"une photocopie du relevé de notes officiel (+ du diplôme, le cas échéant) avec mention du résultat obtenu et/ou "
+"des crédits totaux inscrits et acquis lors de l'année académique"
+
+msgid "special_exam_admission_doc_needed"
+msgstr ""
+"une photocopie de l'attestation de réussite de l'examen d'admission aux études de 1er cycle en sciences de "
+"l'ingénieur (ingénieur civil) ;"
+
+msgid "exam_admission_doc_needed"
+msgstr "une photocopie de l'attestation de réussite de l'examen d'admission au premier cycle"
+
+msgid "secondary_diploma_needed"
+msgstr "une photocopie de votre diplôme d'études secondaires : "
+
+msgid "capaes_doc_needed"
+msgstr ""
+"le document 'Attestation de fonction dans le cadre d'une inscription à la formation CAPAES' dûment complété et signé ;"
+
+msgid "capaes_identification_doc_needed"
+msgstr "le document 'Capaes : fiche signalétique du candidat' dûment complété et signé ;"
+
+msgid "opes_url"
+msgstr ""
+"Particularité : L'inscription au programme de master en politique économique et sociale nécessite la participation "
+"préalable à une procédure d'admission spécifique dont les modalités sont prévues sous l'onglet Processus d'admission "
+"du site OPES : http://www.uclouvain.be/429755.html"
+
+msgid "fopa_url"
+msgstr ""
+"Particularité : L'inscription au programme de master en sciences de l'éducation, avec ou sans année préparatoire, "
+"nécessite la participation préalable à une procédure d'admission spécifique dont les modalités sont prévues sous "
+"l'onglet admission du site FOPA : http://www.uclouvain.be/68479.html"
+
+msgid "capaes_limit_date_part1"
+msgstr "Néanmoins, nous traiterons en priorité les dossiers reçus :"
+
+msgid "capaes_limit_date_part2_start"
+msgstr "- avant le 31 août"
+
+msgid "capaes_limit_date_part2_middle"
+msgstr "pour les étudiants ayant obtenu leur titre d'accès en juin"
+
+msgid "capaes_limit_date_part2_end"
+msgstr "au plus tard"
+
+msgid "capaes_limit_date_part3_start"
+msgstr "- avant le 15 septembre"
+
+msgid "capaes_limit_date_part3_end"
+msgstr "pour les autres."
+
+msgid "debts_doc_needed"
+msgstr "une attestation stipulant l'absence de dettes vis-à-vis de l'établissement fréquenté durant l'année académique;"
+

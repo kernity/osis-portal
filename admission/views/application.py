@@ -28,7 +28,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from admission import models as mdl
 from admission.models.enums import coverage_access_degree as coverage_access_degree_choices, application_state
-from admission.views import common, demande_validation, navigation
+from admission.views import common, demande_validation, navigation, submission
+from admission.utils import file_reference
 from admission.views.common import get_picture_id, get_id_document
 from base import models as mdl_base
 from reference import models as mdl_reference
@@ -176,7 +177,7 @@ def applications(request, application_id=None):
     return render(request, "admission_home.html", data)
 
 
-def submission(request, application_id=None):
+def application_submission(request, application_id=None):
     if application_id:
         application = mdl.application.find_by_id(application_id)
     else:
@@ -194,8 +195,11 @@ def submission(request, application_id=None):
     applicant = mdl.applicant.find_by_user(request.user)
     data.update(demande_validation.get_validation_status(application, applicant))
     data.update({"application_valide": get_application_status(data),
-                 "application_reference": get_reference(application, applicant)}
+                 "application_reference": file_reference.get_reference(application, applicant)}
                 )
+    # data.update({"submission_info": submission.get_model_message(application.application_type)})
+    data.update({"submission_info": submission.text_display(applicant, application)})
+    print(application.state)
     if application.state == application_state.SUBMITTED:
         return render(request, "submission_confirmed.html", data)
     else:
@@ -349,33 +353,3 @@ def get_application_status(data):
        data['validation_message'] is None):
         return True
     return False
-
-
-def get_reference(application, applicant):
-    ref_year = get_year_reference(application)
-    ref_id = application.id
-    applications = mdl.application.find_by_user(applicant.user)
-    ref_seq_number = None
-    if applications.exists():
-        ref_seq_number = len(applications)
-
-    return "{0}-{1}-{2}-{3}".format(get_initials_reference(),
-                                get_year_reference(application),
-                                get_id_reference(application),
-                                ref_seq_number)
-
-def get_year_reference(application):
-    ref_year = application.offer_year.academic_year.year
-    if ref_year:
-        try:
-            return str(ref_year)[2:4]
-        except:
-            return None
-    return None
-
-
-def get_initials_reference():
-    return "XX"
-
-def get_id_reference(application):
-    return "{0:06}".format(application.id)

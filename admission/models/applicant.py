@@ -34,6 +34,17 @@ from django.conf import settings
 from osis_common.models.serializable_model import SerializableModel
 
 
+MALE='MALE'
+FEMALE='FEMALE'
+
+MARRIED='MARRIED'
+SINGLE='SINGLE'
+WIDOWED='WIDOWED'
+DIVORCED='DIVORCED'
+SEPARATED='SEPARATED'
+COHABITANT='COHABITANT'
+UNKNOWN='UNKNOWN'
+
 class ApplicantAdmin(admin.ModelAdmin):
     list_display = ('user', 'birth_date', 'gender', 'activation_code')
     fieldsets = ((None, {'fields': ('user', 'birth_date', 'gender', 'language', 'nationality', 'registration_id')}),)
@@ -41,17 +52,17 @@ class ApplicantAdmin(admin.ModelAdmin):
 
 class Applicant(SerializableModel):
     GENDER_CHOICES = (
-        ('FEMALE', _('female')),
-        ('MALE', _('male')))
+        (FEMALE, _('female')),
+        (MALE, _('male')))
 
     CIVIL_STATUS_CHOICES = (
-        ('MARRIED', _('married')),
-        ('SINGLE', _('single')),
-        ('WIDOWED', _('widowed')),
-        ('DIVORCED', _('divorced')),
-        ('SEPARATED', _('separated')),
-        ('COHABITANT', _('cohabitant')),
-        ('UNKNOWN', _('unknown')))
+        (MARRIED, _('married')),
+        (SINGLE, _('single')),
+        (WIDOWED, _('widowed')),
+        (DIVORCED, _('divorced')),
+        (SEPARATED, _('separated')),
+        (COHABITANT, _('cohabitant')),
+        (UNKNOWN, _('unknown')))
 
     activation_code = models.UUIDField(default=uuid.uuid4, editable=False, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
