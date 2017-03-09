@@ -23,21 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from unittest.mock import patch
-from django.contrib.auth.models import User, Group, Permission
-from django.core.urlresolvers import reverse
-from django.test import TestCase, Client
 import json
 import random
+import warnings
+
+from unittest.mock import patch, Mock, MagicMock
+
+from django.contrib.auth.models import User, Group, Permission
+from django.core.urlresolvers import reverse
+from django.test import TestCase
+
 from base.tests.models import test_student, test_person, test_academic_year, test_offer_year, test_offer_enrollment
 from exam_enrollment.views import main
-import warnings
 
 
 def load_json_file(path):
-    json_data = open(path)
-    data1 = json.load(json_data) # deserialises it
-    return data1
+    with open(path, 'r') as fp:
+        return json.load(fp)
 
 
 def _create_group(name):
@@ -48,7 +50,6 @@ def _create_group(name):
 
 class ExamEnrollmentFormTest(TestCase):
     def setUp(self):
-        self.client = Client()
         self.academic_year = test_academic_year.create_academic_year()
         group = _create_group('students')
         group.permissions.add(Permission.objects.get(codename='is_student'))
@@ -170,10 +171,71 @@ class ExamEnrollmentFormTest(TestCase):
         student_offer_year_enrollment = self.create_offer_enrollment_for_current_academic_yr()
         self.assertEqual(main._get_student_programs(self.student)[0], student_offer_year_enrollment.offer_year)
 
-    def test_navigation_with_no_offer_in_current_academic_year(self):
+    @patch('base.models.student.find_by_user')
+    def test_choose_offer_no_student_for_current_user(self, mock_find_by_user):
+        mock_find_by_user.return_value = None
+
+        self.client.force_login(self.user)
+
+        an_url = reverse('exam_enrollment_offer_choice', args=(1, ))
+        response = self.client.get(an_url, follow=True)
+
+        self.assertEqual('offer_choice.html', response.templates[0].name)
+
+    @patch('exam_enrollment.views.main._get_student_programs')
+    def test_navigation_student_has_no_programs(self, mock_student_programs):
+        mock_student_programs.return_value = None
+
         self.client.force_login(self.user)
         an_url = reverse('exam_enrollment_offer_choice', args=(1,))
         response = self.client.get(an_url, follow=True)
         self.assertRedirects(response, reverse('dashboard_home'))
         self.assertEqual('dashboard.html', response.templates[0].name)
+
+    @patch('exam_enrollment.views.main._get_student_programs')
+    @patch('exam_enrollment.views.main._fetch_exam_enrollment_form')
+    @patch('base.models.academic_year.current_academic_year')
+    @patch('base.models.offer_year.find_by_id')
+    def test_navigation_student_has_programs_but_no_data(self,
+                                                         mock_find_by_id,
+                                                         mock_current_academic_year,
+                                                         mock_fetch_exam_form,
+                                                         mock_get_student_programs):
+        mock_find_by_id.return_value = Mock()
+        mock_current_academic_year.return_value = None
+        mock_get_student_programs.return_value = [MagicMock(id=1)]
+        mock_fetch_exam_form.return_value = None
+
+        self.client.force_login(self.user)
+        an_url = reverse('exam_enrollment_offer_choice', args=(1, ))
+
+        response = self.client.get(an_url, follow=True)
+
+        self.assertTrue(mock_current_academic_year.called)
+        self.assertRedirects(response, reverse('dashboard_home'))
+
+    @patch('exam_enrollment.views.main._get_student_programs')
+    @patch('exam_enrollment.views.main._fetch_exam_enrollment_form')
+    @patch('base.models.academic_year.current_academic_year')
+    @patch('base.models.offer_year.find_by_id')
+    def test_navigation_student_has_programs_with_data(self,
+                                                       mock_find_by_id,
+                                                       mock_current_academic_year,
+                                                       mock_fetch_exam_form,
+                                                       mock_get_student_programs):
+        mock_find_by_id.return_value = Mock()
+        mock_current_academic_year.return_value = None
+        mock_get_student_programs.return_value = [MagicMock(id=1)]
+        mock_fetch_exam_form.return_value = {
+            'exam_enrollments': [],
+            'current_number_session': 0,
+        }
+
+        self.client.force_login(self.user)
+        an_url = reverse('exam_enrollment_offer_choice', args=(1, ))
+
+        response = self.client.get(an_url, follow=True)
+
+        self.assertTrue(mock_current_academic_year.called)
+        self.assertEqual('exam_enrollment_form.html', response.templates[0].name)
 
